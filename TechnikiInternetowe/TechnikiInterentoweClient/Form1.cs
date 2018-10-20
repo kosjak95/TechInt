@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,42 @@ namespace TechnikiInterentoweClient
         public Form1()
         {
             InitializeComponent();
+
+            filesList.View = View.Details;
+            filesList.Columns.Add("File Name");
+            filesList.Columns.Add("Open");
+            filesList.GridLines = true;
+
+            RestClient rClient = new RestClient();
+            rClient.endPoint = "http://localhost:8080/Files/";
+            string strResponse = rClient.makeRequest();
+
+            updateFilesList(strResponse);
+        }
+
+        /// <summary>
+        /// Decode files' names from raw data, after request  
+        /// </summary>
+        /// <param name="rawData"></param>
+        /// <returns></returns>
+        private string[] DecodeFilesNames(string rawData)
+        {
+            rawData = rawData.Substring(2, rawData.Length - 4);
+            return rawData.Split(new string[] { "\",\"" }, StringSplitOptions.None);
+        }
+
+        /// <summary>
+        /// Update list view with files name
+        /// </summary>
+        /// <param name="strResponse"></param>
+        private void updateFilesList(string strResponse)
+        {
+            var filesNames = DecodeFilesNames(strResponse);
+
+            foreach (string fileName in filesNames)
+            {
+                filesList.Items.Add(new ListViewItem(fileName));
+            }
         }
 
         #region UI Event Hander
@@ -22,8 +59,6 @@ namespace TechnikiInterentoweClient
         {
             RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/Hello/" + txtRestRequestURL.Text;
-
-            setOutput("Client Created!");
 
             string strResponse = rClient.makeRequest();
 
@@ -46,5 +81,14 @@ namespace TechnikiInterentoweClient
             }
         }
 
+        private void txtRestResponse_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtRestRequestURL_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
