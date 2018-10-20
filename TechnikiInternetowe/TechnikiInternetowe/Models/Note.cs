@@ -6,9 +6,8 @@ using System.Web;
 
 namespace TechnikiInternetowe.Models
 {
-    public class File
+    public class Note
     {
-        [Key]
         public int FileId { get; set; }
         public string FileName { get; set; }
         public int version { get; set; }
