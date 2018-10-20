@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnikiInternetowe", "TechnikiInternetowe\TechnikiInternetowe.csproj", "{FBEE29E2-3775-4F21-8FFE-56B65927A99A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnikiInterentoweClient", "TechnikiInterentoweClient\TechnikiInterentoweClient.csproj", "{2498C9F4-C667-4059-BBA8-74E09CF26448}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBEE29E2-3775-4F21-8FFE-56B65927A99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBEE29E2-3775-4F21-8FFE-56B65927A99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBEE29E2-3775-4F21-8FFE-56B65927A99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBEE29E2-3775-4F21-8FFE-56B65927A99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2498C9F4-C667-4059-BBA8-74E09CF26448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2498C9F4-C667-4059-BBA8-74E09CF26448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2498C9F4-C667-4059-BBA8-74E09CF26448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2498C9F4-C667-4059-BBA8-74E09CF26448}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
