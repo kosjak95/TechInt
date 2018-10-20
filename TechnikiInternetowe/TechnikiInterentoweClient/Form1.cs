@@ -21,7 +21,7 @@ namespace TechnikiInterentoweClient
         private void btnSendReq_Click(object sender, EventArgs e)
         {
             RestClient rClient = new RestClient();
-            rClient.endPoint = "http://localhost:59428/Hello/" + txtRestRequestURL.Text;
+            rClient.endPoint = "http://localhost:8080/Hello/" + txtRestRequestURL.Text;
 
             setOutput("Client Created!");
 
