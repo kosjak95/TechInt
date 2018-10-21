@@ -22,7 +22,5 @@ namespace TechnikiInternetowe.Controllers
         {
             return "Hello " + name + ". Nice to see u!";
         }
-
-        
     }
 }

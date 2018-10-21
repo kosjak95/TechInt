@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using TechnikiInternetowe.Models;
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -32,10 +29,47 @@ namespace TechnikiInternetowe.Controllers
         [Route("Files")]
         public string GetListOfFilesOnServer()
         {
-            var jsonSerialiser = new JavaScriptSerializer();
-            var json = jsonSerialiser.Serialize(filesList);
-
             return new JavaScriptSerializer().Serialize(filesList);
+        }
+    }
+
+    public class OpenFileController : Controller
+    {
+        private string project_path { get; set; }
+
+        public OpenFileController()
+        {
+            project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files\";
+
+            //DirectoryInfo di = new DirectoryInfo(project_path);
+            //FileInfo[] files = di.GetFiles("*.txt");
+        }
+
+        [HttpGet]
+        [Route("OpenFile/{fileName}")]
+        public string GetFileContent()
+        {
+            string nameOfFile = RouteData.Values["fileName"] as string;
+            //foreach(var routkey in RouteData.Values.Keys)
+            //{
+            //    if (routkey == "fileName")
+            //        fileName = RouteData.Values[routkey] as string;
+            //}
+            string contents = "";
+            try
+            {
+                using (StreamReader sr = new StreamReader(project_path + nameOfFile +".txt"))
+                {
+                    contents = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                contents = "We have some problem with open this file";
+            }
+
+            return new JavaScriptSerializer().Serialize(contents);
         }
     }
 }

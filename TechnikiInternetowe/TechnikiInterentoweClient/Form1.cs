@@ -83,11 +83,28 @@ namespace TechnikiInterentoweClient
 
         }
 
+        #region UI Event Hander
         private void filesList_Click(object sender, EventArgs e)
         {
             int i = filesList.SelectedIndices[0];
-            string s = filesList.Items[i].Text;
-            MessageBox.Show(s);
+            string selectedRow = filesList.Items[i].Text;
+
+            SendReqToServerWithOpen(selectedRow);
         }
+
+        /// <summary>
+        /// Send request to server about read only acces to file
+        /// </summary>
+        /// <param name="selectedRow"></param
+        private void SendReqToServerWithOpen(string selectedRow)
+        {
+            //TODO: when we add modify date, it can be wrong
+            RestClient rClient = new RestClient();
+            rClient.endPoint = "http://localhost:8080/OpenFile/" + selectedRow.Substring(0,selectedRow.Length-4);
+            string strResponse = rClient.makeRequest();
+
+            SetOutput(strResponse);
+        }
+        #endregion
     }
 }
