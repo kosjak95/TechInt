@@ -19,12 +19,6 @@ namespace TechnikiInternetowe
                 url: "{controller}/{action}",
                 defaults: new { controller = "Hello", action = "Index" }
             );
-
-            //routes.MapRoute(
-            //    name: "OpenFile",
-            //    url: "{controller}/{fileName}",
-            //    defaults: new { controller = "OpenFile", fileName = "" }
-            //);
         }
     }
 }
