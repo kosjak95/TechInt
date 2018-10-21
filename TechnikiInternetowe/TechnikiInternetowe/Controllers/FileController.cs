@@ -40,9 +40,6 @@ namespace TechnikiInternetowe.Controllers
         public OpenFileController()
         {
             project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files\";
-
-            //DirectoryInfo di = new DirectoryInfo(project_path);
-            //FileInfo[] files = di.GetFiles("*.txt");
         }
 
         [HttpGet]
@@ -50,11 +47,6 @@ namespace TechnikiInternetowe.Controllers
         public string GetFileContent()
         {
             string nameOfFile = RouteData.Values["fileName"] as string;
-            //foreach(var routkey in RouteData.Values.Keys)
-            //{
-            //    if (routkey == "fileName")
-            //        fileName = RouteData.Values[routkey] as string;
-            //}
             string contents = "";
             try
             {

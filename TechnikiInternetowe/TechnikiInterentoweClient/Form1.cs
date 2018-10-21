@@ -46,19 +46,6 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        #region UI Event Hander
-        private void btnSendReq_Click(object sender, EventArgs e)
-        {
-            RestClient rClient = new RestClient();
-            rClient.endPoint = "http://localhost:8080/Hello/" + txtRestRequestURL.Text;
-
-            string strResponse = rClient.makeRequest();
-
-            SetOutput(strResponse);
-        }
-
-        #endregion
-
         private void SetOutput(string requestText)
         {
             try
@@ -93,6 +80,21 @@ namespace TechnikiInterentoweClient
         }
 
         /// <summary>
+        /// Create new tabPage with TextBox
+        /// </summary>
+        /// <param name="title">title of TabPage</param>
+        /// <param name="fileContent">text to set inside TextBox</param>
+        private void OpenNewTabPage(string title, string fileContent)
+        {
+            TabPage tp = new TabPage(title);
+            tabs.TabPages.Add(tp);
+            TextBox fileContentTB = new TextBox();
+            fileContentTB.Dock = DockStyle.Fill;
+            tp.Controls.Add(fileContentTB);
+            fileContentTB.Text = fileContent;
+        }
+
+        /// <summary>
         /// Send request to server about read only acces to file
         /// </summary>
         /// <param name="selectedRow"></param
@@ -100,11 +102,18 @@ namespace TechnikiInterentoweClient
         {
             //TODO: when we add modify date, it can be wrong
             RestClient rClient = new RestClient();
-            rClient.endPoint = "http://localhost:8080/OpenFile/" + selectedRow.Substring(0,selectedRow.Length-4);
+            string fileNameWithoutFormat = selectedRow.Substring(0, selectedRow.Length - 4);
+            rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
+            strResponse = strResponse.Substring(1, strResponse.Length - 2);
 
-            SetOutput(strResponse);
+            OpenNewTabPage(fileNameWithoutFormat, strResponse);
         }
         #endregion
+
+        private void createNewFileButton_Click(object sender, EventArgs e)
+        {
+            OpenNewTabPage(newFileNameTextBox.Text, "");
+        }
     }
 }
