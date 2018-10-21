@@ -60,16 +60,6 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        private void txtRestResponse_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtRestRequestURL_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         #region UI Event Hander
         private void filesList_Click(object sender, EventArgs e)
         {
@@ -84,14 +74,22 @@ namespace TechnikiInterentoweClient
         /// </summary>
         /// <param name="title">title of TabPage</param>
         /// <param name="fileContent">text to set inside TextBox</param>
-        private void OpenNewTabPage(string title, string fileContent)
+        private TabPage OpenNewTabPage(string title, string fileContent)
         {
             TabPage tp = new TabPage(title);
             tabs.TabPages.Add(tp);
+            tp.Dock = DockStyle.Fill;
             TextBox fileContentTB = new TextBox();
             fileContentTB.Dock = DockStyle.Fill;
+            fileContentTB.Location = new System.Drawing.Point(0, Convert.ToInt32(0.2 * Convert.ToInt32(tp.Size.Height.ToString())));
+            fileContentTB.Multiline = true;
+            fileContentTB.ScrollBars = ScrollBars.Vertical;
+            fileContentTB.AcceptsReturn = true;
+            fileContentTB.AcceptsTab = true;
+            fileContentTB.WordWrap = true;
             tp.Controls.Add(fileContentTB);
             fileContentTB.Text = fileContent;
+            return tp;
         }
 
         /// <summary>
@@ -113,7 +111,12 @@ namespace TechnikiInterentoweClient
 
         private void createNewFileButton_Click(object sender, EventArgs e)
         {
-            OpenNewTabPage(newFileNameTextBox.Text, "");
+            TabPage tabPage = OpenNewTabPage(newFileNameTextBox.Text, "");
+           
+            Button saveButton = new Button();
+            tabPage.Controls.Add(saveButton);
+            saveButton.Text = "Save";
+            saveButton.Dock = DockStyle.Top;
         }
     }
 }

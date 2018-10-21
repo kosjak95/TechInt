@@ -47,7 +47,7 @@
             this.firstTab.Location = new System.Drawing.Point(4, 25);
             this.firstTab.Name = "firstTab";
             this.firstTab.Padding = new System.Windows.Forms.Padding(3);
-            this.firstTab.Size = new System.Drawing.Size(734, 390);
+            this.firstTab.Size = new System.Drawing.Size(735, 384);
             this.firstTab.TabIndex = 0;
             this.firstTab.Text = "K&K Reader";
             this.firstTab.UseVisualStyleBackColor = true;
@@ -71,17 +71,16 @@
             this.txtRestResponse.Multiline = true;
             this.txtRestResponse.Name = "txtRestResponse";
             this.txtRestResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRestResponse.Size = new System.Drawing.Size(178, 43);
+            this.txtRestResponse.Size = new System.Drawing.Size(179, 37);
             this.txtRestResponse.TabIndex = 1;
-            this.txtRestResponse.TextChanged += new System.EventHandler(this.txtRestResponse_TextChanged);
             // 
             // tabs
             // 
             this.tabs.Controls.Add(this.firstTab);
-            this.tabs.Location = new System.Drawing.Point(0, -1);
+            this.tabs.Location = new System.Drawing.Point(0, 0);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(742, 419);
+            this.tabs.Size = new System.Drawing.Size(743, 413);
             this.tabs.TabIndex = 5;
             // 
             // createNewFileButton
@@ -106,7 +105,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(736, 411);
+            this.ClientSize = new System.Drawing.Size(742, 413);
             this.Controls.Add(this.tabs);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
