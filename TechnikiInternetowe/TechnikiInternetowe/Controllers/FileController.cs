@@ -16,7 +16,6 @@ namespace TechnikiInternetowe.Controllers
 
         public FileController()
         {
-            
             filesList = new List<string>();
             project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files";
 
@@ -27,7 +26,6 @@ namespace TechnikiInternetowe.Controllers
             {
                 filesList.Add(file.Name);
             }
-            
         }
 
         [HttpGet]

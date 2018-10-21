@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.firstTab = new System.Windows.Forms.TabPage();
-            this.txtRestRequestURL = new System.Windows.Forms.TextBox();
-            this.txtRestResponse = new System.Windows.Forms.TextBox();
-            this.btnSendReq = new System.Windows.Forms.Button();
-            this.tabs = new System.Windows.Forms.TabControl();
             this.filesList = new System.Windows.Forms.ListView();
+            this.btnSendReq = new System.Windows.Forms.Button();
+            this.txtRestResponse = new System.Windows.Forms.TextBox();
+            this.txtRestRequestURL = new System.Windows.Forms.TextBox();
+            this.tabs = new System.Windows.Forms.TabControl();
             this.firstTab.SuspendLayout();
             this.tabs.SuspendLayout();
             this.SuspendLayout();
@@ -52,15 +52,25 @@
             this.firstTab.Text = "K&K Reader";
             this.firstTab.UseVisualStyleBackColor = true;
             // 
-            // txtRestRequestURL
+            // filesList
             // 
-            this.txtRestRequestURL.AccessibleName = "txtRestRequestURL";
-            this.txtRestRequestURL.Location = new System.Drawing.Point(470, 21);
-            this.txtRestRequestURL.Margin = new System.Windows.Forms.Padding(4);
-            this.txtRestRequestURL.Name = "txtRestRequestURL";
-            this.txtRestRequestURL.Size = new System.Drawing.Size(87, 22);
-            this.txtRestRequestURL.TabIndex = 0;
-            this.txtRestRequestURL.TextChanged += new System.EventHandler(this.txtRestRequestURL_TextChanged);
+            this.filesList.Location = new System.Drawing.Point(0, 0);
+            this.filesList.Name = "filesList";
+            this.filesList.Size = new System.Drawing.Size(463, 390);
+            this.filesList.TabIndex = 3;
+            this.filesList.UseCompatibleStateImageBehavior = false;
+            this.filesList.Click += new System.EventHandler(this.filesList_Click);
+            // 
+            // btnSendReq
+            // 
+            this.btnSendReq.Location = new System.Drawing.Point(601, 18);
+            this.btnSendReq.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSendReq.Name = "btnSendReq";
+            this.btnSendReq.Size = new System.Drawing.Size(100, 28);
+            this.btnSendReq.TabIndex = 2;
+            this.btnSendReq.Text = "Send";
+            this.btnSendReq.UseVisualStyleBackColor = true;
+            this.btnSendReq.Click += new System.EventHandler(this.btnSendReq_Click);
             // 
             // txtRestResponse
             // 
@@ -76,16 +86,15 @@
             this.txtRestResponse.TabIndex = 1;
             this.txtRestResponse.TextChanged += new System.EventHandler(this.txtRestResponse_TextChanged);
             // 
-            // btnSendReq
+            // txtRestRequestURL
             // 
-            this.btnSendReq.Location = new System.Drawing.Point(601, 18);
-            this.btnSendReq.Margin = new System.Windows.Forms.Padding(4);
-            this.btnSendReq.Name = "btnSendReq";
-            this.btnSendReq.Size = new System.Drawing.Size(100, 28);
-            this.btnSendReq.TabIndex = 2;
-            this.btnSendReq.Text = "Send";
-            this.btnSendReq.UseVisualStyleBackColor = true;
-            this.btnSendReq.Click += new System.EventHandler(this.btnSendReq_Click);
+            this.txtRestRequestURL.AccessibleName = "txtRestRequestURL";
+            this.txtRestRequestURL.Location = new System.Drawing.Point(470, 21);
+            this.txtRestRequestURL.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRestRequestURL.Name = "txtRestRequestURL";
+            this.txtRestRequestURL.Size = new System.Drawing.Size(87, 22);
+            this.txtRestRequestURL.TabIndex = 0;
+            this.txtRestRequestURL.TextChanged += new System.EventHandler(this.txtRestRequestURL_TextChanged);
             // 
             // tabs
             // 
@@ -95,14 +104,6 @@
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(742, 419);
             this.tabs.TabIndex = 5;
-            // 
-            // filesList
-            // 
-            this.filesList.Location = new System.Drawing.Point(0, 0);
-            this.filesList.Name = "filesList";
-            this.filesList.Size = new System.Drawing.Size(463, 390);
-            this.filesList.TabIndex = 3;
-            this.filesList.UseCompatibleStateImageBehavior = false;
             // 
             // Form1
             // 

@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TechnikiInterentoweClient
@@ -19,14 +11,14 @@ namespace TechnikiInterentoweClient
 
             filesList.View = View.Details;
             filesList.Columns.Add("File Name");
-            filesList.Columns.Add("Open");
+            filesList.Columns.Add("Updated");
             filesList.GridLines = true;
 
             RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/Files/";
             string strResponse = rClient.makeRequest();
 
-            updateFilesList(strResponse);
+            UpdateFilesList(strResponse);
         }
 
         /// <summary>
@@ -44,7 +36,7 @@ namespace TechnikiInterentoweClient
         /// Update list view with files name
         /// </summary>
         /// <param name="strResponse"></param>
-        private void updateFilesList(string strResponse)
+        private void UpdateFilesList(string strResponse)
         {
             var filesNames = DecodeFilesNames(strResponse);
 
@@ -62,12 +54,12 @@ namespace TechnikiInterentoweClient
 
             string strResponse = rClient.makeRequest();
 
-            setOutput(strResponse);
+            SetOutput(strResponse);
         }
 
         #endregion
 
-        private void setOutput(string requestText)
+        private void SetOutput(string requestText)
         {
             try
             {
@@ -89,6 +81,13 @@ namespace TechnikiInterentoweClient
         private void txtRestRequestURL_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void filesList_Click(object sender, EventArgs e)
+        {
+            int i = filesList.SelectedIndices[0];
+            string s = filesList.Items[i].Text;
+            MessageBox.Show(s);
         }
     }
 }
