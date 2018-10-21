@@ -1,14 +1,10 @@
 using System;
-﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-<<<<<<< HEAD
-using TechnikiInternetowe.Models;
-using TechnikiInternetowe.NewFolder1;
-=======
->>>>>>> 4fa968f8850ab1147712c40d412043205a4e33e2
+using TechnikiInternetowe.DBEntity;
+
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -20,7 +16,7 @@ namespace TechnikiInternetowe.Controllers
         public FileController()
         {
             filesList = new List<string>();
-            project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files";
+            project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files\";
 
             DirectoryInfo di = new DirectoryInfo(project_path);
             FileInfo[] files = di.GetFiles("*.txt");
@@ -31,6 +27,10 @@ namespace TechnikiInternetowe.Controllers
             }
         }
 
+        /// <summary>
+        /// Test db json
+        /// </summary>
+        /// <returns></returns>
         [Route("Json")]
         public string Index()
         {
@@ -38,35 +38,33 @@ namespace TechnikiInternetowe.Controllers
             var dane = db.Files;
 
             return new JavaScriptSerializer().Serialize(dane);
-
-
         }
+
+        /// <summary>
+        /// Return Json formated string with Names of each file on server
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("Files")]
         public string GetListOfFilesOnServer()
         {
             return new JavaScriptSerializer().Serialize(filesList);
         }
-    }
 
-    public class OpenFileController : Controller
-    {
-        private string project_path { get; set; }
-
-        public OpenFileController()
-        {
-            project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files\";
-        }
-
+        /// <summary>
+        /// Return contend of given by argument file
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("OpenFile/{fileName}")]
-        public string GetFileContent()
+        public string GetFileContent(string fileName)
         {
-            string nameOfFile = RouteData.Values["fileName"] as string;
+            //string nameOfFile = RouteData.Values["fileName"] as string;
             string contents = "";
             try
             {
-                using (StreamReader sr = new StreamReader(project_path + nameOfFile +".txt"))
+                string file_path = project_path + fileName + ".txt";
+                using (StreamReader sr = new StreamReader(file_path))
                 {
                     contents = sr.ReadToEnd();
                 }
@@ -80,4 +78,5 @@ namespace TechnikiInternetowe.Controllers
             return new JavaScriptSerializer().Serialize(contents);
         }
     }
+
 }

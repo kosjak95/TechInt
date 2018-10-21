@@ -20,11 +20,11 @@ namespace TechnikiInternetowe
                 defaults: new { controller = "Hello", action = "Index" }
             );
 
-            routes.MapRoute(
-                name: "OpenFile",
-                url: "{controller}/{fileName}",
-                defaults: new { controller = "OpenFile", fileName = "" }
-            );
+            //routes.MapRoute(
+            //    name: "OpenFile",
+            //    url: "{controller}/{fileName}",
+            //    defaults: new { controller = "OpenFile", fileName = "" }
+            //);
         }
     }
 }

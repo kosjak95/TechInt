@@ -16,6 +16,7 @@ namespace TechnikiInternetowe.Controllers
         {
             return "Hello World!";
         }
+
         [HttpGet]
         [Route("{name}")]
         public string HelloName(string name)
