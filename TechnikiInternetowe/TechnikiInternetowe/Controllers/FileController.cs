@@ -6,6 +6,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using TechnikiInternetowe.Models;
+using TechnikiInternetowe.NewFolder1;
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -30,6 +31,16 @@ namespace TechnikiInternetowe.Controllers
             
         }
 
+        [Route("Json")]
+        public string Index()
+        {
+            DB_TechIntEntities db = new DB_TechIntEntities();
+            var dane = db.Files;
+
+            return new JavaScriptSerializer().Serialize(dane);
+
+
+        }
         [HttpGet]
         [Route("Files")]
         public string GetListOfFilesOnServer()
