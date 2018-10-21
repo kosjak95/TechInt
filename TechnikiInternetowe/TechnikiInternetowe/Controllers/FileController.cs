@@ -1,12 +1,14 @@
-﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+<<<<<<< HEAD
 using TechnikiInternetowe.Models;
 using TechnikiInternetowe.NewFolder1;
+=======
+>>>>>>> 4fa968f8850ab1147712c40d412043205a4e33e2
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -17,7 +19,6 @@ namespace TechnikiInternetowe.Controllers
 
         public FileController()
         {
-            
             filesList = new List<string>();
             project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files";
 
@@ -28,7 +29,6 @@ namespace TechnikiInternetowe.Controllers
             {
                 filesList.Add(file.Name);
             }
-            
         }
 
         [Route("Json")]
@@ -45,10 +45,39 @@ namespace TechnikiInternetowe.Controllers
         [Route("Files")]
         public string GetListOfFilesOnServer()
         {
-            var jsonSerialiser = new JavaScriptSerializer();
-            var json = jsonSerialiser.Serialize(filesList);
-
             return new JavaScriptSerializer().Serialize(filesList);
+        }
+    }
+
+    public class OpenFileController : Controller
+    {
+        private string project_path { get; set; }
+
+        public OpenFileController()
+        {
+            project_path = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Files\";
+        }
+
+        [HttpGet]
+        [Route("OpenFile/{fileName}")]
+        public string GetFileContent()
+        {
+            string nameOfFile = RouteData.Values["fileName"] as string;
+            string contents = "";
+            try
+            {
+                using (StreamReader sr = new StreamReader(project_path + nameOfFile +".txt"))
+                {
+                    contents = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                contents = "We have some problem with open this file";
+            }
+
+            return new JavaScriptSerializer().Serialize(contents);
         }
     }
 }
