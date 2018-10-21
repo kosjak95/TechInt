@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using TechnikiInternetowe.DBEntity;
 using System.Linq;
-using System.Net;
 using Newtonsoft.Json;
 
 namespace TechnikiInternetowe.Controllers
@@ -37,7 +35,7 @@ namespace TechnikiInternetowe.Controllers
             var dane = db.Files;
             KeyValuePair<int, string> test = new KeyValuePair<int, string>(2, "asdasdasd");
 
-            return new JavaScriptSerializer().Serialize(test);
+            return new JavaScriptSerializer().Serialize(dane);
         }
 
         /// <summary>
@@ -61,15 +59,18 @@ namespace TechnikiInternetowe.Controllers
         {
             string contents = "";
             Files file = null;
+            List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
-                //string file_path = project_path + fileName + ".txt";
                 file = db.Files.Where(w => w.Name == fileName).First();
                 string file_path = project_path + @file.FileSrc + file.Name + ".txt";
                 using (StreamReader sr = new StreamReader(file_path))
                 {
                     contents = sr.ReadToEnd();
                 }
+
+                KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, contents);
+                file_content.Add(test);
             }
             catch (Exception e)
             {
@@ -77,11 +78,8 @@ namespace TechnikiInternetowe.Controllers
                 contents = "We have some problem with open this file";
             }
 
-            List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
-            KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, contents);
-            file_content.Add(test);
 
-            return new JavaScriptSerializer().Serialize(file_content);
+            return JsonConvert.SerializeObject(file_content[0]);;
         }
 
         /// <summary>
@@ -108,8 +106,16 @@ namespace TechnikiInternetowe.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("UpdateContent")]
-        public bool UpdateFileContent(KeyValuePair<int, string> file_data)
+        public bool UpdateFileContent(int file_id, string file_data)
         {
+            Files file = db.Files.Where(w => w.FileId == file_id).Single();
+            if (file == null)
+                return false;
+
+            string file_path = project_path + file.FileSrc + file.Name + ".txt";
+
+
+
             return true;
         }
 

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 namespace TechnikiInterentoweClient
@@ -54,7 +57,8 @@ namespace TechnikiInterentoweClient
                 txtRestResponse.Text = requestText + Environment.NewLine;
                 txtRestResponse.SelectionStart = txtRestResponse.TextLength;
                 txtRestResponse.ScrollToCaret();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 System.Diagnostics.Debug.Write(e.Message);
             }
@@ -100,23 +104,24 @@ namespace TechnikiInterentoweClient
         {
             //TODO: when we add modify date, it can be wrong
             RestClient rClient = new RestClient();
-            string fileNameWithoutFormat = selectedRow.Substring(0, selectedRow.Length - 4);
+            string fileNameWithoutFormat = selectedRow.Substring(0, selectedRow.Length);
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
-            strResponse = strResponse.Substring(1, strResponse.Length - 2);
 
-            OpenNewTabPage(fileNameWithoutFormat, strResponse);
+            KeyValuePair<int, string> keyValuePair = JsonConvert.DeserializeObject<KeyValuePair<int, string>>(strResponse);
+
+            OpenNewTabPage(fileNameWithoutFormat, keyValuePair.Value);
         }
         #endregion
 
         private void createNewFileButton_Click(object sender, EventArgs e)
         {
             TabPage tabPage = OpenNewTabPage(newFileNameTextBox.Text, "");
-           
             Button saveButton = new Button();
             tabPage.Controls.Add(saveButton);
             saveButton.Text = "Save";
             saveButton.Dock = DockStyle.Top;
         }
+
     }
 }
