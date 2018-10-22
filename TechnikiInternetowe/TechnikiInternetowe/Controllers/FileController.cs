@@ -86,15 +86,15 @@ namespace TechnikiInternetowe.Controllers
         /// Fucntion gives information about possibility of creation new note
         /// if it is possible insert row to Db, and lock file on edit automaticly
         /// </summary>
-        /// <param name="newFile">Json formatted as Files.cs with single row</param>
+        /// <param name="newFile">Inserted by user name of file</param>
         /// <returns>true if creation is possible and done, other way false</returns>
         [HttpPost]
         [Route("TryCreate")]
-        public bool PermissionOnCreateFile(Files newFile)
+        public bool PermissionOnCreateFile(string file_name)
         {
 
-            if (isCreationOfFilePossible(newFile))
-                return insertDataToDb(newFile);
+            if (isCreationOfFilePossible(file_name))
+                return insertDataToDb(file_name);
 
             return false;
         }
@@ -114,7 +114,16 @@ namespace TechnikiInternetowe.Controllers
 
             string file_path = project_path + file.FileSrc + file.Name + ".txt";
 
+            try
+            {
+                System.IO.File.WriteAllText(file_path, file_data);
+            }
+            catch (IOException e)
+            {
 
+                System.Diagnostics.Debug.Write(e.Message);
+                return false;
+            }
 
             return true;
         }
@@ -124,12 +133,12 @@ namespace TechnikiInternetowe.Controllers
         #region private methods
 
         //check if file with this name not exist in db
-        private bool isCreationOfFilePossible(Files newFile)
+        private bool isCreationOfFilePossible(string file_name)
         {
             Files file = null;
             try
             {
-                file = db.Files.Where(w => w.Name == newFile.Name).Single();
+                file = db.Files.Where(w => w.Name == file_name).Single();
             }
             catch (Exception e)
             {
@@ -142,10 +151,16 @@ namespace TechnikiInternetowe.Controllers
         }
 
         //try insert given file into db
-        private bool insertDataToDb(Files newFile)
+        private bool insertDataToDb(string file_name)
         {
             try
             {
+                Files newFile = new Files();
+
+                newFile.Name = file_name;
+                newFile.CreatedTs = DateTime.Now;
+                newFile.FileSrc = project_path + @"App_Dat\Files\" + file_name + ".txt";
+                newFile.Version = "1";
                 newFile.IsEdited = true;
                 db.Files.Add(newFile);
                 db.SaveChanges();
