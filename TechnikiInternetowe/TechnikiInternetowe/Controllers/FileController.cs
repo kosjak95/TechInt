@@ -6,22 +6,15 @@ using System.Web.Script.Serialization;
 using TechnikiInternetowe.DBEntity;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace TechnikiInternetowe.Controllers
 {
     public class FileController : Controller
     {
-        private string project_path { get; set; }
-        private DB_TechIntEntities db { get; set; }
+        //private static string project_path { get; set; }
+       // private DB_TechIntEntities db { get; set; }
 
-        /// <summary>
-        /// Controller
-        /// </summary>
-        public FileController()
-        {
-            project_path = AppDomain.CurrentDomain.BaseDirectory;
-            db = new DB_TechIntEntities();
-        }
 
         #region public methods
 
@@ -29,9 +22,10 @@ namespace TechnikiInternetowe.Controllers
         /// Test db json
         /// </summary>
         /// <returns></returns>
-        [Route("Json")]
-        public string Index()
+        //[Route("Json")]
+        public static string Index()
         {
+            DB_TechIntEntities db = new DB_TechIntEntities();
             var dane = db.Files;
             KeyValuePair<int, string> test = new KeyValuePair<int, string>(2, "asdasdasd");
 
@@ -42,10 +36,11 @@ namespace TechnikiInternetowe.Controllers
         /// Return Json formated string with Names of each file on server
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("Files")]
-        public string GetListOfFilesOnServer()
+        //[HttpGet]
+        //[Route("Files")]
+        public static string GetListOfFilesOnServer()
         {
+            DB_TechIntEntities db = new DB_TechIntEntities();
             return new JavaScriptSerializer().Serialize(db.Files.Select(s => s.Name).ToList());
         }
 
@@ -53,15 +48,18 @@ namespace TechnikiInternetowe.Controllers
         /// Return contend of given by argument file
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("OpenFile/{fileName}")]
-        public string GetFileContent(string fileName)
+        //[HttpGet]
+        //[Route("OpenFile/{fileName}")]
+        public static string GetFileContent(string project_path, string fileName)
         {
             string contents = "";
             Files file = null;
+            DB_TechIntEntities db = new DB_TechIntEntities();
             List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
+
+                //TODO: Obsluzyc jeœli plik jest pusty
                 file = db.Files.Where(w => w.Name == fileName).First();
                 string file_path = project_path + @file.FileSrc + file.Name + ".txt";
                 using (StreamReader sr = new StreamReader(file_path))
@@ -88,13 +86,13 @@ namespace TechnikiInternetowe.Controllers
         /// </summary>
         /// <param name="newFile">Inserted by user name of file</param>
         /// <returns>true if creation is possible and done, other way false</returns>
-        [HttpPost]
-        [Route("TryCreate")]
-        public bool PermissionOnCreateFile(string file_name)
+        //[HttpPost]
+        //[Route("TryCreate")]
+        public static bool PermissionOnCreateFile(string project_path, string file_name)
         {
 
             if (isCreationOfFilePossible(file_name))
-                return insertDataToDb(file_name);
+                return insertDataToDb(project_path, file_name);
 
             return false;
         }
@@ -104,10 +102,11 @@ namespace TechnikiInternetowe.Controllers
         /// </summary>
         /// <param name="file_data"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("UpdateContent")]
-        public bool UpdateFileContent(int file_id, string file_data)
+        //[HttpPost]
+        //[Route("UpdateContent")]
+        public static bool UpdateFileContent(string project_path, int file_id, string file_data)
         {
+            DB_TechIntEntities db = new DB_TechIntEntities();
             Files file = db.Files.Where(w => w.FileId == file_id).Single();
             if (file == null)
                 return false;
@@ -133,9 +132,10 @@ namespace TechnikiInternetowe.Controllers
         #region private methods
 
         //check if file with this name not exist in db
-        private bool isCreationOfFilePossible(string file_name)
+        private static bool isCreationOfFilePossible(string file_name)
         {
             Files file = null;
+            DB_TechIntEntities db = new DB_TechIntEntities();
             try
             {
                 file = db.Files.Where(w => w.Name == file_name).Single();
@@ -151,10 +151,11 @@ namespace TechnikiInternetowe.Controllers
         }
 
         //try insert given file into db
-        private bool insertDataToDb(string file_name)
+        private static bool insertDataToDb(string project_path, string file_name)
         {
             try
             {
+                DB_TechIntEntities db = new DB_TechIntEntities();
                 Files newFile = new Files();
 
                 newFile.Name = file_name;

@@ -19,9 +19,10 @@ namespace TechnikiInternetowe.Controllers
 
         [HttpGet]
         [Route("{name}")]
-        public string HelloName(string name)
+        public static string HelloName(string name)
         {
-            return "Hello " + name + ". Nice to see u!";
+            string asd =  "Hello " + name + ". Nice to see u!";
+            return asd;
         }
 
         

@@ -159,12 +159,12 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Communication\ExternalAdapterController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HelloController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Note.cs" />
     <Compile Include="DBEntity\Files.cs">
       <DependentUpon>ProjectDB.tt</DependentUpon>
     </Compile>
