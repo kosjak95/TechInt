@@ -56,9 +56,9 @@ namespace TechnikiInternetowe.Communication
 
         [HttpPost]
         [Route("UpdateContent")]
-        public async Task<bool> UpdateFileContent(int file_id, string file_data)
+        public async Task<bool> UpdateFileContent(string file_name, string file_data)
         {
-            return await Task.Run(() => FileController.UpdateFileContent(project_path, file_id, file_data));
+            return await Task.Run(() => FileController.UpdateFileContent(project_path, file_name, file_data));
         }
     }
 }

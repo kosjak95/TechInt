@@ -90,7 +90,6 @@ namespace TechnikiInternetowe.Controllers
         //[Route("TryCreate")]
         public static bool PermissionOnCreateFile(string project_path, string file_name)
         {
-
             if (isCreationOfFilePossible(file_name))
                 return insertDataToDb(project_path, file_name);
 
@@ -104,10 +103,10 @@ namespace TechnikiInternetowe.Controllers
         /// <returns></returns>
         //[HttpPost]
         //[Route("UpdateContent")]
-        public static bool UpdateFileContent(string project_path, int file_id, string file_data)
+        public static bool UpdateFileContent(string project_path, string file_name, string file_data)
         {
             DB_TechIntEntities db = new DB_TechIntEntities();
-            Files file = db.Files.Where(w => w.FileId == file_id).Single();
+            Files file = db.Files.Where(w => w.Name == file_name).Single();
             if (file == null)
                 return false;
 
