@@ -58,7 +58,6 @@ namespace TechnikiInternetowe.Controllers
             List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
-
                 //TODO: Obsluzyc jeœli plik jest pusty
                 file = db.Files.Where(w => w.Name == fileName).First();
                 string file_path = project_path + @file.FileSrc + file.Name + ".txt";

@@ -64,9 +64,9 @@ namespace TechnikiInterentoweClient
             string fileName = tab.Text;
             string content = ((TextBox)tab.Controls[0]).Text;
 
-            //RestClient rClient = new RestClient();
-            //rClient.endPoint = "http://localhost:8080/UpdateContent/" + fileName + "/"+content;
-            //string strResponse = rClient.makeRequest();
+            RestClient rClient = new RestClient();
+            rClient.endPoint = "http://localhost:8080/UpdateContent/";
+            bool Response = rClient.makePostRequest(new { file_name = fileName, file_data = content });
 
             TabControl tc = (TabControl)tab.Parent;
             tc.TabPages.Remove(tab);
@@ -125,9 +125,14 @@ namespace TechnikiInterentoweClient
         {
             RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/TryCreate/";
-            string strResponse = rClient.makePostRequest(newFileNameTextBox.Text);
-
-            OpenNewTabPage(newFileNameTextBox.Text, "");
+            if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
+            {
+                OpenNewTabPage(newFileNameTextBox.Text, "");
+            }
+            else
+            {
+                MessageBox.Show("Sorry You can't create this file");
+            }
         }
     }
 }

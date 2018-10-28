@@ -63,7 +63,7 @@ namespace TechnikiInterentoweClient
             return strResponse;
         }
 
-        public string makePostRequest(string fileName)
+        public bool makePostRequest(object toSerialize)
         { 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(endPoint);
             httpWebRequest.ContentType = "application/json";
@@ -71,10 +71,7 @@ namespace TechnikiInterentoweClient
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = new JavaScriptSerializer().Serialize(new
-                {
-                    file_name = fileName
-                });
+                string json = new JavaScriptSerializer().Serialize(toSerialize);
 
                 streamWriter.Write(json);
             }
@@ -82,7 +79,7 @@ namespace TechnikiInterentoweClient
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                return streamReader.ReadToEnd();
+                return Convert.ToBoolean(streamReader.ReadToEnd());
             }
         }
     }
