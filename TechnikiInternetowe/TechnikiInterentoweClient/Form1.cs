@@ -100,11 +100,10 @@ namespace TechnikiInterentoweClient
         /// Send request to server about read only acces to file
         /// </summary>
         /// <param name="selectedRow"></param
-        private void SendReqToServerWithOpen(string selectedRow)
+        private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
             //TODO: when we add modify date, it can be wrong
             RestClient rClient = new RestClient();
-            string fileNameWithoutFormat = selectedRow.Substring(0, selectedRow.Length);
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
 
