@@ -58,10 +58,8 @@ namespace TechnikiInternetowe.Controllers
             List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
-                //TODO: Obsluzyc jeœli plik jest pusty
                 file = db.Files.Where(w => w.Name == fileName).First();
-                string file_path = project_path + @file.FileSrc + file.Name + ".txt";
-                using (StreamReader sr = new StreamReader(file_path))
+                using (StreamReader sr = new StreamReader(project_path + @file.FileSrc + file.Name + ".txt"))
                 {
                     contents = sr.ReadToEnd();
                 }
@@ -90,7 +88,8 @@ namespace TechnikiInternetowe.Controllers
         public static bool PermissionOnCreateFile(string project_path, string file_name)
         {
             if (isCreationOfFilePossible(file_name))
-                return insertDataToDb(project_path, file_name);
+                if (insertDataToDb(project_path, file_name))
+                    return CreateFile(project_path, file_name);
 
             return false;
         }
@@ -132,20 +131,39 @@ namespace TechnikiInternetowe.Controllers
         //check if file with this name not exist in db
         private static bool isCreationOfFilePossible(string file_name)
         {
-            Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
+            Files file = null;
             try
             {
                 file = db.Files.Where(w => w.Name == file_name).Single();
             }
             catch (Exception e)
             {
-
                 System.Diagnostics.Debug.Write(e.Message);
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Create File on serwer
+        /// </summary>
+        /// <param name="project_path"></param>
+        /// <param name="file_name"></param>
+        /// <returns></returns>
+        private static bool CreateFile(string project_path, string file_name)
+        {
+            string path = project_path + @"App_Data\Files\" + file_name + ".txt";
+            try
+            {
+                System.IO.File.Create(path).Dispose();
+            }catch(Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                return false;
+            }
+            return true;
         }
 
         //try insert given file into db
@@ -158,7 +176,7 @@ namespace TechnikiInternetowe.Controllers
 
                 newFile.Name = file_name;
                 newFile.CreatedTs = DateTime.Now;
-                newFile.FileSrc = project_path + @"App_Dat\Files\" + file_name + ".txt";
+                newFile.FileSrc =  @"App_Data\Files\";
                 newFile.Version = "1";
                 newFile.IsEdited = true;
                 db.Files.Add(newFile);
