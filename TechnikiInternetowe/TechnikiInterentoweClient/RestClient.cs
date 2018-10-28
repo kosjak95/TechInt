@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace TechnikiInterentoweClient
 {
@@ -60,6 +61,29 @@ namespace TechnikiInterentoweClient
             }
 
             return strResponse;
+        }
+
+        public string makePostRequest(string fileName)
+        { 
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(endPoint);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = httpVerb.POST.ToString();
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = new JavaScriptSerializer().Serialize(new
+                {
+                    file_name = fileName
+                });
+
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
     }
 }

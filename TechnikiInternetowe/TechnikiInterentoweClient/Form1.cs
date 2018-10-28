@@ -49,21 +49,6 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        private void SetOutput(string requestText)
-        {
-            try
-            {
-                System.Diagnostics.Debug.Write(requestText + Environment.NewLine);
-                txtRestResponse.Text = requestText + Environment.NewLine;
-                txtRestResponse.SelectionStart = txtRestResponse.TextLength;
-                txtRestResponse.ScrollToCaret();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Write(e.Message);
-            }
-        }
-
         #region UI Event Hander
         private void filesList_Click(object sender, EventArgs e)
         {
@@ -82,6 +67,9 @@ namespace TechnikiInterentoweClient
             //RestClient rClient = new RestClient();
             //rClient.endPoint = "http://localhost:8080/UpdateContent/" + fileName + "/"+content;
             //string strResponse = rClient.makeRequest();
+
+            TabControl tc = (TabControl)tab.Parent;
+            tc.TabPages.Remove(tab);
         }
 
         /// <summary>
@@ -93,6 +81,7 @@ namespace TechnikiInterentoweClient
         {
             TabPage tp = new TabPage(title);
             tabs.TabPages.Add(tp);
+            tabs.SelectedTab = tp;
             tp.Dock = DockStyle.Fill;
 
             TextBox fileContentTB = new TextBox();
@@ -134,12 +123,11 @@ namespace TechnikiInterentoweClient
 
         private void createNewFileButton_Click(object sender, EventArgs e)
         {
-            //RestClient rClient = new RestClient();
-            //rClient.endPoint = "http://localhost:8080/TryCreate/" + newFileNameTextBox.Text;
-            //string strResponse = rClient.makeRequest();
+            RestClient rClient = new RestClient();
+            rClient.endPoint = "http://localhost:8080/TryCreate/";
+            string strResponse = rClient.makePostRequest(newFileNameTextBox.Text);
 
             OpenNewTabPage(newFileNameTextBox.Text, "");
         }
-
     }
 }
