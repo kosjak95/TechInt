@@ -15,7 +15,7 @@ export class FilesComponent {
 
   constructor(private filesService: FilesService) {
     this.filesService.getFiles()
-      .then(files => console.info(files));
+      .subscribe((res: any) => this.files = res.body);
   }
 
 }
