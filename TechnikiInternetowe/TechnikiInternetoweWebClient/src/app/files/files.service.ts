@@ -8,8 +8,6 @@ export class FilesService {
   constructor(private http: Http) { }
 
   getFiles() {
-    return this.http.get(`${this.baseURL}/Files/`)
-      .toPromise()
-      .then(response => response.json());
+    return this.http.get(`${this.baseURL}/Files/`);
   }
 }

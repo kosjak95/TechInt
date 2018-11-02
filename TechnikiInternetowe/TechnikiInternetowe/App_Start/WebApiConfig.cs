@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace TechnikiInternetowe
 {
@@ -13,6 +14,8 @@ namespace TechnikiInternetowe
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+            var corsAttr = new EnableCorsAttribute("http://localhost:4200", "*", "*");
+            config.EnableCors(corsAttr);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

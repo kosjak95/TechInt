@@ -1,4 +1,5 @@
 import { browser, element, by } from 'protractor';
+import { Locator } from 'protractor/built/locators';
 
 export class TechnikiInternetoweWebClientPage {
   navigateTo() {
@@ -6,6 +7,6 @@ export class TechnikiInternetoweWebClientPage {
   }
 
   getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+    return element(<Locator>by.css('app-root h1')).getText();
   }
 }
