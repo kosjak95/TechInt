@@ -1,3 +1,5 @@
-<p>
-  files works!
-</p>
+<mat-list *ngFor="let file of files">
+  <mat-list-item> {{file}} </mat-list-item>
+  <button mat-raised-button (click)="onClick(file)"> Click me </button>
+  <mat-divider></mat-divider>
+</mat-list>
