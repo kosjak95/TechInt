@@ -41,7 +41,9 @@ namespace TechnikiInternetowe.Controllers
         public static string GetListOfFilesOnServer()
         {
             DB_TechIntEntities db = new DB_TechIntEntities();
-            return new JavaScriptSerializer().Serialize(db.Files.Select(s => s.Name).ToList());
+            var dane = db.Files.Select(s => new { s.FileId, s.LastUpdateTs, s.Name, s.Version, s.IsEdited });
+
+            return new JavaScriptSerializer().Serialize(dane);
         }
 
         /// <summary>
