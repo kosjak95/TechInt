@@ -50,10 +50,6 @@ namespace TechnikiInterentoweClient
         }
 
         #region UI Event Hander
-        private void filesList_Click(object sender, EventArgs e)
-        {
-            
-        }
 
         private void filesList_Click(object sender, MouseEventArgs e)
         {
