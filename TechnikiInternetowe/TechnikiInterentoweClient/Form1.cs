@@ -8,13 +8,18 @@ namespace TechnikiInterentoweClient
 { 
     public partial class Form1 : Form
     {
+        private List<FileData> filesListFromJson;
+
         public Form1()
         {
             InitializeComponent();
 
             filesList.View = View.Details;
+            filesList.Columns.Add("File Id");
             filesList.Columns.Add("File Name");
             filesList.Columns.Add("Updated");
+            filesList.Columns.Add("Version");
+            filesList.Columns.Add("IsEdited");
             filesList.GridLines = true;
 
             RestClient rClient = new RestClient();
@@ -25,27 +30,22 @@ namespace TechnikiInterentoweClient
         }
 
         /// <summary>
-        /// Decode files' names from raw data, after request  
-        /// </summary>
-        /// <param name="rawData"></param>
-        /// <returns></returns>
-        private string[] DecodeFilesNames(string rawData)
-        {
-            rawData = rawData.Substring(2, rawData.Length - 4);
-            return rawData.Split(new string[] { "\",\"" }, StringSplitOptions.None);
-        }
-
-        /// <summary>
         /// Update list view with files name
         /// </summary>
         /// <param name="strResponse"></param>
         private void UpdateFilesList(string strResponse)
         {
-            var filesNames = DecodeFilesNames(strResponse);
+            filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 
-            foreach (string fileName in filesNames)
+            foreach (FileData file in filesListFromJson)
             {
-                filesList.Items.Add(new ListViewItem(fileName));
+                ListViewItem listViewItem = new ListViewItem();
+                listViewItem.SubItems[0].Text =  (filesListFromJson.IndexOf(file)+1).ToString();
+                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem,file.Name));
+                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.LastUpdateTs));
+                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.Version.ToString()));
+                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.IsEdited.ToString()));
+                filesList.Items.Add(listViewItem);
             }
         }
 
