@@ -75,7 +75,7 @@
             this.filesList.Size = new System.Drawing.Size(542, 390);
             this.filesList.TabIndex = 3;
             this.filesList.UseCompatibleStateImageBehavior = false;
-            this.filesList.Click += new System.EventHandler(this.filesList_Click);
+            this.filesList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.filesList_Click);
             // 
             // tabs
             // 

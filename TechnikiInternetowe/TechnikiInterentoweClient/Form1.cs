@@ -52,8 +52,13 @@ namespace TechnikiInterentoweClient
         #region UI Event Hander
         private void filesList_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void filesList_Click(object sender, MouseEventArgs e)
+        {
             int i = filesList.SelectedIndices[0];
-            string selectedRow = filesList.Items[i].Text;
+            string selectedRow = filesList.Items[i].SubItems[1].Text;
 
             SendReqToServerWithOpen(selectedRow);
         }
@@ -101,6 +106,12 @@ namespace TechnikiInterentoweClient
             saveButton.Text = "Save";
             saveButton.Dock = DockStyle.Top;
 
+            //Button closeButton = new Button();
+            //tp.Controls.Add(closeButton);
+            ////closeButton.Click += new EventHandler(SaveButtonOnClick);
+            //closeButton.Text = "Close";
+            //closeButton.Dock = DockStyle.Top;
+
             return tp;
         }
 
@@ -128,6 +139,11 @@ namespace TechnikiInterentoweClient
             if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
             {
                 OpenNewTabPage(newFileNameTextBox.Text, "");
+                rClient = new RestClient();
+                rClient.endPoint = "http://localhost:8080/Files/";
+                string strResponse = rClient.makeRequest();
+                filesList.Items.Clear();
+                UpdateFilesList(strResponse);
             }
             else
             {
