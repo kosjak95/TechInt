@@ -6,7 +6,6 @@ import { File } from './files.models';
 import { formatDate } from '@angular/common';
 
 
-
 @Component({
   selector: 'app-files',
   templateUrl: './files.component.html',
@@ -28,17 +27,6 @@ export class FilesComponent implements OnInit {
           console.log(this.filesData);
         },
         (error) => console.log(error));
-
-    //this.filesService.getFilesData()
-    //  .subscribe(
-    //    (res: File[]) => {
-    //      this.filesData = res;
-    //      this.dataSource = this.filesData;
-    //      console.log(this.filesData);
-    //    },
-    //    (error) => console.log(error));
-
-
   }
 
   title = 'Notes Editor';
@@ -48,14 +36,17 @@ export class FilesComponent implements OnInit {
   displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited'];
   files = [];
 
-  constructor(private filesService: FilesService, private matSnackBar: MatSnackBar) {
+  constructor(private filesService: FilesService, private matSnackBar: MatSnackBar) {}
 
+  editFileOnClick(fileName: string) {
+
+    var content;
+    this.filesService.getFileContent(fileName)
+      .subscribe(
+        (res: string) => {
+          content = res;
+          console.log(content);
+        },
+      (error) => console.log(error));
   }
-
-  onClick(file: any) {
-    this.matSnackBar.open(file, null, {
-      'duration': 2000
-    })
-  }
-
 }
