@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { FilesService } from './files.service';
-import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatSnackBar, MatTableDataSource, MatDialog } from '@angular/material';
 import { concat } from 'rxjs';
 import { File } from './files.models';
 import { formatDate } from '@angular/common';
+import { EditorComponent } from '../editor/editor.component'
 
 
 @Component({
@@ -33,10 +34,10 @@ export class FilesComponent implements OnInit {
   dataSource;
   filesData = [];
 
-  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited'];
+  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited', 'open'];
   files = [];
 
-  constructor(private filesService: FilesService, private matSnackBar: MatSnackBar) {}
+  constructor(private filesService: FilesService, private matSnackBar: MatSnackBar, private dialog: MatDialog) {}
 
   editFileOnClick(fileName: string) {
 
@@ -46,7 +47,35 @@ export class FilesComponent implements OnInit {
         (res: string) => {
           content = res;
           console.log(content);
+
+          let dialogRef = this.dialog.open(EditorComponent, {
+            height: '400px',
+            width: '600px',
+            data: {
+              dataKey: content
+            },
+          });
         },
       (error) => console.log(error));
+  }
+
+  openFileOnClick(fileName: string) {
+
+    var content;
+    this.filesService.getFileContent(fileName)
+      .subscribe(
+        (res: string) => {
+          content = res;
+          console.log(content);
+
+          let dialogRef = this.dialog.open(EditorComponent, {
+            height: '400px',
+            width: '600px',
+            data: {
+              dataKey: content
+            },
+          });
+        },
+        (error) => console.log(error));
   }
 }

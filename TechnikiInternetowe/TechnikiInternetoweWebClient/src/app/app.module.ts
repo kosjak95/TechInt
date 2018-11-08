@@ -9,11 +9,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FilesComponent } from './files/files.component';
 import { FilesService } from './files/files.service';
 import { HttpClientModule } from '@angular/common/http';
+import { EditorComponent } from './editor/editor.component'
 
 @NgModule({
   declarations: [
     AppComponent,
-    FilesComponent
+    FilesComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [FilesService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [EditorComponent]
 })
 export class AppModule { }
