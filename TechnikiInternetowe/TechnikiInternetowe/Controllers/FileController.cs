@@ -54,29 +54,24 @@ namespace TechnikiInternetowe.Controllers
         //[Route("OpenFile/{fileName}")]
         public static string GetFileContent(string project_path, string fileName)
         {
-            string contents = "";
+            string content = "";
             Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
-            List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
                 file = db.Files.Where(w => w.Name == fileName).First();
                 using (StreamReader sr = new StreamReader(project_path + @file.FileSrc + file.Name + ".txt"))
                 {
-                    contents = sr.ReadToEnd();
+                    content = sr.ReadToEnd();
                 }
-
-                KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, contents);
-                file_content.Add(test);
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.Write(e.Message);
-                contents = "We have some problem with open this file";
+                content = "We have some problem with open this file";
             }
 
-
-            return JsonConvert.SerializeObject(file_content[0]);;
+            return JsonConvert.SerializeObject(content);;
         }
 
         /// <summary>
