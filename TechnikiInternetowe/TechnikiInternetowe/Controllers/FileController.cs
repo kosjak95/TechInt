@@ -15,7 +15,6 @@ namespace TechnikiInternetowe.Controllers
         //private static string project_path { get; set; }
        // private DB_TechIntEntities db { get; set; }
 
-
         #region public methods
 
         /// <summary>
@@ -57,6 +56,7 @@ namespace TechnikiInternetowe.Controllers
             string content = "";
             Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
+            List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
                 file = db.Files.Where(w => w.Name == fileName).First();
@@ -64,6 +64,8 @@ namespace TechnikiInternetowe.Controllers
                 {
                     content = sr.ReadToEnd();
                 }
+                KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, content);
+                file_content.Add(test);
             }
             catch (Exception e)
             {
@@ -71,7 +73,7 @@ namespace TechnikiInternetowe.Controllers
                 content = "We have some problem with open this file";
             }
 
-            return JsonConvert.SerializeObject(content);;
+            return JsonConvert.SerializeObject(file_content[0]);
         }
 
         /// <summary>
