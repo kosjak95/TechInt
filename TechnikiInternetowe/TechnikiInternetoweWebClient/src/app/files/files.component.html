@@ -4,6 +4,7 @@
   <mat-divider></mat-divider>
 </mat-list>-->
 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <div>
   {{title}}
 </div>
@@ -36,10 +37,28 @@
       <td mat-cell *matCellDef="let element"> {{element['Version']}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="isEdited">
+    <!--<ng-container matColumnDef="isEdited">
       <th mat-header-cell *matHeaderCellDef> isEdited </th>
       <td mat-cell *matCellDef="let element"> <mat-checkbox [(ngModel)]="element.IsEdited" disabled="true"></mat-checkbox></td>
-    </ng-container>
+    </ng-container>-->
+
+      <ng-container matColumnDef="isEdited">
+          <th mat-header-cell *matHeaderCellDef> Edit </th>
+          <td mat-cell *matCellDef="let element">
+              <button mat-icon-button (click)="editFileOnClick(element.Name)">
+                  <mat-icon>edit</mat-icon>
+              </button>
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="open">
+          <th mat-header-cell *matHeaderCellDef> Open </th>
+          <td mat-cell *matCellDef="let element">
+              <button mat-icon-button (click)="openFileOnClick(element.Name)">
+                  <mat-icon>visibility</mat-icon>
+              </button>
+          </td>
+      </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -50,5 +69,4 @@
   <button mat-fab color="accent" (click)="OnNewItemClick()">+</button>
 
 </div>
-
 
