@@ -48,6 +48,7 @@ namespace TechnikiInternetowe.Communication
         }
 
         [HttpPost]
+        [HttpOptions]
         [Route("TryCreate")]
         public async Task<bool> PermissionOnCreateFile(string file_name)
         {

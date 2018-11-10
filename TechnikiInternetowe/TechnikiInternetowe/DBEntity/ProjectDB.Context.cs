@@ -26,5 +26,6 @@ namespace TechnikiInternetowe.DBEntity
         }
     
         public virtual DbSet<Files> Files { get; set; }
+        public virtual DbSet<FileContent> FileContent { get; set; }
     }
 }

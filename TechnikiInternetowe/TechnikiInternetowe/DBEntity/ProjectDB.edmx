@@ -17,8 +17,30 @@
           <Property Name="FileSrc" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsEdited" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 2015\PROJECTS\TECHINT\DB_TECHINT.MDF.dbo.FileContent' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="FileContent">
+          <Key>
+            <PropertyRef Name="FileId" />
+            <PropertyRef Name="IsEdited" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="FileContent" />
+          </Key>
+          <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsEdited" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="FileContent" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="DB_TechIntModelStoreContainer">
           <EntitySet Name="Files" EntityType="Self.Files" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileContent" EntityType="Self.FileContent" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [FileContent].[FileId] AS [FileId], 
+    [FileContent].[IsEdited] AS [IsEdited], 
+    [FileContent].[Name] AS [Name], 
+    [FileContent].[FileContent] AS [FileContent]
+    FROM [dbo].[FileContent] AS [FileContent]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -38,7 +60,20 @@
         </EntityType>
         <EntityContainer Name="DB_TechIntEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Files" EntityType="Self.Files" />
+          <EntitySet Name="FileContent" EntityType="DB_TechIntModel.FileContent" />
         </EntityContainer>
+        <EntityType Name="FileContent">
+          <Key>
+            <PropertyRef Name="FileId" />
+            <PropertyRef Name="IsEdited" />
+            <PropertyRef Name="FileContent1" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsEdited" Type="Boolean" Nullable="false" />
+          <Property Name="FileContent1" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -55,6 +90,16 @@
                 <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileContent">
+            <EntityTypeMapping TypeName="DB_TechIntModel.FileContent">
+              <MappingFragment StoreEntitySet="FileContent">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FileContent1" ColumnName="FileContent" />
+                <ScalarProperty Name="IsEdited" ColumnName="IsEdited" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

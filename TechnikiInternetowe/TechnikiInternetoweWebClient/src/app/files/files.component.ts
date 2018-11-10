@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core'
 import { FilesService } from './files.service';
-import { File } from './files.models';
+import { File, FileContent } from './files.models';
 import { formatDate, KeyValue, KeyValuePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EditorComponent } from '../editor/editor.component';
+import { concat } from 'rxjs';
 
 
 @Component({
@@ -33,8 +34,9 @@ export class FilesComponent implements OnInit {
   title = 'Notes Editor';
   dataSource;
   filesData = [];
+  fileName: string;
 
-  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited', 'open'];
+  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited'];
   files = [];
 
 
@@ -49,46 +51,48 @@ export class FilesComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
+        this.fileName = result;
+
+        this.filesService.tryCreate({ file_name: this.fileName })
+          .subscribe(
+            resp => {
+              console.log(resp);
+            },
+            (error) => console.log(error));
+
+
+
       });
     }
   }
 
-  openFileOnClick(fileName: string) {
+  //openFileOnClick(fileName: string) {
 
-    this.filesService.getFileContent(fileName)
-      .subscribe(
-        (res: string) => {
-        console.log(res);
+  //  this.filesService.getFileContent(fileName)
+  //    .subscribe(
+  //    (res: FileContent) => {
+  //      console.log(res);
 
-          let dialogRef = this.dialog.open(EditorComponent, {
-            height: '300px',
-            width: '700px',
-            data: {
-              fileName: fileName,
-              content: res,
-              isItEdit: false
-            },
-          });
-        },
-        (error) => console.log(error));
-  }
+  //      let dialogRef = this.dialog.open(EditorComponent, {
+  //        height: '450px',
+  //        width: '700px',
+  //        data: res,
+  //        });
+  //      },
+  //      (error) => console.log(error));
+  //}
 
   editFileOnClick(fileName: string) {
 
     this.filesService.getFileContent(fileName)
       .subscribe(
-        (res: string) => {
-          var content = res;
-          console.log(content);
+        (res: FileContent) => {
+          console.log(res);
 
           let dialogRef = this.dialog.open(EditorComponent, {
-            height: '300px',
+            height: '450px',
             width: '700px',
-            data: {
-              fileName: fileName,
-              content: content,
-              isItEdit: true
-            },
+            data: res,
           });
         },
         (error) => console.log(error));
@@ -103,7 +107,9 @@ export class DialogOverviewExampleDialog {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: File) { }
+    @Inject(MAT_DIALOG_DATA) public data: string) { }
+
+  public name: string;
 
   onNoClick(): void {
     this.dialogRef.close();

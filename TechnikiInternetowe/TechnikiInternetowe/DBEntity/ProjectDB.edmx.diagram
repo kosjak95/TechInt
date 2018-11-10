@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="561f17878d0946e1aee963362dcb60e8" Name="Diagram1">
         <EntityTypeShape EntityType="DB_TechIntModel.Files" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_TechIntModel.FileContent" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

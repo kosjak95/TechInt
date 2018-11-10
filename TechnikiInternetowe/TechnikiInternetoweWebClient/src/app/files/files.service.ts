@@ -19,8 +19,9 @@ export class FilesService {
     return this.http.get(`${this.baseURL}/OpenFile/${fileName}`);
   }
 
-  tryCreate(fileName: string) {
-    return this.http.post(`${this.baseURL}/TryCreate`, fileName);
+  tryCreate(data: { file_name: string }) {
+    console.log(data);
+    return this.http.post(`${this.baseURL}/TryCreate`, data);
   }
 
   updateFileContent(fileName: string, content: string) {

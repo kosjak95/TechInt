@@ -19,7 +19,7 @@ namespace TechnikiInternetowe.Controllers
     public class FileController : Controller
     {
         //private static string project_path { get; set; }
-       // private DB_TechIntEntities db { get; set; }
+        // private DB_TechIntEntities db { get; set; }
 
         #region public methods
 
@@ -62,7 +62,8 @@ namespace TechnikiInternetowe.Controllers
             string content = "";
             Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
-            List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
+            FileContent file_content = null;
+            //List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
                 file = db.Files.Where(w => w.Name == fileName).First();
@@ -70,8 +71,9 @@ namespace TechnikiInternetowe.Controllers
                 {
                     content = sr.ReadToEnd();
                 }
-                KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, content);
-                file_content.Add(test);
+                //KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, content);
+                //file_content.Add(test);
+                file_content = new FileContent() { FileId = file.FileId, Name = file.Name, IsEdited = file.IsEdited, FileContent1 = content };
             }
             catch (Exception e)
             {
@@ -79,7 +81,7 @@ namespace TechnikiInternetowe.Controllers
                 content = "We have some problem with open this file";
             }
 
-            return JsonConvert.SerializeObject(file_content[0]);
+            return JsonConvert.SerializeObject(file_content);
         }
 
         /// <summary>
@@ -163,7 +165,8 @@ namespace TechnikiInternetowe.Controllers
             try
             {
                 System.IO.File.Create(path).Dispose();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 System.Diagnostics.Debug.Write(e.Message);
                 return false;
@@ -181,7 +184,8 @@ namespace TechnikiInternetowe.Controllers
 
                 newFile.Name = file_name;
                 newFile.CreatedTs = DateTime.Now;
-                newFile.FileSrc =  @"App_Data\Files\";
+                newFile.LastUpdateTs = DateTime.Now;
+                newFile.FileSrc = @"App_Data\Files\";
                 newFile.Version = "1";
                 newFile.IsEdited = true;
                 db.Files.Add(newFile);

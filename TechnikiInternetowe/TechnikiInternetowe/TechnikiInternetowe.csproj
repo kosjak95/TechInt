@@ -168,6 +168,9 @@
     <Compile Include="Communication\ExternalAdapterController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HelloController.cs" />
+    <Compile Include="DBEntity\FileContent.cs">
+      <DependentUpon>ProjectDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

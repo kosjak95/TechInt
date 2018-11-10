@@ -5,3 +5,11 @@ export interface File {
   lastUpdateTs: string;
   isEdited: boolean;
 }
+
+
+export interface FileContent {
+  Name: string;
+  FileContent1: string;
+  IsEdited: boolean;
+  FileId: number;
+}

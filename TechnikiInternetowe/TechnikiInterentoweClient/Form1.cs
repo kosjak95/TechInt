@@ -122,9 +122,10 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
 
-            KeyValuePair<int, string> keyValuePair = JsonConvert.DeserializeObject<KeyValuePair<int, string>>(strResponse);
+            FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
+            //KeyValuePair<int, string> keyValuePair = JsonConvert.DeserializeObject<KeyValuePair<int, string>>(strResponse);
 
-            OpenNewTabPage(fileNameWithoutFormat, keyValuePair.Value);
+            OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1);
         }
         #endregion
 

@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { FilesService } from '../files/files.service';
 import { concat } from 'rxjs';
+import { FileContent } from '../files/files.models';
 
 @Component({
   selector: 'app-editor',
@@ -12,19 +13,20 @@ import { concat } from 'rxjs';
 export class EditorComponent implements OnInit {
 
   ngOnInit(): void {
-    this.disableModify = !this.data.isItEdit;
-    this.fileTextArea = this.data.content;
-    console.log("editor:" + this.data.content)
+    this.name = this.data.Name;
+    this.disableModify = this.data.IsEdited;
+    this.fileTextArea = this.data.FileContent1;
   }
 
+  name: string;
   disableModify: boolean;
   fileTextArea: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private filesService: FilesService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: FileContent, private filesService: FilesService) { }
 
   SaveFileOnClick() {
-    console.log(this.fileTextArea);
-    this.filesService.updateFileContent(this.data.fileName, this.fileTextArea)
+    console.log(this.data);
+    this.filesService.updateFileContent(this.data.Name, this.fileTextArea)
       .subscribe(
       resp => {
         console.log(resp);
