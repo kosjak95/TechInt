@@ -33,7 +33,7 @@ namespace TechnikiInterentoweClient
         /// Update list view with files name
         /// </summary>
         /// <param name="strResponse"></param>
-        private void UpdateFilesList(string strResponse)
+        private async void UpdateFilesList(string strResponse)
         {
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 

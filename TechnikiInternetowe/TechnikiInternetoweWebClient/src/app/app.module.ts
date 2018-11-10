@@ -6,14 +6,15 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { FilesComponent } from './files/files.component';
+import { FilesComponent, DialogOverviewExampleDialog } from './files/files.component';
 import { FilesService } from './files/files.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FilesComponent
+    FilesComponent,
+    DialogOverviewExampleDialog,       
   ],
   imports: [
     BrowserModule,
@@ -25,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [FilesService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DialogOverviewExampleDialog]
 })
 export class AppModule { }
