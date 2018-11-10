@@ -62,9 +62,10 @@ export class FilesComponent implements OnInit {
           console.log(content);
 
           let dialogRef = this.dialog.open(EditorComponent, {
-            height: '500px',
+            height: '300px',
             width: '700px',
             data: {
+              fileName: fileName,
               content: content,
               isItEdit: false
             },
@@ -82,9 +83,10 @@ export class FilesComponent implements OnInit {
           console.log(content);
 
           let dialogRef = this.dialog.open(EditorComponent, {
-            height: '500px',
+            height: '300px',
             width: '700px',
             data: {
+              fileName: fileName,
               content: content,
               isItEdit: true
             },
