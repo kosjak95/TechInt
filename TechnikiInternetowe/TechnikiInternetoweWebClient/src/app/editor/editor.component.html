@@ -1,4 +1,9 @@
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<button mat-icon-button disabled={{disableModify}} (click)="SaveFileOnClick()">
+  <mat-icon>save</mat-icon>
+</button><br />
+
+<input matInput style="width: auto; height:inherit ;" >
 {{data.content}}
