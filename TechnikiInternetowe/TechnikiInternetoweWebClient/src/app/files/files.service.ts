@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class FilesService {
@@ -24,6 +23,9 @@ export class FilesService {
     return this.http.post(`${this.baseURL}/TryCreate`, fileName);
   }
 
-  updateContent() { }
-}
+  updateFileContent(fileName: string, content: string) {
 
+    return this.http.post(`${this.baseURL}/UpdateContentReqStruct`, { 'FileName': fileName, 'FileContent': content });
+  }
+
+}

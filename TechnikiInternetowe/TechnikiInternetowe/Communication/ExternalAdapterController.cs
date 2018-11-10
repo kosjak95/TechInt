@@ -60,5 +60,13 @@ namespace TechnikiInternetowe.Communication
         {
             return await Task.Run(() => FileController.UpdateFileContent(project_path, file_name, file_data));
         }
+
+        //[HttpOptions]
+        [HttpPost]
+        [Route("UpdateContentReqStruct")]
+        public async Task<bool> UpdateFileContentReqStruct(UpdateFileContentReq req)
+        {
+            return await Task.Run(() => FileController.UpdateFileContent(project_path, req.FileName, req.FileContent));
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core'
 import { FilesService } from './files.service';
 import { File } from './files.models';
-import { formatDate } from '@angular/common';
+import { formatDate, KeyValue, KeyValuePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EditorComponent } from '../editor/editor.component';
 
@@ -58,15 +58,14 @@ export class FilesComponent implements OnInit {
     this.filesService.getFileContent(fileName)
       .subscribe(
         (res: string) => {
-          var content = res;
-          console.log(content);
+        console.log(res);
 
           let dialogRef = this.dialog.open(EditorComponent, {
             height: '300px',
             width: '700px',
             data: {
               fileName: fileName,
-              content: content,
+              content: res,
               isItEdit: false
             },
           });

@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace TechnikiInternetowe.Controllers
 {
+    public class UpdateFileContentReq
+    {
+        public string FileName { get; set; }
+        public string FileContent { get; set; }
+    }
+
     public class FileController : Controller
     {
         //private static string project_path { get; set; }
