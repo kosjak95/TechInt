@@ -4,7 +4,6 @@ import { File, FileContent } from './files.models';
 import { formatDate, KeyValue, KeyValuePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EditorComponent } from '../editor/editor.component';
-import { concat } from 'rxjs';
 
 
 @Component({
@@ -60,10 +59,10 @@ export class FilesComponent implements OnInit {
           .subscribe(
             resp => {
               this.InitFilesList();
-            },
-            (error) => {
-              this.InitFilesList();
-            });
+              this.editFileOnClick(this.fileName);
+          },
+          (error) => {
+            console.log(error);});
       });
     }
   }
@@ -73,13 +72,14 @@ export class FilesComponent implements OnInit {
     this.filesService.getFileContent(fileName)
       .subscribe(
         (res: FileContent) => {
-          console.log(res);
 
           let dialogRef = this.dialog.open(EditorComponent, {
             height: '450px',
             width: '700px',
             data: res,
           });
+
+          dialogRef.componentInstance.dialogRef = dialogRef;
         },
         (error) => console.log(error));
   }

@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core'
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core'
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { FilesService } from '../files/files.service';
 import { FileContent } from '../files/files.models';
 
@@ -9,7 +9,7 @@ import { FileContent } from '../files/files.models';
 })
 
 
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit{
 
   ngOnInit(): void {
     this.name = this.data.Name;
@@ -20,14 +20,17 @@ export class EditorComponent implements OnInit {
   name: string;
   disableModify: boolean;
   fileTextArea: string;
+  public dialogRef: MatDialogRef<EditorComponent,any>;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: FileContent, private filesService: FilesService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: FileContent,
+              private filesService: FilesService) { }
 
   SaveFileOnClick() {
     this.filesService.updateFileContent(this.data.Name, this.fileTextArea)
       .subscribe(
       resp => {
+        this.dialogRef.close();
         },
-        (error) => console.log(error));
+      (error) => console.log(error));
   }
 }
