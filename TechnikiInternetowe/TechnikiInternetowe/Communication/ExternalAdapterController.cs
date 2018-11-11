@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,12 +49,22 @@ namespace TechnikiInternetowe.Communication
         }
 
         [HttpPost]
-        [HttpOptions]
         [Route("TryCreate")]
         public async Task<bool> PermissionOnCreateFile(string file_name)
         {
             return await Task.Run(() => FileController.PermissionOnCreateFile(project_path, file_name));
         }
+
+        [System.Web.Http.HttpOptions]
+        [Route("Cludge")]
+        public async Task<string> PermissionOnCreateFile1([System.Web.Http.FromBody] string file_name)
+        {
+            if (file_name == null)
+                return JsonConvert.SerializeObject(false);
+
+            return await Task.Run(() => JsonConvert.SerializeObject(FileController.PermissionOnCreateFile(project_path, file_name)));
+        }
+
 
         [HttpPost]
         [Route("UpdateContent")]
@@ -62,7 +73,6 @@ namespace TechnikiInternetowe.Communication
             return await Task.Run(() => FileController.UpdateFileContent(project_path, file_name, file_data));
         }
 
-        //[HttpOptions]
         [HttpPost]
         [Route("UpdateContentReqStruct")]
         public async Task<bool> UpdateFileContentReqStruct(UpdateFileContentReq req)

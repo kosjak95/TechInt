@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -21,7 +21,15 @@ export class FilesService {
 
   tryCreate(data: { file_name: string }) {
     console.log(data);
-    return this.http.post(`${this.baseURL}/TryCreate`, data);
+    //return this.http.post(`${this.baseURL}/Route`, data);
+
+    const body = JSON.stringify(data);
+    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<boolean>(`${this.baseURL}/Cludge`, body, {
+      headers: headerOptions
+    });
+
+
   }
 
   updateFileContent(fileName: string, content: string) {

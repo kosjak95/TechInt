@@ -18,17 +18,7 @@ export class FilesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.filesService.getFiles()
-      .subscribe(
-        (res: File[]) => {
-          this.filesData = res;
-          this.filesData.forEach(x => {
-            x.LastUpdateTs = formatDate(x.LastUpdateTs.substring(6, 19), 'dd-MM-yyyy hh:mm:ss a', 'en-US');
-          })
-          this.dataSource = this.filesData;
-          console.log(this.filesData);
-        },
-        (error) => console.log(error));
+    this.InitFilesList();
   }
 
   title = 'Notes Editor';
@@ -41,6 +31,22 @@ export class FilesComponent implements OnInit {
 
 
   constructor(private filesService: FilesService, private dialog: MatDialog) { }
+
+  InitFilesList(): void {
+    this.files = [];
+    console.log("init");
+    this.filesService.getFiles()
+      .subscribe(
+        (res: File[]) => {
+          this.filesData = res;
+          this.filesData.forEach(x => {
+            x.LastUpdateTs = formatDate(x.LastUpdateTs.substring(6, 19), 'dd-MM-yyyy hh:mm:ss a', 'en-US');
+          })
+          this.dataSource = this.filesData;
+          console.log(this.filesData);
+        },
+        (error) => console.log(error));
+  }
 
   OnNewItemClick() {
     {
@@ -57,11 +63,12 @@ export class FilesComponent implements OnInit {
           .subscribe(
             resp => {
               console.log(resp);
+              this.InitFilesList();
             },
-            (error) => console.log(error));
-
-
-
+            (error) => {
+              console.log(error);
+              this.InitFilesList();
+            });
       });
     }
   }
