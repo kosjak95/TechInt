@@ -81,11 +81,18 @@ export class FilesComponent implements OnInit {
             data: res,
           });
           dialogRef.afterClosed().subscribe(name => {
-            //TODO: zwolnienie edytowanego pliku, nowa funkcja na serwerze
+            this.releaseFile(fileName);
             this.InitFilesList();
           });
           dialogRef.componentInstance.dialogRef = dialogRef;
         },
+        (error) => console.log(error));
+  }
+
+  releaseFile(fileName: string) {
+    this.filesService.releaseFile(fileName)
+      .subscribe(
+        (res: boolean) => {},
         (error) => console.log(error));
   }
 }

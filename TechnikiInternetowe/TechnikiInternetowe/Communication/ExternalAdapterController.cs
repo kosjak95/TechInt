@@ -76,5 +76,12 @@ namespace TechnikiInternetowe.Communication
         {
             return await Task.Run(() => JsonConvert.SerializeObject(FileController.UpdateFileContent(project_path, fileName,content)));
         }
+
+        [System.Web.Http.HttpOptions]
+        [Route("ReleaseFileCludge")]
+        public async Task<string> ReleaseFile([System.Web.Http.FromBody] string fileName)
+        {
+            return await Task.Run(() => JsonConvert.SerializeObject(FileController.ReleaseFile(fileName)));
+        }
     }
 }

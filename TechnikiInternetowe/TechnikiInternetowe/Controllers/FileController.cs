@@ -97,7 +97,6 @@ namespace TechnikiInternetowe.Controllers
         }
 
         /// <summary>
-        ///  @TODO: IN PROGRESS
         /// </summary>
         /// <param name="file_data"></param>
         /// <returns></returns>
@@ -125,6 +124,33 @@ namespace TechnikiInternetowe.Controllers
             }
 
             UpdateDataAtDb(file);
+            return true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        /// //[HttpOptions]
+        //[Route("ReleaseFileCludge")]
+        public static bool ReleaseFile(string fileName)
+        {
+            try
+            {
+                DB_TechIntEntities db = new DB_TechIntEntities();
+                Files file = db.Files.Where(w => w.Name == fileName).Single();
+                if (file == null)
+                    return false;
+                file.IsEdited = false;
+                db.Entry(file).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                return false;
+            }
+
             return true;
         }
 

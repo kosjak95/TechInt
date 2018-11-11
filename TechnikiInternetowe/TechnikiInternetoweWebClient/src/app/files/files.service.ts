@@ -36,4 +36,13 @@ export class FilesService {
       headers: headerOptions
     });
   }
+
+  releaseFile(fileName: string) {
+
+    const body = JSON.stringify({ fileName });
+    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<boolean>(`${this.baseURL}/ReleaseFileCludge`, body, {
+      headers: headerOptions
+    });
+  }
 }
