@@ -49,7 +49,7 @@ export class FilesComponent implements OnInit {
     {
       const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
         width: '250px',
-        data: { name: "test", vesion: "next" }
+        data: { name: "" }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -59,7 +59,9 @@ export class FilesComponent implements OnInit {
           .subscribe(
             resp => {
               this.InitFilesList();
-              this.editFileOnClick(this.fileName);
+              if (resp == true) {
+                this.editFileOnClick(this.fileName);
+              }
           },
           (error) => {
             console.log(error);});
@@ -78,7 +80,10 @@ export class FilesComponent implements OnInit {
             width: '700px',
             data: res,
           });
-
+          dialogRef.afterClosed().subscribe(name => {
+            //TODO: zwolnienie edytowanego pliku, nowa funkcja na serwerze
+            this.InitFilesList();
+          });
           dialogRef.componentInstance.dialogRef = dialogRef;
         },
         (error) => console.log(error));

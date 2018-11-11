@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using TechnikiInternetowe.DBEntity;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Data.Entity;
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -56,7 +57,6 @@ namespace TechnikiInternetowe.Controllers
             Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
             FileContent file_content = null;
-            //List<KeyValuePair<int, string>> file_content = new List<KeyValuePair<int, string>>();
             try
             {
                 file = db.Files.Where(w => w.Name == fileName).First();
@@ -64,9 +64,11 @@ namespace TechnikiInternetowe.Controllers
                 {
                     content = sr.ReadToEnd();
                 }
-                //KeyValuePair<int, string> test = new KeyValuePair<int, string>(file.FileId, content);
-                //file_content.Add(test);
                 file_content = new FileContent() { FileId = file.FileId, Name = file.Name, IsEdited = file.IsEdited, FileContent1 = content };
+                file.IsEdited = true;
+                db.Entry(file).State = EntityState.Modified;
+                db.SaveChanges();
+
             }
             catch (Exception e)
             {
@@ -118,11 +120,11 @@ namespace TechnikiInternetowe.Controllers
             }
             catch (IOException e)
             {
-
                 System.Diagnostics.Debug.Write(e.Message);
                 return false;
             }
 
+            UpdateDataAtDb(file);
             return true;
         }
 
@@ -182,8 +184,28 @@ namespace TechnikiInternetowe.Controllers
                 newFile.LastUpdateTs = DateTime.Now;
                 newFile.FileSrc = @"App_Data\Files\";
                 newFile.Version = "1";
-                newFile.IsEdited = true;
+                newFile.IsEdited = false;
                 db.Files.Add(newFile);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool UpdateDataAtDb(Files file)
+        {
+            try
+            {
+                DB_TechIntEntities db = new DB_TechIntEntities();
+                file.LastUpdateTs = DateTime.Now;
+                file.Version = (Int32.Parse(file.Version) + 1).ToString();
+                file.IsEdited = false;
+                db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
             }
             catch (Exception e)
