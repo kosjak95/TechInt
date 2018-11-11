@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { FilesService } from '../files/files.service';
-import { concat } from 'rxjs';
 import { FileContent } from '../files/files.models';
 
 @Component({
@@ -25,11 +24,9 @@ export class EditorComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: FileContent, private filesService: FilesService) { }
 
   SaveFileOnClick() {
-    console.log(this.data);
     this.filesService.updateFileContent(this.data.Name, this.fileTextArea)
       .subscribe(
       resp => {
-        console.log(resp);
         },
         (error) => console.log(error));
   }

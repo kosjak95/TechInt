@@ -6,16 +6,9 @@ using System.Web.Script.Serialization;
 using TechnikiInternetowe.DBEntity;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace TechnikiInternetowe.Controllers
 {
-    public class UpdateFileContentReq
-    {
-        public string FileName { get; set; }
-        public string FileContent { get; set; }
-    }
-
     public class FileController : Controller
     {
         //private static string project_path { get; set; }
@@ -110,6 +103,8 @@ namespace TechnikiInternetowe.Controllers
         //[Route("UpdateContent")]
         public static bool UpdateFileContent(string project_path, string file_name, string file_data)
         {
+            if (file_name == null || file_data == null)
+                return false;
             DB_TechIntEntities db = new DB_TechIntEntities();
             Files file = db.Files.Where(w => w.Name == file_name).Single();
             if (file == null)

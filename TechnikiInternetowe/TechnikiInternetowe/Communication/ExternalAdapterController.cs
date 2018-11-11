@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using TechnikiInternetowe.Controllers;
-using TechnikiInternetowe.DBEntity;
+
 
 namespace TechnikiInternetowe.Communication
 {
@@ -73,11 +70,11 @@ namespace TechnikiInternetowe.Communication
             return await Task.Run(() => FileController.UpdateFileContent(project_path, file_name, file_data));
         }
 
-        [HttpPost]
-        [Route("UpdateContentReqStruct")]
-        public async Task<bool> UpdateFileContentReqStruct(UpdateFileContentReq req)
+        [System.Web.Http.HttpOptions]
+        [Route("UpdateContentCludge")]
+        public async Task<string> UpdateFileContentReqStruct([System.Web.Http.FromBody] string fileName, string content)
         {
-            return await Task.Run(() => FileController.UpdateFileContent(project_path, req.FileName, req.FileContent));
+            return await Task.Run(() => JsonConvert.SerializeObject(FileController.UpdateFileContent(project_path, fileName,content)));
         }
     }
 }

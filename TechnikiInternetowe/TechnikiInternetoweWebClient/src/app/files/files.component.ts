@@ -34,7 +34,6 @@ export class FilesComponent implements OnInit {
 
   InitFilesList(): void {
     this.files = [];
-    console.log("init");
     this.filesService.getFiles()
       .subscribe(
         (res: File[]) => {
@@ -43,7 +42,6 @@ export class FilesComponent implements OnInit {
             x.LastUpdateTs = formatDate(x.LastUpdateTs.substring(6, 19), 'dd-MM-yyyy hh:mm:ss a', 'en-US');
           })
           this.dataSource = this.filesData;
-          console.log(this.filesData);
         },
         (error) => console.log(error));
   }
@@ -56,38 +54,19 @@ export class FilesComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
         this.fileName = result;
 
         this.filesService.tryCreate({ file_name: this.fileName })
           .subscribe(
             resp => {
-              console.log(resp);
               this.InitFilesList();
             },
             (error) => {
-              console.log(error);
               this.InitFilesList();
             });
       });
     }
   }
-
-  //openFileOnClick(fileName: string) {
-
-  //  this.filesService.getFileContent(fileName)
-  //    .subscribe(
-  //    (res: FileContent) => {
-  //      console.log(res);
-
-  //      let dialogRef = this.dialog.open(EditorComponent, {
-  //        height: '450px',
-  //        width: '700px',
-  //        data: res,
-  //        });
-  //      },
-  //      (error) => console.log(error));
-  //}
 
   editFileOnClick(fileName: string) {
 

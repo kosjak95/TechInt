@@ -20,21 +20,20 @@ export class FilesService {
   }
 
   tryCreate(data: { file_name: string }) {
-    console.log(data);
-    //return this.http.post(`${this.baseURL}/Route`, data);
 
     const body = JSON.stringify(data);
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<boolean>(`${this.baseURL}/Cludge`, body, {
       headers: headerOptions
     });
-
-
   }
 
   updateFileContent(fileName: string, content: string) {
 
-    return this.http.post(`${this.baseURL}/UpdateContentReqStruct`, { 'FileName': fileName, 'FileContent': content });
+    const body = JSON.stringify({ fileName, content });
+    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<boolean>(`${this.baseURL}/UpdateContentCludge`, body, {
+      headers: headerOptions
+    });
   }
-
 }
