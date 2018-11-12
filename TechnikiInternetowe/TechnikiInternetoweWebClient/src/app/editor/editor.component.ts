@@ -33,4 +33,18 @@ export class EditorComponent implements OnInit{
         },
       (error) => console.log(error));
   }
+
+  ngOnDestroy(): void {
+    console.log("window closed");
+
+    if (!this.disableModify)
+      this.releaseFile(name)
+  }
+
+  releaseFile(fileName: string) {
+    this.filesService.releaseFile(fileName)
+      .subscribe(
+        (res: boolean) => { },
+        (error) => console.log(error));
+  }
 }

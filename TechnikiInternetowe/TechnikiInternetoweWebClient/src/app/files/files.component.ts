@@ -81,18 +81,11 @@ export class FilesComponent implements OnInit {
             data: res,
           });
           dialogRef.afterClosed().subscribe(name => {
-            this.releaseFile(fileName);
+            //this.releaseFile(fileName);
             this.InitFilesList();
           });
           dialogRef.componentInstance.dialogRef = dialogRef;
         },
-        (error) => console.log(error));
-  }
-
-  releaseFile(fileName: string) {
-    this.filesService.releaseFile(fileName)
-      .subscribe(
-        (res: boolean) => {},
         (error) => console.log(error));
   }
 }
