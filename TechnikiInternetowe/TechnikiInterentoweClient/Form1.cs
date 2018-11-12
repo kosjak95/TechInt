@@ -5,7 +5,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 namespace TechnikiInterentoweClient
-{ 
+{
     public partial class Form1 : Form
     {
         private List<FileData> filesListFromJson;
@@ -41,8 +41,8 @@ namespace TechnikiInterentoweClient
             foreach (FileData file in filesListFromJson)
             {
                 ListViewItem listViewItem = new ListViewItem();
-                listViewItem.SubItems[0].Text =  (filesListFromJson.IndexOf(file)+1).ToString();
-                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem,file.Name));
+                listViewItem.SubItems[0].Text = (filesListFromJson.IndexOf(file) + 1).ToString();
+                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.Name));
                 listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.LastUpdateTs));
                 listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.Version.ToString()));
                 listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.IsEdited.ToString()));
@@ -79,7 +79,7 @@ namespace TechnikiInterentoweClient
         /// </summary>
         /// <param name="title">title of TabPage</param>
         /// <param name="fileContent">text to set inside TextBox</param>
-        private TabPage OpenNewTabPage(string title, string fileContent)
+        private TabPage OpenNewTabPage(string title, string fileContent, bool isEdited)
         {
             TabPage tp = new TabPage(title);
             tabs.TabPages.Add(tp);
@@ -97,12 +97,14 @@ namespace TechnikiInterentoweClient
             tp.Controls.Add(fileContentTB);
             fileContentTB.Text = fileContent;
 
-            Button saveButton = new Button();
-            tp.Controls.Add(saveButton);
-            saveButton.Click += new EventHandler(SaveButtonOnClick);
-            saveButton.Text = "Save";
-            saveButton.Dock = DockStyle.Top;
-
+            if (!isEdited)
+            {
+                Button saveButton = new Button();
+                tp.Controls.Add(saveButton);
+                saveButton.Click += new EventHandler(SaveButtonOnClick);
+                saveButton.Text = "Save";
+                saveButton.Dock = DockStyle.Top;
+            }
             //Button closeButton = new Button();
             //tp.Controls.Add(closeButton);
             ////closeButton.Click += new EventHandler(SaveButtonOnClick);
@@ -126,7 +128,7 @@ namespace TechnikiInterentoweClient
             FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
             //KeyValuePair<int, string> keyValuePair = JsonConvert.DeserializeObject<KeyValuePair<int, string>>(strResponse);
 
-            OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1);
+            OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
         #endregion
 
@@ -136,7 +138,7 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/TryCreate/";
             if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
             {
-                OpenNewTabPage(newFileNameTextBox.Text, "");
+                OpenNewTabPage(newFileNameTextBox.Text, "", false);
                 rClient = new RestClient();
                 rClient.endPoint = "http://localhost:8080/Files/";
                 string strResponse = rClient.makeRequest();
@@ -151,10 +153,12 @@ namespace TechnikiInterentoweClient
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if(e.TabPageIndex == 0)
+            if (e.TabPageIndex == 0)
             {
                 if (rClient == null)
+                {
                     rClient = new RestClient();
+                }
 
                 filesList.Items.Clear();
                 rClient.endPoint = "http://localhost:8080/Files/";
@@ -162,6 +166,35 @@ namespace TechnikiInterentoweClient
 
                 UpdateFilesList(strResponse);
             }
+        }
+
+        private void tabs_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                return;
+            }
+
+            TabControl page = (TabControl)sender;
+            if (page.SelectedTab.AccessibilityObject.Name.Equals("KK Reader"))
+            {
+                return;
+            }
+
+            if (page.SelectedTab.Controls.Count <= 1)
+            {
+                page.SelectedTab.Dispose();
+                return;
+            }
+
+            RestClient restClient = new RestClient();
+            rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
+
+            string fileName = page.SelectedTab.AccessibilityObject.Name;
+            rClient.makePostRequest(new { fileName });
+            page.SelectedTab.Dispose();
+
+
         }
     }
 }

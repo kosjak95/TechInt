@@ -30,6 +30,10 @@ namespace TechnikiInterentoweClient
                 {
                     if (page.AccessibilityObject.Name.Equals("KK Reader"))
                         continue;
+
+                    if (page.Controls.Count <= 1)
+                        continue;
+
                     string fileName = page.AccessibilityObject.Name;
                     rClient.makePostRequest(new { fileName });
 
@@ -109,6 +113,7 @@ namespace TechnikiInterentoweClient
             this.tabs.Size = new System.Drawing.Size(557, 336);
             this.tabs.TabIndex = 5;
             this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
+            this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
             // 
             // Form1
             // 
