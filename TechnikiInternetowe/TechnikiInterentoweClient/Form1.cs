@@ -9,6 +9,7 @@ namespace TechnikiInterentoweClient
     public partial class Form1 : Form
     {
         private List<FileData> filesListFromJson;
+        private RestClient rClient;
 
         public Form1()
         {
@@ -22,7 +23,7 @@ namespace TechnikiInterentoweClient
             filesList.Columns.Add("IsEdited");
             filesList.GridLines = true;
 
-            RestClient rClient = new RestClient();
+            rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/Files/";
             string strResponse = rClient.makeRequest();
 
@@ -145,6 +146,21 @@ namespace TechnikiInterentoweClient
             else
             {
                 MessageBox.Show("Sorry You can't create this file");
+            }
+        }
+
+        private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if(e.TabPageIndex == 0)
+            {
+                if (rClient == null)
+                    rClient = new RestClient();
+
+                filesList.Items.Clear();
+                rClient.endPoint = "http://localhost:8080/Files/";
+                string strResponse = rClient.makeRequest();
+
+                UpdateFilesList(strResponse);
             }
         }
     }
