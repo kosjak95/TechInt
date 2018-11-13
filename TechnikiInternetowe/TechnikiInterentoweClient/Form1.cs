@@ -47,14 +47,6 @@ namespace TechnikiInterentoweClient
 
         #region UI Event Hander
 
-        private void filesList_Click(object sender, MouseEventArgs e)
-        {
-            //int i = filesList.SelectedIndices[0];
-            //string selectedRow = filesList.Items[i].SubItems[1].Text;
-
-            //SendReqToServerWithOpen(selectedRow);
-        }
-
         private void SaveButtonOnClick(object sender, EventArgs e)
         {
             TabPage tab = (TabPage)((Button)sender).Parent;
@@ -100,12 +92,6 @@ namespace TechnikiInterentoweClient
                 saveButton.Text = "Save";
                 saveButton.Dock = DockStyle.Top;
             }
-            //Button closeButton = new Button();
-            //tp.Controls.Add(closeButton);
-            ////closeButton.Click += new EventHandler(SaveButtonOnClick);
-            //closeButton.Text = "Close";
-            //closeButton.Dock = DockStyle.Top;
-
             return tp;
         }
 
@@ -115,25 +101,37 @@ namespace TechnikiInterentoweClient
         /// <param name="selectedRow"></param
         private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
-            //TODO: when we add modify date, it can be wrong
             RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
 
             FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
-            //KeyValuePair<int, string> keyValuePair = JsonConvert.DeserializeObject<KeyValuePair<int, string>>(strResponse);
 
             OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
         #endregion
 
-        private void createNewFileButton_Click(object sender, EventArgs e)
+        private void createAndOpenNewFile()
         {
+            CreateFileDialog createDialog = new CreateFileDialog();
+
+            string fileNameFromUser = "";
+            if (createDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                fileNameFromUser = createDialog.getFileNameToCreate();
+                createDialog.Dispose();
+            }
+            else
+            {
+                createDialog.Dispose();
+                return;
+            }
+
             RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/TryCreate/";
-            if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
+            if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
             {
-                OpenNewTabPage(newFileNameTextBox.Text, "", false);
+                OpenNewTabPage(fileNameFromUser, "", false);
                 rClient = new RestClient();
                 rClient.endPoint = "http://localhost:8080/Files/";
                 string strResponse = rClient.makeRequest();
@@ -167,12 +165,12 @@ namespace TechnikiInterentoweClient
 
         private void tabs_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            TabControl page = (TabControl)sender;
             if (e.Button == MouseButtons.Left)
             {
                 return;
             }
 
-            TabControl page = (TabControl)sender;
             if (page.SelectedTab.AccessibilityObject.Name.Equals("KK Reader"))
             {
                 return;
@@ -190,8 +188,6 @@ namespace TechnikiInterentoweClient
             string fileName = page.SelectedTab.AccessibilityObject.Name;
             rClient.makePostRequest(new { fileName });
             page.SelectedTab.Dispose();
-
-
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -199,9 +195,27 @@ namespace TechnikiInterentoweClient
             DataGridView dgv = sender as DataGridView;
             if (dgv == null)
                 return;
+            if (dgv.CurrentRow.Index >= filesListFromJson.Count)
+                return;
+
             string file_name = filesListFromJson[dgv.CurrentRow.Index].Name;
 
             SendReqToServerWithOpen(file_name);
+        }
+
+        private void tabs_MouseClick(object sender, MouseEventArgs e)
+        {
+            TabControl page = (TabControl)sender;
+            if (e.Button == MouseButtons.Left)
+            {
+                if (page.SelectedTab.AccessibilityObject.Name.Equals("    +"))
+                {
+                    TabPage addPage = tabs.TabPages[tabs.TabPages.Count - 1];
+                    tabs.TabPages.Remove(addPage);
+                    createAndOpenNewFile();
+                    tabs.TabPages.Add(addPage);
+                }
+            }
         }
     }
 }

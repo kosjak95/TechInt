@@ -53,9 +53,9 @@ namespace TechnikiInterentoweClient
             this.components = new System.ComponentModel.Container();
             this.firstTab = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.newFileNameTextBox = new System.Windows.Forms.TextBox();
-            this.createNewFileButton = new System.Windows.Forms.Button();
             this.tabs = new System.Windows.Forms.TabControl();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.addTab = new System.Windows.Forms.TabPage();
             this.fileIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastUpdateTsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,25 +65,25 @@ namespace TechnikiInterentoweClient
             this.firstTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabs.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // firstTab
             // 
-            this.firstTab.Controls.Add(this.dataGridView1);
-            this.firstTab.Controls.Add(this.newFileNameTextBox);
-            this.firstTab.Controls.Add(this.createNewFileButton);
-            this.firstTab.Location = new System.Drawing.Point(4, 22);
-            this.firstTab.Margin = new System.Windows.Forms.Padding(2);
+            this.firstTab.Controls.Add(this.flowLayoutPanel1);
+            this.firstTab.Location = new System.Drawing.Point(4, 25);
+            this.firstTab.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.firstTab.Name = "firstTab";
-            this.firstTab.Padding = new System.Windows.Forms.Padding(2);
-            this.firstTab.Size = new System.Drawing.Size(549, 310);
+            this.firstTab.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.firstTab.Size = new System.Drawing.Size(735, 385);
             this.firstTab.TabIndex = 0;
             this.firstTab.Text = "K&K Reader";
             this.firstTab.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -93,44 +93,49 @@ namespace TechnikiInterentoweClient
             this.versionDataGridViewTextBoxColumn,
             this.isEditedDataGridViewCheckBoxColumn});
             this.dataGridView1.DataSource = this.fileDataBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(8, 3);
+            this.dataGridView1.Location = new System.Drawing.Point(4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(409, 304);
+            this.dataGridView1.Size = new System.Drawing.Size(545, 374);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            // 
-            // newFileNameTextBox
-            // 
-            this.newFileNameTextBox.Location = new System.Drawing.Point(422, 15);
-            this.newFileNameTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.newFileNameTextBox.Name = "newFileNameTextBox";
-            this.newFileNameTextBox.Size = new System.Drawing.Size(112, 20);
-            this.newFileNameTextBox.TabIndex = 6;
-            this.newFileNameTextBox.Text = "NewFile";
-            // 
-            // createNewFileButton
-            // 
-            this.createNewFileButton.Location = new System.Drawing.Point(422, 38);
-            this.createNewFileButton.Margin = new System.Windows.Forms.Padding(2);
-            this.createNewFileButton.Name = "createNewFileButton";
-            this.createNewFileButton.Size = new System.Drawing.Size(111, 19);
-            this.createNewFileButton.TabIndex = 4;
-            this.createNewFileButton.Text = "Add New File";
-            this.createNewFileButton.UseVisualStyleBackColor = true;
-            this.createNewFileButton.Click += new System.EventHandler(this.createNewFileButton_Click);
             // 
             // tabs
             // 
             this.tabs.Controls.Add(this.firstTab);
+            this.tabs.Controls.Add(this.addTab);
+            this.tabs.ItemSize = new System.Drawing.Size(20, 21);
             this.tabs.Location = new System.Drawing.Point(0, 0);
-            this.tabs.Margin = new System.Windows.Forms.Padding(2);
+            this.tabs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(557, 336);
+            this.tabs.Size = new System.Drawing.Size(743, 414);
             this.tabs.TabIndex = 5;
             this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
+            this.tabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseClick);
             this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.dataGridView1);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(732, 382);
+            this.flowLayoutPanel1.TabIndex = 8;
+            // 
+            // addTab
+            // 
+            this.addTab.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addTab.ForeColor = System.Drawing.Color.Lime;
+            this.addTab.Location = new System.Drawing.Point(4, 25);
+            this.addTab.Margin = new System.Windows.Forms.Padding(0);
+            this.addTab.Name = "addTab";
+            this.addTab.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.addTab.Size = new System.Drawing.Size(735, 385);
+            this.addTab.TabIndex = 1;
+            this.addTab.Text = "    +";
+            this.addTab.UseVisualStyleBackColor = true;
             // 
             // fileIdDataGridViewTextBoxColumn
             // 
@@ -173,16 +178,17 @@ namespace TechnikiInterentoweClient
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 336);
+            this.ClientSize = new System.Drawing.Size(741, 414);
             this.Controls.Add(this.tabs);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "c# Rest Client";
             this.firstTab.ResumeLayout(false);
-            this.firstTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabs.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -192,8 +198,6 @@ namespace TechnikiInterentoweClient
 
         private System.Windows.Forms.TabPage firstTab;
         private System.Windows.Forms.TabControl tabs;
-        private System.Windows.Forms.Button createNewFileButton;
-        private System.Windows.Forms.TextBox newFileNameTextBox;
         private DataGridView dataGridView1;
         private BindingSource bindingSource;
         private DataGridViewTextBoxColumn fileIdDataGridViewTextBoxColumn;
@@ -202,6 +206,8 @@ namespace TechnikiInterentoweClient
         private DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
         private DataGridViewCheckBoxColumn isEditedDataGridViewCheckBoxColumn;
         private BindingSource fileDataBindingSource;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private TabPage addTab;
     }
 }
 
