@@ -14,14 +14,8 @@ namespace TechnikiInterentoweClient
         public Form1()
         {
             InitializeComponent();
-
-            filesList.View = View.Details;
-            filesList.Columns.Add("File Id");
-            filesList.Columns.Add("File Name");
-            filesList.Columns.Add("Updated");
-            filesList.Columns.Add("Version");
-            filesList.Columns.Add("IsEdited");
-            filesList.GridLines = true;
+            bindingSource = new BindingSource();
+            
 
             rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/Files/";
@@ -38,26 +32,27 @@ namespace TechnikiInterentoweClient
         {
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 
+            int i = 0;
             foreach (FileData file in filesListFromJson)
             {
-                ListViewItem listViewItem = new ListViewItem();
-                listViewItem.SubItems[0].Text = (filesListFromJson.IndexOf(file) + 1).ToString();
-                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.Name));
-                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.LastUpdateTs));
-                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.Version.ToString()));
-                listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, file.IsEdited.ToString()));
-                filesList.Items.Add(listViewItem);
+                file.FileId = (++i).ToString();
+                bindingSource.Add(file);
+
             }
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.AutoSize = true;
+            dataGridView1.DataSource = bindingSource;
+
         }
 
         #region UI Event Hander
 
         private void filesList_Click(object sender, MouseEventArgs e)
         {
-            int i = filesList.SelectedIndices[0];
-            string selectedRow = filesList.Items[i].SubItems[1].Text;
+            //int i = filesList.SelectedIndices[0];
+            //string selectedRow = filesList.Items[i].SubItems[1].Text;
 
-            SendReqToServerWithOpen(selectedRow);
+            //SendReqToServerWithOpen(selectedRow);
         }
 
         private void SaveButtonOnClick(object sender, EventArgs e)
@@ -142,7 +137,8 @@ namespace TechnikiInterentoweClient
                 rClient = new RestClient();
                 rClient.endPoint = "http://localhost:8080/Files/";
                 string strResponse = rClient.makeRequest();
-                filesList.Items.Clear();
+                dataGridView1.Rows.Clear();
+                dataGridView1.Refresh();
                 UpdateFilesList(strResponse);
             }
             else
@@ -160,7 +156,8 @@ namespace TechnikiInterentoweClient
                     rClient = new RestClient();
                 }
 
-                filesList.Items.Clear();
+                dataGridView1.Rows.Clear();
+                dataGridView1.Refresh();
                 rClient.endPoint = "http://localhost:8080/Files/";
                 string strResponse = rClient.makeRequest();
 
@@ -195,6 +192,16 @@ namespace TechnikiInterentoweClient
             page.SelectedTab.Dispose();
 
 
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            if (dgv == null)
+                return;
+            string file_name = filesListFromJson[dgv.CurrentRow.Index].Name;
+
+            SendReqToServerWithOpen(file_name);
         }
     }
 }

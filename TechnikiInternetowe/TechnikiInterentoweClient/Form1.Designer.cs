@@ -50,20 +50,29 @@ namespace TechnikiInterentoweClient
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.firstTab = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.newFileNameTextBox = new System.Windows.Forms.TextBox();
             this.createNewFileButton = new System.Windows.Forms.Button();
-            this.filesList = new System.Windows.Forms.ListView();
             this.tabs = new System.Windows.Forms.TabControl();
+            this.fileIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lastUpdateTsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.isEditedDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.fileDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.firstTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // firstTab
             // 
+            this.firstTab.Controls.Add(this.dataGridView1);
             this.firstTab.Controls.Add(this.newFileNameTextBox);
             this.firstTab.Controls.Add(this.createNewFileButton);
-            this.firstTab.Controls.Add(this.filesList);
             this.firstTab.Location = new System.Drawing.Point(4, 22);
             this.firstTab.Margin = new System.Windows.Forms.Padding(2);
             this.firstTab.Name = "firstTab";
@@ -72,6 +81,24 @@ namespace TechnikiInterentoweClient
             this.firstTab.TabIndex = 0;
             this.firstTab.Text = "K&K Reader";
             this.firstTab.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.fileIdDataGridViewTextBoxColumn,
+            this.lastUpdateTsDataGridViewTextBoxColumn,
+            this.nameDataGridViewTextBoxColumn,
+            this.versionDataGridViewTextBoxColumn,
+            this.isEditedDataGridViewCheckBoxColumn});
+            this.dataGridView1.DataSource = this.fileDataBindingSource;
+            this.dataGridView1.Location = new System.Drawing.Point(8, 3);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.Size = new System.Drawing.Size(409, 304);
+            this.dataGridView1.TabIndex = 7;
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
             // newFileNameTextBox
             // 
@@ -93,16 +120,6 @@ namespace TechnikiInterentoweClient
             this.createNewFileButton.UseVisualStyleBackColor = true;
             this.createNewFileButton.Click += new System.EventHandler(this.createNewFileButton_Click);
             // 
-            // filesList
-            // 
-            this.filesList.Location = new System.Drawing.Point(0, 0);
-            this.filesList.Margin = new System.Windows.Forms.Padding(2);
-            this.filesList.Name = "filesList";
-            this.filesList.Size = new System.Drawing.Size(408, 318);
-            this.filesList.TabIndex = 3;
-            this.filesList.UseCompatibleStateImageBehavior = false;
-            this.filesList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.filesList_Click);
-            // 
             // tabs
             // 
             this.tabs.Controls.Add(this.firstTab);
@@ -115,6 +132,45 @@ namespace TechnikiInterentoweClient
             this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
             this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
             // 
+            // fileIdDataGridViewTextBoxColumn
+            // 
+            this.fileIdDataGridViewTextBoxColumn.DataPropertyName = "FileId";
+            this.fileIdDataGridViewTextBoxColumn.HeaderText = "FileId";
+            this.fileIdDataGridViewTextBoxColumn.Name = "fileIdDataGridViewTextBoxColumn";
+            this.fileIdDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // lastUpdateTsDataGridViewTextBoxColumn
+            // 
+            this.lastUpdateTsDataGridViewTextBoxColumn.DataPropertyName = "LastUpdateTs";
+            this.lastUpdateTsDataGridViewTextBoxColumn.HeaderText = "LastUpdateTs";
+            this.lastUpdateTsDataGridViewTextBoxColumn.Name = "lastUpdateTsDataGridViewTextBoxColumn";
+            this.lastUpdateTsDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // versionDataGridViewTextBoxColumn
+            // 
+            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
+            this.versionDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // isEditedDataGridViewCheckBoxColumn
+            // 
+            this.isEditedDataGridViewCheckBoxColumn.DataPropertyName = "IsEdited";
+            this.isEditedDataGridViewCheckBoxColumn.HeaderText = "IsEdited";
+            this.isEditedDataGridViewCheckBoxColumn.Name = "isEditedDataGridViewCheckBoxColumn";
+            this.isEditedDataGridViewCheckBoxColumn.ReadOnly = true;
+            // 
+            // fileDataBindingSource
+            // 
+            this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweClient.FileData);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -125,7 +181,9 @@ namespace TechnikiInterentoweClient
             this.Text = "c# Rest Client";
             this.firstTab.ResumeLayout(false);
             this.firstTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -133,10 +191,17 @@ namespace TechnikiInterentoweClient
         #endregion
 
         private System.Windows.Forms.TabPage firstTab;
-        private System.Windows.Forms.ListView filesList;
         private System.Windows.Forms.TabControl tabs;
         private System.Windows.Forms.Button createNewFileButton;
         private System.Windows.Forms.TextBox newFileNameTextBox;
+        private DataGridView dataGridView1;
+        private BindingSource bindingSource;
+        private DataGridViewTextBoxColumn fileIdDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn lastUpdateTsDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
+        private DataGridViewCheckBoxColumn isEditedDataGridViewCheckBoxColumn;
+        private BindingSource fileDataBindingSource;
     }
 }
 
