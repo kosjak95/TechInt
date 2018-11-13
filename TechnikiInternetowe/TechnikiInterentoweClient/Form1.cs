@@ -15,7 +15,9 @@ namespace TechnikiInterentoweClient
         {
             InitializeComponent();
             bindingSource = new BindingSource();
-            
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.AutoSize = true;
+            dataGridView1.DataSource = bindingSource;
 
             rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/Files/";
@@ -30,6 +32,8 @@ namespace TechnikiInterentoweClient
         /// <param name="strResponse"></param>
         private async void UpdateFilesList(string strResponse)
         {
+            dataGridView1.Rows.Clear();
+
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 
             int i = 0;
@@ -39,10 +43,7 @@ namespace TechnikiInterentoweClient
                 bindingSource.Add(file);
 
             }
-            dataGridView1.AutoGenerateColumns = false;
-            dataGridView1.AutoSize = true;
-            dataGridView1.DataSource = bindingSource;
-
+            dataGridView1.Refresh();
         }
 
         #region UI Event Hander
@@ -52,8 +53,11 @@ namespace TechnikiInterentoweClient
             TabPage tab = (TabPage)((Button)sender).Parent;
             string fileName = tab.Text;
             string content = ((TextBox)tab.Controls[0]).Text;
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
 
-            RestClient rClient = new RestClient();
             rClient.endPoint = "http://localhost:8080/UpdateContent/";
             bool Response = rClient.makePostRequest(new { file_name = fileName, file_data = content });
 
@@ -101,7 +105,11 @@ namespace TechnikiInterentoweClient
         /// <param name="selectedRow"></param
         private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
-            RestClient rClient = new RestClient();
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
+
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
             string strResponse = rClient.makeRequest();
 
@@ -127,16 +135,29 @@ namespace TechnikiInterentoweClient
                 return;
             }
 
-            RestClient rClient = new RestClient();
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
+
             rClient.endPoint = "http://localhost:8080/TryCreate/";
             if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
             {
-                OpenNewTabPage(fileNameFromUser, "", false);
-                rClient = new RestClient();
-                rClient.endPoint = "http://localhost:8080/Files/";
+
+                rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameFromUser;
                 string strResponse = rClient.makeRequest();
-                dataGridView1.Rows.Clear();
-                dataGridView1.Refresh();
+                FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
+
+                OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
+
+                if (rClient == null)
+                {
+                    rClient = new RestClient();
+                }
+
+                rClient.endPoint = "http://localhost:8080/Files/";
+                strResponse = rClient.makeRequest();
+
                 UpdateFilesList(strResponse);
             }
             else
@@ -194,9 +215,14 @@ namespace TechnikiInterentoweClient
         {
             DataGridView dgv = sender as DataGridView;
             if (dgv == null)
+            {
                 return;
+            }
+
             if (dgv.CurrentRow.Index >= filesListFromJson.Count)
+            {
                 return;
+            }
 
             string file_name = filesListFromJson[dgv.CurrentRow.Index].Name;
 
