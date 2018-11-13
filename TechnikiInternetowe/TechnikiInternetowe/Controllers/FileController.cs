@@ -209,7 +209,7 @@ namespace TechnikiInternetowe.Controllers
                 newFile.CreatedTs = DateTime.Now;
                 newFile.LastUpdateTs = DateTime.Now;
                 newFile.FileSrc = @"App_Data\Files\";
-                newFile.Version = "1";
+                newFile.Version = "0";
                 newFile.IsEdited = false;
                 db.Files.Add(newFile);
                 db.SaveChanges();
