@@ -26,5 +26,15 @@ namespace TechnikiInterentoweClient
         {
             this.DialogResult = DialogResult.OK;
         }
+
+        private void fileName_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.KeyCode)
+            {
+                case Keys.Escape:
+                    this.Dispose();
+                    break;
+            }
+        }
     }
 }

@@ -48,6 +48,7 @@
             this.fileName.Name = "fileName";
             this.fileName.Size = new System.Drawing.Size(100, 22);
             this.fileName.TabIndex = 2;
+            this.fileName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileName_KeyDown);
             // 
             // createButton
             // 

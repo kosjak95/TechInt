@@ -62,9 +62,10 @@ export class FilesComponent implements OnInit {
               if (resp == true) {
                 this.editFileOnClick(this.fileName);
               }
-          },
-          (error) => {
-            console.log(error);});
+            },
+            (error) => {
+              console.log(error);
+            });
       });
     }
   }
@@ -81,11 +82,20 @@ export class FilesComponent implements OnInit {
             data: res,
           });
           dialogRef.afterClosed().subscribe(name => {
-            //this.releaseFile(fileName);
+            if (!res.IsEdited) {
+              this.releaseFile(fileName);
+            }
             this.InitFilesList();
           });
           dialogRef.componentInstance.dialogRef = dialogRef;
         },
+        (error) => console.log(error));
+  }
+
+  releaseFile(fileName: string) {
+    this.filesService.releaseFile(fileName)
+      .subscribe(
+        (res: boolean) => { },
         (error) => console.log(error));
   }
 }

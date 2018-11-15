@@ -72,8 +72,12 @@ namespace TechnikiInterentoweClient
         /// <param name="fileContent">text to set inside TextBox</param>
         private TabPage OpenNewTabPage(string title, string fileContent, bool isEdited)
         {
+            TabPage addPage = tabs.TabPages[tabs.TabPages.Count - 1];
+            tabs.TabPages.Remove(addPage);
+
             TabPage tp = new TabPage(title);
             tabs.TabPages.Add(tp);
+            tabs.TabPages.Add(addPage);
             tabs.SelectedTab = tp;
             tp.Dock = DockStyle.Fill;
 
@@ -236,10 +240,7 @@ namespace TechnikiInterentoweClient
             {
                 if (page.SelectedTab.AccessibilityObject.Name.Equals("    +"))
                 {
-                    TabPage addPage = tabs.TabPages[tabs.TabPages.Count - 1];
-                    tabs.TabPages.Remove(addPage);
                     createAndOpenNewFile();
-                    tabs.TabPages.Add(addPage);
                 }
             }
         }
