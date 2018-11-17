@@ -3,17 +3,20 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TechnikiInternetowe.Controllers;
-
+using TechnikiInternetowe.WebSockets;
 
 namespace TechnikiInternetowe.Communication
 {
     public class ExternalAdapterController : Controller
     {
         private static string project_path { get; set; }
+        private ServerWebSocket serverSocket { get; set; }
 
         public ExternalAdapterController()
         {
             project_path = AppDomain.CurrentDomain.BaseDirectory;
+            Console.Write("constr");
+            serverSocket = ServerWebSocket.Instance;
         }
 
         [HttpGet]

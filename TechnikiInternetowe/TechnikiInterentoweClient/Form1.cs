@@ -26,7 +26,7 @@ namespace TechnikiInterentoweClient
             UpdateFilesList(strResponse);
 
             //TODO: uncomment when run server
-           // ClientWebSocket.sendMsg("udalo sie?");
+           ClientWebSocket.sendMsg("udalo sie?");
         }
 
         /// <summary>

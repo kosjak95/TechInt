@@ -13,13 +13,10 @@ namespace TechnikiInternetowe.Controllers
 {
     public class FileController : Controller
     {
-        private ServerWebSocket serverSocket {get; set;}
 
         public FileController()
         {
             //TODO: Run this constructor on server start
-            Console.Write("constr");
-            serverSocket = new ServerWebSocket();
         }
 
         #region public methods
