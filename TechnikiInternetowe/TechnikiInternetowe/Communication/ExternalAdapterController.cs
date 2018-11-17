@@ -9,26 +9,11 @@ namespace TechnikiInternetowe.Communication
 {
     public class ExternalAdapterController : Controller
     {
-
         private static string project_path { get; set; }
 
         public ExternalAdapterController()
         {
             project_path = AppDomain.CurrentDomain.BaseDirectory;
-        }
-
-        [HttpPost]
-        [Route("Test1")]
-        public async Task<string> DoSmth(string filename)
-        {
-            return await Task.Run(() => HelloController.HelloName(filename));
-        }
-
-        [HttpGet]
-        [Route("Json")]
-        public async Task<string> TestFunction()
-        {
-            return await Task.Run(() => FileController.Index());
         }
 
         [HttpGet]

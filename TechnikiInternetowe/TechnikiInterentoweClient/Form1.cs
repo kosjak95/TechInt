@@ -24,6 +24,9 @@ namespace TechnikiInterentoweClient
             string strResponse = rClient.makeRequest();
 
             UpdateFilesList(strResponse);
+
+            //TODO: uncomment when run server
+           // ClientWebSocket.sendMsg("udalo sie?");
         }
 
         /// <summary>

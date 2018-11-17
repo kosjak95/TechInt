@@ -7,29 +7,22 @@ using TechnikiInternetowe.DBEntity;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Data.Entity;
+using TechnikiInternetowe.WebSockets;
 
 namespace TechnikiInternetowe.Controllers
 {
     public class FileController : Controller
     {
-        //private static string project_path { get; set; }
-        // private DB_TechIntEntities db { get; set; }
+        private ServerWebSocket serverSocket {get; set;}
+
+        public FileController()
+        {
+            //TODO: Run this constructor on server start
+            Console.Write("constr");
+            serverSocket = new ServerWebSocket();
+        }
 
         #region public methods
-
-        /// <summary>
-        /// Test db json
-        /// </summary>
-        /// <returns></returns>
-        //[Route("Json")]
-        public static string Index()
-        {
-            DB_TechIntEntities db = new DB_TechIntEntities();
-            var dane = db.Files;
-            KeyValuePair<int, string> test = new KeyValuePair<int, string>(2, "asdasdasd");
-
-            return new JavaScriptSerializer().Serialize(dane);
-        }
 
         /// <summary>
         /// Return Json formated string with Names of each file on server
