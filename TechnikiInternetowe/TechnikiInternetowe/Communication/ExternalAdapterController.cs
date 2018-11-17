@@ -15,8 +15,12 @@ namespace TechnikiInternetowe.Communication
         public ExternalAdapterController()
         {
             project_path = AppDomain.CurrentDomain.BaseDirectory;
-            Console.Write("constr");
             serverSocket = ServerWebSocket.Instance;
+        }
+
+        ~ExternalAdapterController()
+        {
+            serverSocket.closeServer();
         }
 
         [HttpGet]

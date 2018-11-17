@@ -1,30 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
+using SuperSocket.ClientEngine;
+using WebSocket4Net;
 
 namespace TechnikiInterentoweClient
 {
     public class ClientWebSocket
     {
-        static string serverIP = "localhost";
-        static int port = 8081;
+        private WebSocket websocketClient;
 
-        static public void sendMsg(string msg)
+        private string url;
+        private string protocol;
+        private WebSocketVersion version;
+
+        public void Setup()
         {
-            TcpClient client = new TcpClient(serverIP,port);
+            this.url = "ws://192.168.1.20:8081";
+            this.protocol = "basic";
+            this.version = WebSocketVersion.Rfc6455;
 
-            int byteCount = Encoding.ASCII.GetByteCount(msg);
-            byte[] data = new byte[byteCount];
-            data = Encoding.ASCII.GetBytes(msg);
+            websocketClient = new WebSocket(this.url, this.protocol, this.version);
 
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
+            websocketClient.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocketClient_Error);
+            websocketClient.Opened += new EventHandler(websocketClient_Opened);
+            websocketClient.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocketClient_MessageReceived);
+        }
 
-            stream.Close();
-            client.Close();
+        public void Start()
+        {
+            websocketClient.Open();
+        }
+
+        private void websocketClient_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            Console.WriteLine("Message Received. Server answered: " + e.Message);
+        }
+
+        private void websocketClient_Opened(object sender, EventArgs e)
+        {
+            Console.Write("Succesfully connected");
+        }
+
+        private void websocketClient_Error(object sender, ErrorEventArgs e)
+        {
+            Console.WriteLine(e.Exception.Message);
+        }
+
+        public void sendMsg(string msg)
+        {
+            websocketClient.Send(msg);
+        }
+
+        public void Stop()
+        {
+            websocketClient.Close();
+
+            Console.WriteLine("Client disconnected");
         }
     }
 }

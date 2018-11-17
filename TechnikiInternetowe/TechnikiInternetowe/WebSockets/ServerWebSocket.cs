@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+﻿using SuperSocket.SocketBase;
+using SuperWebSocket;
+using System;
 using System.Threading;
 
 namespace TechnikiInternetowe.WebSockets
@@ -9,10 +8,7 @@ namespace TechnikiInternetowe.WebSockets
     public class ServerWebSocket
     {
         private const int Port = 8081;
-        IPAddress ip;
-        TcpListener server;
-        TcpClient client;
-        bool serverStatus;
+        private static WebSocketServer webSocketServer;
         private static ServerWebSocket serverSocketInstance = null;
         private static readonly object m_oPadLock = new object();
 
@@ -33,56 +29,46 @@ namespace TechnikiInternetowe.WebSockets
         }
         private ServerWebSocket()
         {
-
-            ip = Dns.GetHostEntry("localhost").AddressList[0];
-            server = new TcpListener(Port);
-            client = default(TcpClient);
-            serverStatus = true;
+            webSocketServer = new WebSocketServer();
+            webSocketServer.Setup(Port);
+            webSocketServer.NewSessionConnected += webSocketServer_NewSessionConnected;
+            webSocketServer.NewMessageReceived += webSocketServer_NewMessageReceived;
+            webSocketServer.NewDataReceived += webSocketServer_NewDataReceived;
+            webSocketServer.SessionClosed += webSocketServer_SessionClosed;
 
             ThreadPool.QueueUserWorkItem(new WaitCallback((x) => this.runServer()));
         }
 
-        public void turnOffServer()
+        private void webSocketServer_SessionClosed(WebSocketSession session, CloseReason value)
         {
-            serverStatus = false;
+            Console.Write("SessionClosed");
+        }
+
+        private void webSocketServer_NewDataReceived(WebSocketSession session, byte[] value)
+        {
+            Console.Write("NewDataReceive");
+        }
+
+        private void webSocketServer_NewMessageReceived(WebSocketSession session, string value)
+        {
+            Console.Write(value);
+            session.Send("received" + value);
+            //TODO: Any handle of client msgs
+        }
+
+        private void webSocketServer_NewSessionConnected(WebSocketSession session)
+        {
+            Console.Write("SessionConnected");
+        }
+
+        public void closeServer()
+        {
+            webSocketServer.Stop();
         }
 
         public async void runServer()
         {
-            try
-            {
-                server.Start();
-                Console.Write("Server is running");
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Write("We cannot run server: " + e.Message);
-            }
-
-            while (serverStatus)
-            {
-                client = server.AcceptTcpClient();
-
-                byte[] buffer = new byte[200];
-                NetworkStream stream = client.GetStream();
-
-                stream.Read(buffer, 0, buffer.Length);
-                StringBuilder builder = new StringBuilder();
-
-                foreach (byte b in buffer)
-                {
-                    if (b.Equals(00))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        builder.Append(Convert.ToChar(b).ToString());
-                    }
-                }
-
-                Console.Write(builder.ToString());
-            }
+            webSocketServer.Start();
         }
     }
 }

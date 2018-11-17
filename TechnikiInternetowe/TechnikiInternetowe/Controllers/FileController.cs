@@ -13,12 +13,6 @@ namespace TechnikiInternetowe.Controllers
 {
     public class FileController : Controller
     {
-
-        public FileController()
-        {
-            //TODO: Run this constructor on server start
-        }
-
         #region public methods
 
         /// <summary>

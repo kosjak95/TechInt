@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace TechnikiInterentoweClient
 {
@@ -10,9 +11,15 @@ namespace TechnikiInterentoweClient
     {
         private List<FileData> filesListFromJson;
         private RestClient rClient;
+        private ClientWebSocket clientSocket = new ClientWebSocket();
 
         public Form1()
         {
+            clientSocket.Setup();
+            clientSocket.Start();
+            //IT'S IMPORTANT: establishing a connection takes quite a long time
+            Thread.Sleep(100);
+
             InitializeComponent();
             bindingSource = new BindingSource();
             dataGridView1.AutoGenerateColumns = false;
@@ -24,9 +31,7 @@ namespace TechnikiInterentoweClient
             string strResponse = rClient.makeRequest();
 
             UpdateFilesList(strResponse);
-
-            //TODO: uncomment when run server
-           ClientWebSocket.sendMsg("udalo sie?");
+            clientSocket.sendMsg("Connection established");
         }
 
         /// <summary>
@@ -174,7 +179,7 @@ namespace TechnikiInterentoweClient
         }
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
-        {
+        { 
             if (e.TabPageIndex == 0)
             {
                 if (rClient == null)
@@ -246,6 +251,11 @@ namespace TechnikiInterentoweClient
                     createAndOpenNewFile();
                 }
             }
+        }
+
+        ~Form1()
+        {
+            clientSocket.Stop();
         }
     }
 }
