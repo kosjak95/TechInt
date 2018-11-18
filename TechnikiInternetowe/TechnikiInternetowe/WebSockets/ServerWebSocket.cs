@@ -1,6 +1,7 @@
 ﻿using SuperSocket.SocketBase;
 using SuperWebSocket;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace TechnikiInternetowe.WebSockets
@@ -8,9 +9,10 @@ namespace TechnikiInternetowe.WebSockets
     public class ServerWebSocket
     {
         private const int Port = 8081;
-        private static WebSocketServer webSocketServer;
+        private WebSocketServer webSocketServer;
         private static ServerWebSocket serverSocketInstance = null;
         private static readonly object m_oPadLock = new object();
+        private List<WebSocketSession> listOfClientsSessions;
 
         public static ServerWebSocket Instance
         {
@@ -29,6 +31,7 @@ namespace TechnikiInternetowe.WebSockets
         }
         private ServerWebSocket()
         {
+            listOfClientsSessions = new List<WebSocketSession>();
             webSocketServer = new WebSocketServer();
             webSocketServer.Setup(Port);
             webSocketServer.NewSessionConnected += webSocketServer_NewSessionConnected;
@@ -58,12 +61,21 @@ namespace TechnikiInternetowe.WebSockets
 
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
         {
+            listOfClientsSessions.Add(session);
             Console.Write("SessionConnected");
         }
 
         public void closeServer()
         {
             webSocketServer.Stop();
+        }
+
+        public void sendToAll(string msg)
+        {
+            foreach(WebSocketSession session in listOfClientsSessions)
+            {
+                session.Send(msg);
+            }
         }
 
         public async void runServer()

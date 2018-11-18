@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -108,6 +107,10 @@ namespace TechnikiInternetowe.Controllers
             }
 
             UpdateDataAtDb(file);
+
+            ServerWebSocket serverSocket = ServerWebSocket.Instance;
+            serverSocket.sendToAll("1");
+
             return true;
         }
 

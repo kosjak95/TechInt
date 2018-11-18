@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
@@ -7,13 +8,14 @@ namespace TechnikiInterentoweClient
     public class ClientWebSocket
     {
         private WebSocket websocketClient;
-
         private string url;
         private string protocol;
         private WebSocketVersion version;
+        public List<int> msgsList;
 
         public void Setup()
         {
+            msgsList = new List<int>();
             this.url = "ws://192.168.1.20:8081";
             this.protocol = "basic";
             this.version = WebSocketVersion.Rfc6455;
@@ -32,7 +34,10 @@ namespace TechnikiInterentoweClient
 
         private void websocketClient_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            Console.WriteLine("Message Received. Server answered: " + e.Message);
+            if (e.Message.Length > 1)
+                return;
+
+            msgsList.Add(Convert.ToInt32(e.Message));
         }
 
         private void websocketClient_Opened(object sender, EventArgs e)

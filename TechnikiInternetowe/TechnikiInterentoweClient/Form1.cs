@@ -26,20 +26,21 @@ namespace TechnikiInterentoweClient
             dataGridView1.AutoSize = true;
             dataGridView1.DataSource = bindingSource;
 
-            rClient = new RestClient();
-            rClient.endPoint = "http://localhost:8080/Files/";
-            string strResponse = rClient.makeRequest();
-
-            UpdateFilesList(strResponse);
-            clientSocket.sendMsg("Connection established");
+            UpdateFilesList();
         }
 
         /// <summary>
         /// Update list view with files name
         /// </summary>
         /// <param name="strResponse"></param>
-        private async void UpdateFilesList(string strResponse)
+        private async void UpdateFilesList()
         {
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
+            rClient.endPoint = "http://localhost:8080/Files/";
+            string strResponse = rClient.makeRequest();
             dataGridView1.Rows.Clear();
 
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
@@ -167,10 +168,7 @@ namespace TechnikiInterentoweClient
                     rClient = new RestClient();
                 }
 
-                rClient.endPoint = "http://localhost:8080/Files/";
-                strResponse = rClient.makeRequest();
-
-                UpdateFilesList(strResponse);
+                UpdateFilesList();
             }
             else
             {
@@ -189,10 +187,8 @@ namespace TechnikiInterentoweClient
 
                 dataGridView1.Rows.Clear();
                 dataGridView1.Refresh();
-                rClient.endPoint = "http://localhost:8080/Files/";
-                string strResponse = rClient.makeRequest();
 
-                UpdateFilesList(strResponse);
+                UpdateFilesList();
             }
         }
 
@@ -256,6 +252,18 @@ namespace TechnikiInterentoweClient
         ~Form1()
         {
             clientSocket.Stop();
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if(clientSocket.msgsList.Count > 0)
+            {
+                if(clientSocket.msgsList[0] == 1)
+                {
+                    UpdateFilesList();
+                    clientSocket.msgsList.RemoveAt(0);
+                }
+            }
         }
     }
 }
