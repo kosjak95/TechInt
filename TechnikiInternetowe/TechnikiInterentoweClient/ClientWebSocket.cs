@@ -16,7 +16,7 @@ namespace TechnikiInterentoweClient
         public void Setup()
         {
             msgsList = new List<int>();
-            this.url = "ws://192.168.1.20:8081";
+            this.url = "ws://localhost:8081";
             this.protocol = "basic";
             this.version = WebSocketVersion.Rfc6455;
 

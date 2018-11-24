@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace TechnikiInterentoweClient
 {
@@ -21,24 +20,29 @@ namespace TechnikiInterentoweClient
                 components.Dispose();
             }
 
-            TabControl.TabPageCollection pages = tabs.TabPages;
-            if (pages.Count > 1)
+
+            if (tabs != null)
             {
-                RestClient restClient = new RestClient();
-                rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
-                //if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
-                foreach (TabPage page in pages)
+                TabControl.TabPageCollection pages = tabs.TabPages;
+                if (pages.Count > 1)
                 {
-                    if (page.AccessibilityObject.Name.Equals("KK Reader"))
-                        continue;
+                    RestClient restClient = new RestClient();
+                    rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
+                    //if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
+                    foreach (TabPage page in pages)
+                    {
 
-                    if (page.Controls.Count <= 1)
-                        continue;
+                        if (page.AccessibilityObject.Name.Equals("KK Reader") || page.AccessibilityObject.Name.Equals("    +"))
+                            continue;
 
-                    string fileName = page.AccessibilityObject.Name;
-                    rClient.makePostRequest(new { fileName });
+                        if (page.Controls.Count <= 1)
+                            continue;
 
-                }
+                        string fileName = page.AccessibilityObject.Name;
+                        rClient.makePostRequest(new { fileName });
+
+                    }
+                } 
             }
             base.Dispose(disposing);
         }

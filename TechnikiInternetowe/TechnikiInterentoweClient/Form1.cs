@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace TechnikiInterentoweClient
 {
@@ -11,10 +11,26 @@ namespace TechnikiInterentoweClient
     {
         private List<FileData> filesListFromJson;
         private RestClient rClient;
-        private ClientWebSocket clientSocket = new ClientWebSocket();
+        private ClientWebSocket clientSocket = null;
+        private string client_name;
 
         public Form1()
         {
+            ClientName clientName = new ClientName();
+            DialogResult result = clientName.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                client_name = clientName.getClientName();
+                clientName.Dispose();
+            }
+            else //if (clientName.ShowDialog(this) == DialogResult.None)
+            {
+                clientName.Dispose();
+                throw new Exception();
+            }
+
+
+            clientSocket = new ClientWebSocket();
             clientSocket.Setup();
             clientSocket.Start();
             //IT'S IMPORTANT: establishing a connection takes quite a long time
@@ -27,6 +43,7 @@ namespace TechnikiInterentoweClient
             dataGridView1.DataSource = bindingSource;
 
             UpdateFilesList();
+
         }
 
         /// <summary>
@@ -178,7 +195,7 @@ namespace TechnikiInterentoweClient
         }
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
-        { 
+        {
             if (e.TabPageIndex == 0)
             {
                 if (rClient == null)
@@ -255,14 +272,17 @@ namespace TechnikiInterentoweClient
 
         ~Form1()
         {
-            clientSocket.Stop();
+            if (clientSocket != null)
+            {
+                clientSocket.Stop();
+            }
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            if(clientSocket.msgsList.Count > 0)
+            if (clientSocket.msgsList.Count > 0)
             {
-                switch(clientSocket.msgsList[0])
+                switch (clientSocket.msgsList[0])
                 {
                     case 1:
                         UpdateFilesList();
