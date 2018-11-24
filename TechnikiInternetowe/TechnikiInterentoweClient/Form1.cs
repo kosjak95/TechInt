@@ -42,6 +42,7 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/Files/";
             string strResponse = rClient.makeRequest();
             dataGridView1.Rows.Clear();
+            //TODO: Nest step, client without server connection
 
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 
@@ -211,7 +212,10 @@ namespace TechnikiInterentoweClient
                 return;
             }
 
-            RestClient restClient = new RestClient();
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
             rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
 
             string fileName = page.SelectedTab.AccessibilityObject.Name;
@@ -258,11 +262,14 @@ namespace TechnikiInterentoweClient
         {
             if(clientSocket.msgsList.Count > 0)
             {
-                if(clientSocket.msgsList[0] == 1)
+                switch(clientSocket.msgsList[0])
                 {
-                    UpdateFilesList();
-                    clientSocket.msgsList.RemoveAt(0);
+                    case 1:
+                        UpdateFilesList();
+                        break;
                 }
+
+                clientSocket.msgsList.RemoveAt(0);
             }
         }
     }
