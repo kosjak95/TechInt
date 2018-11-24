@@ -92,7 +92,7 @@ namespace TechnikiInternetowe.WebSockets
                         break;
                     }
             }
-            //TODO: Any handle of client msgs
+            //DONE: Any handle of client msgs
         }
 
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
