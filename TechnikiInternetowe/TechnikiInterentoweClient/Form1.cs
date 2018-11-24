@@ -33,8 +33,8 @@ namespace TechnikiInterentoweClient
             clientSocket = new ClientWebSocket();
             clientSocket.Setup();
             clientSocket.Start();
-            //IT'S IMPORTANT: establishing a connection takes quite a long time
-            Thread.Sleep(100);
+
+
 
             InitializeComponent();
             bindingSource = new BindingSource();
@@ -282,11 +282,21 @@ namespace TechnikiInterentoweClient
         {
             if (clientSocket.msgsList.Count > 0)
             {
-                switch (clientSocket.msgsList[0])
+                Message message = clientSocket.msgsList[0];
+                switch (message.Key)
                 {
                     case 1:
-                        UpdateFilesList();
-                        break;
+                        {
+                            UpdateFilesList();
+                            break;
+                        }
+                    case 2:
+                        {
+                            KeyValuePair<int, string> msg = new KeyValuePair<int, string>(2, client_name);
+                            clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+                            break;
+                        }
+
                 }
 
                 clientSocket.msgsList.RemoveAt(0);

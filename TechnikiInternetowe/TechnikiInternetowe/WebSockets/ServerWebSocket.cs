@@ -1,8 +1,10 @@
-﻿using SuperSocket.SocketBase;
+﻿using Newtonsoft.Json;
+using SuperSocket.SocketBase;
 using SuperWebSocket;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Web.Script.Serialization;
 
 namespace TechnikiInternetowe.WebSockets
 {
@@ -12,7 +14,7 @@ namespace TechnikiInternetowe.WebSockets
         private WebSocketServer webSocketServer;
         private static ServerWebSocket serverSocketInstance = null;
         private static readonly object m_oPadLock = new object();
-        private List<WebSocketSession> listOfClientsSessions;
+        private List<Client> listOfClientsSessions;
 
         public static ServerWebSocket Instance
         {
@@ -31,7 +33,7 @@ namespace TechnikiInternetowe.WebSockets
         }
         private ServerWebSocket()
         {
-            listOfClientsSessions = new List<WebSocketSession>();
+            listOfClientsSessions = new List<Client>();
             webSocketServer = new WebSocketServer();
             webSocketServer.Setup(Port);
             webSocketServer.NewSessionConnected += webSocketServer_NewSessionConnected;
@@ -55,13 +57,50 @@ namespace TechnikiInternetowe.WebSockets
         private void webSocketServer_NewMessageReceived(WebSocketSession session, string value)
         {
             Console.Write(value);
-            session.Send("received" + value);
+            //session.Send("received" + value);
+            
+            Message message = new JavaScriptSerializer().Deserialize<Message>(value);
+            //1. server update actions
+            //2. naming of clients
+            //3. chat
+            switch(message.Key)
+            {
+                case 1:
+                    {
+                        throw new NotImplementedException();
+                        break;
+                    }
+                case 2:
+                    {
+                        foreach(Client client in listOfClientsSessions )
+                        {
+                            if (client.socket == session)
+                            {
+                                listOfClientsSessions.Remove(client);
+                                listOfClientsSessions.Add(new Client() { clientName = message.Value, socket = session });
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        foreach(Client client in listOfClientsSessions)
+                        {
+                            client.socket.Send(message.Value);
+                        }
+                        break;
+                    }
+            }
             //TODO: Any handle of client msgs
         }
 
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
         {
-            listOfClientsSessions.Add(session);
+            listOfClientsSessions.Add(new Client() { clientName = "", socket = session });
+            KeyValuePair<int, string> initMsgToClient = new KeyValuePair<int, string>(2, "name");
+            session.Send(new JavaScriptSerializer().Serialize(initMsgToClient));
+
             Console.Write("SessionConnected");
         }
 
@@ -72,9 +111,9 @@ namespace TechnikiInternetowe.WebSockets
 
         public void sendToAll(string msg)
         {
-            foreach(WebSocketSession session in listOfClientsSessions)
+            foreach(Client client in listOfClientsSessions)
             {
-                session.Send(msg);
+                client.socket.Send(msg);
             }
         }
 
@@ -82,5 +121,18 @@ namespace TechnikiInternetowe.WebSockets
         {
             webSocketServer.Start();
         }
+
+        private class Client
+        {
+            public string clientName;
+            public WebSocketSession socket;
+
+        }
+        private class Message
+        {
+            public int Key;
+            public string Value;
+        }
     }
+
 }

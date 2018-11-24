@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
@@ -11,11 +12,11 @@ namespace TechnikiInterentoweClient
         private string url;
         private string protocol;
         private WebSocketVersion version;
-        public List<int> msgsList;
+        public List<Message> msgsList;
 
         public void Setup()
         {
-            msgsList = new List<int>();
+            msgsList = new List<Message>();
             this.url = "ws://localhost:8081";
             this.protocol = "basic";
             this.version = WebSocketVersion.Rfc6455;
@@ -34,10 +35,8 @@ namespace TechnikiInterentoweClient
 
         private void websocketClient_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            if (e.Message.Length > 1)
-                return;
-
-            msgsList.Add(Convert.ToInt32(e.Message));
+            Message message = new JavaScriptSerializer().Deserialize<Message>(e.Message);
+            msgsList.Add(message);
         }
 
         private void websocketClient_Opened(object sender, EventArgs e)
