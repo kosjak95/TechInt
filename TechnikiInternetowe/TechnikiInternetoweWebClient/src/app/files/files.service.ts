@@ -15,8 +15,8 @@ export class FilesService {
     return this.http.get(`${this.baseURL}/Json/`);
   }
 
-  getFileContent(fileName: string) {
-    return this.http.get(`${this.baseURL}/OpenFile/${fileName}`);
+  getFileContent(fileName: string, clientName: string) {
+    return this.http.get(`${this.baseURL}/OpenFile/${fileName}/${clientName}`);
   }
 
   tryCreate(data: { file_name: string }) {

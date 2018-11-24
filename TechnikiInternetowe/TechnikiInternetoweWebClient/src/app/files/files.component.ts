@@ -21,13 +21,13 @@ export class FilesComponent implements OnInit {
   }
 
   title = 'Notes Editor';
+  client_name = 'AngularClient';
   dataSource;
   filesData = [];
   fileName: string;
 
-  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited'];
+  displayedColumns: string[] = ['Id', 'name', 'lastUpdate', 'version', 'isEdited', 'editorName'];
   files = [];
-
 
   constructor(private filesService: FilesService, private dialog: MatDialog) { }
 
@@ -60,7 +60,7 @@ export class FilesComponent implements OnInit {
             resp => {
               this.InitFilesList();
               if (resp == true) {
-                this.editFileOnClick(this.fileName);
+                this.editFileOnClick(this.fileName, this.client_name);
               }
             },
             (error) => {
@@ -70,9 +70,8 @@ export class FilesComponent implements OnInit {
     }
   }
 
-  editFileOnClick(fileName: string) {
-
-    this.filesService.getFileContent(fileName)
+  editFileOnClick(fileName: string, clientName: string) {
+    this.filesService.getFileContent(fileName, clientName)
       .subscribe(
         (res: FileContent) => {
 
@@ -85,7 +84,6 @@ export class FilesComponent implements OnInit {
             if (!res.IsEdited) {
               this.releaseFile(fileName);
             }
-            this.InitFilesList();
           });
           dialogRef.componentInstance.dialogRef = dialogRef;
         },
@@ -95,8 +93,8 @@ export class FilesComponent implements OnInit {
   releaseFile(fileName: string) {
     this.filesService.releaseFile(fileName)
       .subscribe(
-        (res: boolean) => { },
-        (error) => console.log(error));
+      (res: boolean) => { this.InitFilesList();},
+      (error) => console.log(error));
   }
 }
 

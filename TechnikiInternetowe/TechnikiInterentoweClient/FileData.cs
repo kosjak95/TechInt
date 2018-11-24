@@ -13,6 +13,7 @@ namespace TechnikiInterentoweClient
         public string Name { get; set; }
         public int Version { get; set; }
         public bool IsEdited { get; set; }
+        public string EditorName { get; set; }
     }
 
 

@@ -31,10 +31,10 @@ namespace TechnikiInternetowe.Communication
         }
 
         [HttpGet]
-        [Route("OpenFile/{fileName}")]
-        public async Task<string> GetFileContent(string fileName)
+        [Route("OpenFile/{fileName}/{editorName}")]
+        public async Task<string> GetFileContent(string fileName, string editorName)
         {
-            return await Task.Run(() => FileController.GetFileContent(project_path, fileName));
+            return await Task.Run(() => FileController.GetFileContent(project_path, fileName, editorName));
         }
 
         [HttpPost]

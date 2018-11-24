@@ -4,6 +4,7 @@ export interface File {
   version: string;
   lastUpdateTs: string;
   isEdited: boolean;
+  editorName: string;
 }
 
 
@@ -12,4 +13,5 @@ export interface FileContent {
   FileContent1: string;
   IsEdited: boolean;
   FileId: number;
+  EditorName: string;
 }

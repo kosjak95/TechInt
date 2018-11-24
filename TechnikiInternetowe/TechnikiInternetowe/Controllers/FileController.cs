@@ -23,7 +23,7 @@ namespace TechnikiInternetowe.Controllers
         public static string GetListOfFilesOnServer()
         {
             DB_TechIntEntities db = new DB_TechIntEntities();
-            var dane = db.Files.Select(s => new { s.FileId, s.LastUpdateTs, s.Name, s.Version, s.IsEdited });
+            var dane = db.Files.Select(s => new { s.FileId, s.LastUpdateTs, s.Name, s.Version, s.IsEdited, s.EditorName });
 
             return new JavaScriptSerializer().Serialize(dane);
         }
@@ -32,9 +32,9 @@ namespace TechnikiInternetowe.Controllers
         /// Return contend of given by argument file
         /// </summary>
         /// <returns></returns>
-        //[HttpGet]
-        //[Route("OpenFile/{fileName}")]
-        public static string GetFileContent(string project_path, string fileName)
+        //[HttpPost]
+        //[Route("OpenFile")]
+        public static string GetFileContent(string project_path, string fileName, string editorName)
         {
             string content = "";
             Files file = null;
@@ -47,14 +47,22 @@ namespace TechnikiInternetowe.Controllers
                 {
                     content = sr.ReadToEnd();
                 }
-                file_content = new FileContent() { FileId = file.FileId, Name = file.Name, IsEdited = file.IsEdited, FileContent1 = content };
-                file.IsEdited = true;
-                db.Entry(file).State = EntityState.Modified;
-                db.SaveChanges();
+                file_content = new FileContent() { FileId = file.FileId,
+                                                   Name = file.Name,
+                                                   IsEdited = file.IsEdited,
+                                                   FileContent1 = content,
+                                                   EditorName = editorName };
+
+                if (file.IsEdited == false)
+                {
+                    file.IsEdited = true;
+                    file.EditorName = editorName;
+                    db.Entry(file).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
 
                 ServerWebSocket serverSocket = ServerWebSocket.Instance;
                 serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
-
             }
             catch (Exception e)
             {
@@ -132,6 +140,7 @@ namespace TechnikiInternetowe.Controllers
                 if (file == null)
                     return false;
                 file.IsEdited = false;
+                file.EditorName = "";
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
 
@@ -208,6 +217,7 @@ namespace TechnikiInternetowe.Controllers
                 newFile.FileSrc = @"App_Data\Files\";
                 newFile.Version = "0";
                 newFile.IsEdited = false;
+                newFile.EditorName = "";
                 db.Files.Add(newFile);
                 db.SaveChanges();
             }
@@ -228,6 +238,7 @@ namespace TechnikiInternetowe.Controllers
                 file.LastUpdateTs = DateTime.Now;
                 file.Version = (Int32.Parse(file.Version) + 1).ToString();
                 file.IsEdited = false;
+                file.EditorName = "";
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
             }

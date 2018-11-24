@@ -21,5 +21,6 @@ namespace TechnikiInternetowe.DBEntity
         public Nullable<System.DateTime> LastUpdateTs { get; set; }
         public string FileSrc { get; set; }
         public bool IsEdited { get; set; }
+        public string EditorName { get; set; }
     }
 }

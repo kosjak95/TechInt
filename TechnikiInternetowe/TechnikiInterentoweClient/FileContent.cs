@@ -12,5 +12,6 @@ namespace TechnikiInterentoweClient
         public bool IsEdited { get; set; }
         public string FileContent1 { get; set; }
         public string Name { get; set; }
+        public string EditorName { get; set; }
     }
 }

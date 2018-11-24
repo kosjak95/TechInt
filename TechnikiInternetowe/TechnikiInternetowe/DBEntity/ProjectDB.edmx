@@ -16,9 +16,10 @@
           <Property Name="Version" Type="nvarchar" MaxLength="7" Nullable="false" />
           <Property Name="FileSrc" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsEdited" Type="bit" Nullable="false" />
+          <Property Name="EditorName" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 2015\PROJECTS\TECHINT\DB_TECHINT.MDF.dbo.FileContent' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'C:\USERS\MARCIN\DOCUMENTS\VISUAL STUDIO 2017\PROJECTS\TECHINT\DB_TECHINT.MDF.dbo.FileContent' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="FileContent">
           <Key>
             <PropertyRef Name="FileId" />
@@ -30,6 +31,7 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
           <Property Name="IsEdited" Type="bit" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
           <Property Name="FileContent" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="EditorName" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityContainer Name="DB_TechIntModelStoreContainer">
           <EntitySet Name="Files" EntityType="Self.Files" Schema="dbo" store:Type="Tables" />
@@ -38,7 +40,8 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
     [FileContent].[FileId] AS [FileId], 
     [FileContent].[IsEdited] AS [IsEdited], 
     [FileContent].[Name] AS [Name], 
-    [FileContent].[FileContent] AS [FileContent]
+    [FileContent].[FileContent] AS [FileContent], 
+    [FileContent].[EditorName] AS [EditorName]
     FROM [dbo].[FileContent] AS [FileContent]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -57,6 +60,7 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
           <Property Name="LastUpdateTs" Type="DateTime" Precision="3" />
           <Property Name="FileSrc" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsEdited" Type="Boolean" Nullable="false" />
+          <Property Name="EditorName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="DB_TechIntEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Files" EntityType="Self.Files" />
@@ -73,6 +77,7 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
           <Property Name="IsEdited" Type="Boolean" Nullable="false" />
           <Property Name="FileContent1" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="EditorName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -83,6 +88,7 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
           <EntitySetMapping Name="Files">
             <EntityTypeMapping TypeName="DB_TechIntModel.Files">
               <MappingFragment StoreEntitySet="Files">
+                <ScalarProperty Name="EditorName" ColumnName="EditorName" />
                 <ScalarProperty Name="IsEdited" ColumnName="IsEdited" />
                 <ScalarProperty Name="FileSrc" ColumnName="FileSrc" />
                 <ScalarProperty Name="LastUpdateTs" ColumnName="LastUpdateTs" />
@@ -96,6 +102,7 @@ warning 6002: The table/view 'C:\USERS\KOSMI\ONEDRIVE\DOCUMENTS\VISUAL STUDIO 20
           <EntitySetMapping Name="FileContent">
             <EntityTypeMapping TypeName="DB_TechIntModel.FileContent">
               <MappingFragment StoreEntitySet="FileContent">
+                <ScalarProperty Name="EditorName" ColumnName="EditorName" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="FileContent1" ColumnName="FileContent" />
                 <ScalarProperty Name="IsEdited" ColumnName="IsEdited" />

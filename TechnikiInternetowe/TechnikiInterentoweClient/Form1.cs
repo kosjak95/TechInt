@@ -141,7 +141,7 @@ namespace TechnikiInterentoweClient
                 rClient = new RestClient();
             }
 
-            rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat;
+            rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat + "/" + client_name;
             string strResponse = rClient.makeRequest();
 
             FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
