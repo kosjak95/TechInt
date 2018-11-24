@@ -128,11 +128,13 @@ namespace TechnikiInternetowe.WebSockets
             public WebSocketSession socket;
 
         }
-        private class Message
-        {
-            public int Key;
-            public string Value;
-        }
+
+    }
+
+    public class Message
+    {
+        public int Key;
+        public string Value;
     }
 
 }

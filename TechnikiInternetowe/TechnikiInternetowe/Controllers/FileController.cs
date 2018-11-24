@@ -52,6 +52,9 @@ namespace TechnikiInternetowe.Controllers
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
 
+                ServerWebSocket serverSocket = ServerWebSocket.Instance;
+                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
+
             }
             catch (Exception e)
             {
@@ -109,7 +112,7 @@ namespace TechnikiInternetowe.Controllers
             UpdateDataAtDb(file);
 
             ServerWebSocket serverSocket = ServerWebSocket.Instance;
-            serverSocket.sendToAll("1");
+            serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
 
             return true;
         }
@@ -131,6 +134,9 @@ namespace TechnikiInternetowe.Controllers
                 file.IsEdited = false;
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
+
+                ServerWebSocket serverSocket = ServerWebSocket.Instance;
+                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
             }
             catch (Exception e)
             {
@@ -175,6 +181,10 @@ namespace TechnikiInternetowe.Controllers
             try
             {
                 System.IO.File.Create(path).Dispose();
+
+                ServerWebSocket serverSocket = ServerWebSocket.Instance;
+                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
+
             }
             catch (Exception e)
             {
