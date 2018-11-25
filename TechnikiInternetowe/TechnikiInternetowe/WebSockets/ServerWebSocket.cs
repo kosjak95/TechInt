@@ -98,7 +98,7 @@ namespace TechnikiInternetowe.WebSockets
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
         {
             listOfClientsSessions.Add(new Client() { clientName = "", socket = session });
-            KeyValuePair<int, string> initMsgToClient = new KeyValuePair<int, string>(2, "name");
+            Message initMsgToClient = new Message() { Key = 2, Destination = null, Value = "name" };
             session.Send(new JavaScriptSerializer().Serialize(initMsgToClient));
 
             Console.Write("SessionConnected");
@@ -126,15 +126,13 @@ namespace TechnikiInternetowe.WebSockets
         {
             public string clientName;
             public WebSocketSession socket;
-
         }
-
     }
 
     public class Message
     {
         public int Key;
+        public string Destination;
         public string Value;
     }
-
 }

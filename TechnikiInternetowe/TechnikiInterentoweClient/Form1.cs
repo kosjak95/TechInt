@@ -23,18 +23,15 @@ namespace TechnikiInterentoweClient
                 client_name = clientName.getClientName();
                 clientName.Dispose();
             }
-            else //if (clientName.ShowDialog(this) == DialogResult.None)
+            else
             {
                 clientName.Dispose();
                 throw new Exception();
             }
 
-
             clientSocket = new ClientWebSocket();
             clientSocket.Setup();
             clientSocket.Start();
-
-
 
             InitializeComponent();
             bindingSource = new BindingSource();
@@ -43,7 +40,6 @@ namespace TechnikiInterentoweClient
             dataGridView1.DataSource = bindingSource;
 
             UpdateFilesList();
-
         }
 
         /// <summary>
@@ -59,7 +55,7 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/Files/";
             string strResponse = rClient.makeRequest();
             dataGridView1.Rows.Clear();
-            //TODO: Nest step, client without server connection
+            //TODO: Next step, client without server connection
 
             filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
 
@@ -252,9 +248,14 @@ namespace TechnikiInterentoweClient
             {
                 return;
             }
+            if(e.ColumnIndex.Equals(5))
+            {
+                KeyValuePair<int, string> msg = new KeyValuePair<int, string>(2, client_name);
+                clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+                //dgv.CurrentCell.FormattedValue
+            }
 
             string file_name = filesListFromJson[dgv.CurrentRow.Index].Name;
-
             SendReqToServerWithOpen(file_name);
         }
 
@@ -292,11 +293,10 @@ namespace TechnikiInterentoweClient
                         }
                     case 2:
                         {
-                            KeyValuePair<int, string> msg = new KeyValuePair<int, string>(2, client_name);
+                            Message msg = new Message() { Key = 2, Destination = null, Value = client_name };
                             clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
                             break;
                         }
-
                 }
 
                 clientSocket.msgsList.RemoveAt(0);

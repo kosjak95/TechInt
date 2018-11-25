@@ -60,9 +60,7 @@ namespace TechnikiInternetowe.Controllers
                     db.Entry(file).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-
-                ServerWebSocket serverSocket = ServerWebSocket.Instance;
-                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
+                sendUpdateFileListToAll();
             }
             catch (Exception e)
             {
@@ -71,6 +69,15 @@ namespace TechnikiInternetowe.Controllers
             }
 
             return JsonConvert.SerializeObject(file_content);
+        }
+
+        private static void sendUpdateFileListToAll()
+        {
+            ServerWebSocket serverSocket = ServerWebSocket.Instance;
+            serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() {
+                                                              Key = 1,
+                                                              Destination = null,
+                                                              Value = "Update" }));
         }
 
         /// <summary>
@@ -118,9 +125,7 @@ namespace TechnikiInternetowe.Controllers
             }
 
             UpdateDataAtDb(file);
-
-            ServerWebSocket serverSocket = ServerWebSocket.Instance;
-            serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
+            sendUpdateFileListToAll();
 
             return true;
         }
@@ -143,9 +148,7 @@ namespace TechnikiInternetowe.Controllers
                 file.EditorName = "";
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
-
-                ServerWebSocket serverSocket = ServerWebSocket.Instance;
-                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
+                sendUpdateFileListToAll();
             }
             catch (Exception e)
             {
@@ -190,10 +193,7 @@ namespace TechnikiInternetowe.Controllers
             try
             {
                 System.IO.File.Create(path).Dispose();
-
-                ServerWebSocket serverSocket = ServerWebSocket.Instance;
-                serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() { Key = 1, Value = "Update" }));
-
+                sendUpdateFileListToAll();
             }
             catch (Exception e)
             {

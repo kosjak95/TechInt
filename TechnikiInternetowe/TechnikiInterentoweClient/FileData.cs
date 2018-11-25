@@ -20,6 +20,7 @@ namespace TechnikiInterentoweClient
     public class Message
     {
         public int Key;
+        public string Destination;
         public string Value;
     }
 }
