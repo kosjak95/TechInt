@@ -21,6 +21,7 @@ namespace TechnikiInterentoweClient
     {
         public int Key;
         public string Destination;
+        public string Sender;
         public string Value;
     }
 }

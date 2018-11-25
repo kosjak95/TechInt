@@ -87,12 +87,20 @@ namespace TechnikiInternetowe.WebSockets
                     {
                         foreach(Client client in listOfClientsSessions)
                         {
-                            client.socket.Send(message.Value);
+                            if (client.clientName.Equals(message.Destination))
+                            {
+                                client.socket.Send(new JavaScriptSerializer().Serialize(new Message()
+                                {
+                                    Key = message.Key,
+                                    Destination = message.Destination,
+                                    Sender = message.Sender,
+                                    Value = message.Value
+                                }));
+                            }
                         }
                         break;
                     }
             }
-            //DONE: Any handle of client msgs
         }
 
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
@@ -133,6 +141,7 @@ namespace TechnikiInternetowe.WebSockets
     {
         public int Key;
         public string Destination;
+        public string Sender;
         public string Value;
     }
 }

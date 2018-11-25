@@ -77,6 +77,7 @@ namespace TechnikiInternetowe.Controllers
             serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() {
                                                               Key = 1,
                                                               Destination = null,
+                                                              Sender = "server",
                                                               Value = "Update" }));
         }
 

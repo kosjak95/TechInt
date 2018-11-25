@@ -59,7 +59,7 @@ namespace TechnikiInterentoweClient
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.firstTab = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.fileDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.EditorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabs = new System.Windows.Forms.TabControl();
             this.addTab = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -68,12 +68,12 @@ namespace TechnikiInterentoweClient
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isEditedDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.EditorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fileDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.firstTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.tabs.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // firstTab
@@ -104,7 +104,7 @@ namespace TechnikiInterentoweClient
             this.dataGridView1.DataSource = this.fileDataBindingSource;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 2);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
@@ -114,9 +114,14 @@ namespace TechnikiInterentoweClient
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
-            // fileDataBindingSource
+            // EditorName
             // 
-            this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweClient.FileData);
+            this.EditorName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.EditorName.DataPropertyName = "EditorName";
+            this.EditorName.HeaderText = "EditorName";
+            this.EditorName.MinimumWidth = 30;
+            this.EditorName.Name = "EditorName";
+            this.EditorName.ReadOnly = true;
             // 
             // tabs
             // 
@@ -152,7 +157,7 @@ namespace TechnikiInterentoweClient
             this.panel1.Controls.Add(this.tabs);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1233, 510);
             this.panel1.TabIndex = 9;
@@ -202,14 +207,9 @@ namespace TechnikiInterentoweClient
             this.isEditedDataGridViewCheckBoxColumn.Name = "isEditedDataGridViewCheckBoxColumn";
             this.isEditedDataGridViewCheckBoxColumn.ReadOnly = true;
             // 
-            // EditorName
+            // fileDataBindingSource
             // 
-            this.EditorName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.EditorName.DataPropertyName = "EditorName";
-            this.EditorName.HeaderText = "EditorName";
-            this.EditorName.MinimumWidth = 30;
-            this.EditorName.Name = "EditorName";
-            this.EditorName.ReadOnly = true;
+            this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweClient.FileData);
             // 
             // Form1
             // 
@@ -217,15 +217,15 @@ namespace TechnikiInterentoweClient
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1233, 510);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "c# Rest Client";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.Activated += new System.EventHandler(this.Form1_Activated);
             this.firstTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.tabs.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

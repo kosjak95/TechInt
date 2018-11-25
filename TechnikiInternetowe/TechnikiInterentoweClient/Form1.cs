@@ -13,6 +13,7 @@ namespace TechnikiInterentoweClient
         private RestClient rClient;
         private ClientWebSocket clientSocket = null;
         private string client_name;
+        ChatForm chatForm = null;
 
         public Form1()
         {
@@ -64,7 +65,6 @@ namespace TechnikiInterentoweClient
             {
                 file.FileId = (++i).ToString();
                 bindingSource.Add(file);
-
             }
             dataGridView1.Refresh();
         }
@@ -250,9 +250,11 @@ namespace TechnikiInterentoweClient
             }
             if(e.ColumnIndex.Equals(5))
             {
-                KeyValuePair<int, string> msg = new KeyValuePair<int, string>(2, client_name);
-                clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
-                //dgv.CurrentCell.FormattedValue
+                if(chatForm == null)
+                    chatForm = new ChatForm(client_name, dgv.CurrentCell.FormattedValue.ToString(), clientSocket);
+
+                chatForm.Show(this);
+                return;
             }
 
             string file_name = filesListFromJson[dgv.CurrentRow.Index].Name;
@@ -279,7 +281,7 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void Form1_Activated(object sender, EventArgs e)
         {
             if (clientSocket.msgsList.Count > 0)
             {
@@ -293,8 +295,16 @@ namespace TechnikiInterentoweClient
                         }
                     case 2:
                         {
-                            Message msg = new Message() { Key = 2, Destination = null, Value = client_name };
+                            Message msg = new Message() { Key = 2, Destination = null, Sender = client_name, Value = client_name };
                             clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+                            break;
+                        }
+                    case 3:
+                        {
+                            if (chatForm == null)
+                                chatForm = new ChatForm(client_name, message.Sender, clientSocket);
+                            chatForm.addMsgOnScreen(message);
+                            chatForm.Show(this);
                             break;
                         }
                 }
