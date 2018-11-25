@@ -59,31 +59,31 @@ namespace TechnikiInterentoweClient
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.firstTab = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.EditorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabs = new System.Windows.Forms.TabControl();
-            this.addTab = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.fileIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastUpdateTsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isEditedDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.EditorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fileDataBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tabs = new System.Windows.Forms.TabControl();
+            this.addTab = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.firstTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.tabs.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // firstTab
             // 
             this.firstTab.Controls.Add(this.dataGridView1);
             this.firstTab.Location = new System.Drawing.Point(4, 25);
-            this.firstTab.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.firstTab.Margin = new System.Windows.Forms.Padding(2);
             this.firstTab.Name = "firstTab";
-            this.firstTab.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.firstTab.Size = new System.Drawing.Size(1225, 481);
+            this.firstTab.Padding = new System.Windows.Forms.Padding(2);
+            this.firstTab.Size = new System.Drawing.Size(917, 385);
             this.firstTab.TabIndex = 0;
             this.firstTab.Text = "K&K Reader";
             this.firstTab.UseVisualStyleBackColor = true;
@@ -103,64 +103,15 @@ namespace TechnikiInterentoweClient
             this.EditorName});
             this.dataGridView1.DataSource = this.fileDataBindingSource;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 2);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridView1.Location = new System.Drawing.Point(2, 2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Size = new System.Drawing.Size(1219, 477);
+            this.dataGridView1.Size = new System.Drawing.Size(913, 381);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            // 
-            // EditorName
-            // 
-            this.EditorName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.EditorName.DataPropertyName = "EditorName";
-            this.EditorName.HeaderText = "EditorName";
-            this.EditorName.MinimumWidth = 30;
-            this.EditorName.Name = "EditorName";
-            this.EditorName.ReadOnly = true;
-            // 
-            // tabs
-            // 
-            this.tabs.Controls.Add(this.firstTab);
-            this.tabs.Controls.Add(this.addTab);
-            this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabs.ItemSize = new System.Drawing.Size(20, 21);
-            this.tabs.Location = new System.Drawing.Point(0, 0);
-            this.tabs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabs.Name = "tabs";
-            this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(1233, 510);
-            this.tabs.TabIndex = 5;
-            this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
-            this.tabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseClick);
-            this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
-            // 
-            // addTab
-            // 
-            this.addTab.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.addTab.ForeColor = System.Drawing.Color.Lime;
-            this.addTab.Location = new System.Drawing.Point(4, 25);
-            this.addTab.Margin = new System.Windows.Forms.Padding(0);
-            this.addTab.Name = "addTab";
-            this.addTab.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.addTab.Size = new System.Drawing.Size(1225, 481);
-            this.addTab.TabIndex = 1;
-            this.addTab.Text = "    +";
-            this.addTab.UseVisualStyleBackColor = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.tabs);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1233, 510);
-            this.panel1.TabIndex = 9;
             // 
             // fileIdDataGridViewTextBoxColumn
             // 
@@ -207,25 +158,71 @@ namespace TechnikiInterentoweClient
             this.isEditedDataGridViewCheckBoxColumn.Name = "isEditedDataGridViewCheckBoxColumn";
             this.isEditedDataGridViewCheckBoxColumn.ReadOnly = true;
             // 
+            // EditorName
+            // 
+            this.EditorName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.EditorName.DataPropertyName = "EditorName";
+            this.EditorName.HeaderText = "EditorName";
+            this.EditorName.MinimumWidth = 30;
+            this.EditorName.Name = "EditorName";
+            this.EditorName.ReadOnly = true;
+            // 
             // fileDataBindingSource
             // 
             this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweClient.FileData);
             // 
+            // tabs
+            // 
+            this.tabs.Controls.Add(this.firstTab);
+            this.tabs.Controls.Add(this.addTab);
+            this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabs.ItemSize = new System.Drawing.Size(20, 21);
+            this.tabs.Location = new System.Drawing.Point(0, 0);
+            this.tabs.Margin = new System.Windows.Forms.Padding(2);
+            this.tabs.Name = "tabs";
+            this.tabs.SelectedIndex = 0;
+            this.tabs.Size = new System.Drawing.Size(925, 414);
+            this.tabs.TabIndex = 5;
+            this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
+            this.tabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseClick);
+            this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
+            // 
+            // addTab
+            // 
+            this.addTab.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addTab.ForeColor = System.Drawing.Color.Lime;
+            this.addTab.Location = new System.Drawing.Point(4, 25);
+            this.addTab.Margin = new System.Windows.Forms.Padding(0);
+            this.addTab.Name = "addTab";
+            this.addTab.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.addTab.Size = new System.Drawing.Size(917, 385);
+            this.addTab.TabIndex = 1;
+            this.addTab.Text = "    +";
+            this.addTab.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.tabs);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(925, 414);
+            this.panel1.TabIndex = 9;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1233, 510);
+            this.ClientSize = new System.Drawing.Size(925, 414);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "c# Rest Client";
-            this.Activated += new System.EventHandler(this.Form1_Activated);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.firstTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.tabs.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fileDataBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

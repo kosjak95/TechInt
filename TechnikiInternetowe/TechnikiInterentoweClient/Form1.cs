@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
@@ -70,7 +69,6 @@ namespace TechnikiInterentoweClient
         }
 
         #region UI Event Hander
-
         private void SaveButtonOnClick(object sender, EventArgs e)
         {
             TabPage tab = (TabPage)((Button)sender).Parent;
@@ -87,7 +85,6 @@ namespace TechnikiInterentoweClient
             TabControl tc = (TabControl)tab.Parent;
             tc.TabPages.Remove(tab);
         }
-
         /// <summary>
         /// Create new tabPage with TextBox
         /// </summary>
@@ -248,13 +245,15 @@ namespace TechnikiInterentoweClient
             {
                 return;
             }
-            if(e.ColumnIndex.Equals(5))
+            if (e.ColumnIndex.Equals(5))
             {
                 if (dgv.CurrentCell.FormattedValue.ToString().Equals("") ||
                     dgv.CurrentCell.FormattedValue.ToString().Equals(client_name))
+                {
                     return;
+                }
 
-                chatForm = new ChatForm(client_name, dgv.CurrentCell.FormattedValue.ToString(), clientSocket);
+                chatForm = new ChatForm(client_name, dgv.CurrentCell.FormattedValue.ToString(), clientSocket, this);
 
                 chatForm.Show(this);
                 return;
@@ -284,7 +283,22 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        private void Form1_Activated(object sender, EventArgs e)
+
+        public void MakeChatNull()
+        {
+            this.chatForm = null;
+        }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Timer timer = new Timer();
+            timer.Interval = (500);
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Start();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
         {
             if (clientSocket.msgsList.Count > 0)
             {
@@ -294,32 +308,42 @@ namespace TechnikiInterentoweClient
                     case 1:
                         {
                             UpdateFilesList();
+                            clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
                     case 2:
                         {
                             Message msg = new Message() { Key = 2, Destination = null, Sender = client_name, Value = client_name };
                             clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+                            clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
                     case 3:
                         {
                             if (chatForm == null)
-                                chatForm = new ChatForm(client_name, message.Sender, clientSocket);
+                            {
+                                chatForm = new ChatForm(client_name, message.Sender, clientSocket, this);
+                            }
+
                             bool isOpen = false;
-                            foreach(Form f in Application.OpenForms)
+                            foreach (Form f in Application.OpenForms)
                             {
                                 if (f.Equals(chatForm))
+                                {
                                     isOpen = true;
+                                }
                             }
-                            if(!isOpen)
+                            if (!isOpen)
+                            {
                                 chatForm.Show(this);
+                            }
+
                             break;
                         }
                 }
 
-                clientSocket.msgsList.RemoveAt(0);
             }
         }
+
     }
 }
