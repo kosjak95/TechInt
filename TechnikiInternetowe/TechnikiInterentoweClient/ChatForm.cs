@@ -14,7 +14,6 @@ namespace TechnikiInterentoweClient
     public partial class ChatForm : Form
     {
         private string clientName;
-        private string destinationName;
         ClientWebSocket socket;
 
         public ChatForm(string clientName, string destinationName, ClientWebSocket socket)
@@ -22,13 +21,13 @@ namespace TechnikiInterentoweClient
             this.clientName = clientName;
             this.socket = socket;
             InitializeComponent();
-            this.destinationName = destinationName;
+            this.Text = destinationName;
         }
 
         private void send_button_Click(object sender, EventArgs e)
         {
-            this.tbChat.Text += "\n" + tbMsg.Text;
-            Message msg = new Message() { Key = 3, Destination = this.destinationName, Sender = clientName, Value = this.tbMsg.Text };
+            this.tbChat.Text += "\n Ja: " + tbMsg.Text;
+            Message msg = new Message() { Key = 3, Destination = this.Text, Sender = clientName, Value = this.tbMsg.Text };
             socket.sendMsg(new JavaScriptSerializer().Serialize(msg));
             tbMsg.Text = "";
         }

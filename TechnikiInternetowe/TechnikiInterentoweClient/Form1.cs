@@ -250,8 +250,11 @@ namespace TechnikiInterentoweClient
             }
             if(e.ColumnIndex.Equals(5))
             {
-                if(chatForm == null)
-                    chatForm = new ChatForm(client_name, dgv.CurrentCell.FormattedValue.ToString(), clientSocket);
+                if (dgv.CurrentCell.FormattedValue.ToString().Equals("") ||
+                    dgv.CurrentCell.FormattedValue.ToString().Equals(client_name))
+                    return;
+
+                chatForm = new ChatForm(client_name, dgv.CurrentCell.FormattedValue.ToString(), clientSocket);
 
                 chatForm.Show(this);
                 return;
@@ -303,8 +306,14 @@ namespace TechnikiInterentoweClient
                         {
                             if (chatForm == null)
                                 chatForm = new ChatForm(client_name, message.Sender, clientSocket);
-                            chatForm.addMsgOnScreen(message);
-                            chatForm.Show(this);
+                            bool isOpen = false;
+                            foreach(Form f in Application.OpenForms)
+                            {
+                                if (f.Equals(chatForm))
+                                    isOpen = true;
+                            }
+                            if(!isOpen)
+                                chatForm.Show(this);
                             break;
                         }
                 }
