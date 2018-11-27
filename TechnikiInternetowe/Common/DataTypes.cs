@@ -1,4 +1,6 @@
-﻿namespace TechnikiInterentoweCommon
+﻿using System;
+
+namespace TechnikiInterentoweCommon
 {
     public abstract class FileBase
     {
@@ -36,4 +38,6 @@
         AUTHORIZATION_MSG = 2,
         CHAT_MSG = 3
     }
+
+    public class NoUserNameException : Exception{}
 }

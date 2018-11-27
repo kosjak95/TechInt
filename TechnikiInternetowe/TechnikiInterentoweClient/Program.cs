@@ -20,7 +20,7 @@ namespace TechnikiInterentoweClient
             {
                 Application.Run(new Form1());
             }
-            catch (Exception)
+            catch (TechnikiInterentoweCommon.NoUserNameException)
             {
                 System.Console.WriteLine("Closed cause of no user name");
                 Application.Exit();

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using TechnikiInterentoweCommon;
@@ -15,6 +16,7 @@ namespace TechnikiInterentoweClient
         private ClientWebSocket clientSocket = null;
         private string client_name;
         ChatForm chatForm = null;
+        Boolean isOnline;
 
         public Form1()
         {
@@ -28,7 +30,7 @@ namespace TechnikiInterentoweClient
             else
             {
                 clientName.Dispose();
-                throw new Exception();
+                throw new NoUserNameException();
             }
 
             clientSocket = new ClientWebSocket();
@@ -45,6 +47,44 @@ namespace TechnikiInterentoweClient
         }
 
         /// <summary>
+        /// Save on device file with json contains info about files(source is filesListFromJson member)
+        /// </summary>
+        private void SaveJsonWithFilesOnDevice()
+        {
+            if (!isOnline)
+                return;
+
+            using (StreamWriter file = File.CreateText(Path.GetDirectoryName(
+                                                       Path.GetDirectoryName(
+                                                       System.IO.Directory.GetCurrentDirectory())) + @"\App_Data\files.txt"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, filesListFromJson);
+            }
+        }
+
+        /// <summary>
+        /// Load data from device to filesListFromJson, if Internet connection is disable
+        /// </summary>
+        private void loadFilesFromDevice()
+        {
+            try
+            {
+                using (StreamReader r = new StreamReader(Path.GetDirectoryName(
+                                                         Path.GetDirectoryName(
+                                                         System.IO.Directory.GetCurrentDirectory())) + @"\App_Data\files.txt"))
+                {
+                    string json = r.ReadToEnd();
+                    filesListFromJson = JsonConvert.DeserializeObject<List<FileData>>(json);
+                }
+            }catch(Exception e)
+            {
+                MessageBox.Show("Your Internet connection lost. \n We are sorry, but it's first start-up" +
+                    " of application on this computer. We cannot load data.");
+            }
+        }
+
+        /// <summary>
         /// Update list view with files name
         /// </summary>
         /// <param name="strResponse"></param>
@@ -55,12 +95,20 @@ namespace TechnikiInterentoweClient
                 rClient = new RestClient();
             }
             rClient.endPoint = "http://localhost:8080/Files/";
-            string strResponse = rClient.makeRequest();
-            dataGridView1.Rows.Clear();
-            //TODO: Next step, client without server connection
+            try
+            {
+                isOnline = true;
+                string strResponse = rClient.makeRequest();
+                dataGridView1.Rows.Clear();
 
-            filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
+                filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
+            }catch(Exception e)
+            {
+                isOnline = false;
+                loadFilesFromDevice();
+            }
 
+            SaveJsonWithFilesOnDevice();
             int i = 0;
             foreach (FileData file in filesListFromJson)
             {
@@ -131,19 +179,28 @@ namespace TechnikiInterentoweClient
         /// <param name="selectedRow"></param
         private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
-            if (rClient == null)
-            {
-                rClient = new RestClient();
-            }
-
-            rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat + "/" + client_name;
-            string strResponse = rClient.makeRequest();
-
-            CommonFileContent file_content = JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
-
+            CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(fileNameWithoutFormat + "/" + client_name);
             OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
         #endregion
+
+        private CommonFileContent SendReqToOpenFileAndReturnContentOfIt(string endOfPath)
+        {
+            if (isOnline)
+            {
+                if (rClient == null)
+                {
+                    rClient = new RestClient();
+                }
+
+                rClient.endPoint = "http://localhost:8080/OpenFile/" + endOfPath;
+                string strResponse = rClient.makeRequest();
+
+                return JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
+            }
+            //TODO: per offline
+            return new CommonFileContent();
+        }
 
         private void createAndOpenNewFile()
         {
@@ -169,17 +226,8 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/TryCreate/";
             if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
             {
-
-                rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameFromUser;
-                string strResponse = rClient.makeRequest();
-                CommonFileContent file_content = JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
-
+                CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(fileNameFromUser + "/" + client_name);
                 OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
-
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
 
                 UpdateFilesList();
             }
