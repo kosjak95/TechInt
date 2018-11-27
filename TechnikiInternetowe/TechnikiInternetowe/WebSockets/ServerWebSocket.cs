@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using SuperSocket.SocketBase;
+﻿using SuperSocket.SocketBase;
 using SuperWebSocket;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Web.Script.Serialization;
+using TechnikiInterentoweCommon;
 
 namespace TechnikiInternetowe.WebSockets
 {
@@ -57,20 +57,16 @@ namespace TechnikiInternetowe.WebSockets
         private void webSocketServer_NewMessageReceived(WebSocketSession session, string value)
         {
             Console.Write(value);
-            //session.Send("received" + value);
-            
+
             Message message = new JavaScriptSerializer().Deserialize<Message>(value);
-            //1. server update actions
-            //2. naming of clients
-            //3. chat
             switch(message.Key)
             {
-                case 1:
+                case MsgType.SYSTEM_ACTION_MSG:
                     {
                         throw new NotImplementedException();
                         break;
                     }
-                case 2:
+                case MsgType.AUTHORIZATION_MSG:
                     {
                         foreach(Client client in listOfClientsSessions )
                         {
@@ -83,7 +79,7 @@ namespace TechnikiInternetowe.WebSockets
                         }
                         break;
                     }
-                case 3:
+                case MsgType.CHAT_MSG:
                     {
                         foreach(Client client in listOfClientsSessions)
                         {
@@ -106,7 +102,7 @@ namespace TechnikiInternetowe.WebSockets
         private void webSocketServer_NewSessionConnected(WebSocketSession session)
         {
             listOfClientsSessions.Add(new Client() { clientName = "", socket = session });
-            Message initMsgToClient = new Message() { Key = 2, Destination = null, Value = "name" };
+            Message initMsgToClient = new Message() { Key = MsgType.AUTHORIZATION_MSG, Destination = null, Value = "name" };
             session.Send(new JavaScriptSerializer().Serialize(initMsgToClient));
 
             Console.Write("SessionConnected");
@@ -135,13 +131,5 @@ namespace TechnikiInternetowe.WebSockets
             public string clientName;
             public WebSocketSession socket;
         }
-    }
-
-    public class Message
-    {
-        public int Key;
-        public string Destination;
-        public string Sender;
-        public string Value;
     }
 }

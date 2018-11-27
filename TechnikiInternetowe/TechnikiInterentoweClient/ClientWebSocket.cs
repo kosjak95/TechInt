@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using SuperSocket.ClientEngine;
+using TechnikiInterentoweCommon;
 using WebSocket4Net;
 
 namespace TechnikiInterentoweClient

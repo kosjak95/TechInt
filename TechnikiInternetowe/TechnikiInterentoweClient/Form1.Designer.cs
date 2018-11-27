@@ -169,7 +169,7 @@ namespace TechnikiInterentoweClient
             // 
             // fileDataBindingSource
             // 
-            this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweClient.FileData);
+            this.fileDataBindingSource.DataSource = typeof(TechnikiInterentoweCommon.FileData);
             // 
             // tabs
             // 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnikiInternetowe", "TechnikiInternetowe\TechnikiInternetowe.csproj", "{FBEE29E2-3775-4F21-8FFE-56B65927A99A}"
 EndProject
@@ -25,6 +25,12 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "TechnikiInternetoweWebClien
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "53754"
+		SlnRelativePath = "TechnikiInternetoweWebClient\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{CC2CD8FC-64A9-441A-B4CC-9FAF88A1A9D4}"
+	ProjectSection(SolutionItems) = preProject
+		Common\DataTypes.cs = Common\DataTypes.cs
 	EndProjectSection
 EndProject
 Global
@@ -48,5 +54,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBF3DAD1-6158-45B6-A987-41DCE9E238C0}
 	EndGlobalSection
 EndGlobal

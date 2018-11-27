@@ -187,6 +187,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Common\DataTypes.cs">
+      <Link>DataTypes.cs</Link>
+    </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Communication\ExternalAdapterController.cs" />

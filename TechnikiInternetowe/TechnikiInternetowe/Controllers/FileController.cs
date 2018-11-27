@@ -7,6 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Data.Entity;
 using TechnikiInternetowe.WebSockets;
+using TechnikiInterentoweCommon;
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -39,7 +40,7 @@ namespace TechnikiInternetowe.Controllers
             string content = "";
             Files file = null;
             DB_TechIntEntities db = new DB_TechIntEntities();
-            FileContent file_content = null;
+            DBEntity.FileContent file_content = null;
             try
             {
                 file = db.Files.Where(w => w.Name == fileName).First();
@@ -47,7 +48,7 @@ namespace TechnikiInternetowe.Controllers
                 {
                     content = sr.ReadToEnd();
                 }
-                file_content = new FileContent() { FileId = file.FileId,
+                file_content = new DBEntity.FileContent() { FileId = file.FileId,
                                                    Name = file.Name,
                                                    IsEdited = file.IsEdited,
                                                    FileContent1 = content,
@@ -75,7 +76,7 @@ namespace TechnikiInternetowe.Controllers
         {
             ServerWebSocket serverSocket = ServerWebSocket.Instance;
             serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() {
-                                                              Key = 1,
+                                                              Key = MsgType.SYSTEM_ACTION_MSG,
                                                               Destination = null,
                                                               Sender = "server",
                                                               Value = "Update" }));

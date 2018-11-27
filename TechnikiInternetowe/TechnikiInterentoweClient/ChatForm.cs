@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using TechnikiInterentoweCommon;
+using Message = TechnikiInterentoweCommon.Message;
 
 namespace TechnikiInterentoweClient
 {
@@ -29,7 +24,10 @@ namespace TechnikiInterentoweClient
         private void send_button_Click(object sender, EventArgs e)
         {
             this.tbChat.Text += "\n Ja: " + tbMsg.Text;
-            Message msg = new Message() { Key = 3, Destination = this.Text, Sender = clientName, Value = this.tbMsg.Text };
+            Message msg = new Message() { Key = TechnikiInterentoweCommon.MsgType.CHAT_MSG,
+                                          Destination = this.Text,
+                                          Sender = clientName,
+                                          Value = this.tbMsg.Text };
             socket.sendMsg(new JavaScriptSerializer().Serialize(msg));
             tbMsg.Text = "";
         }
@@ -56,7 +54,7 @@ namespace TechnikiInterentoweClient
                 Message msg = socket.msgsList[0];
                 if (msg != null)
                 {
-                    if (msg.Key.Equals(3))
+                    if (msg.Key.Equals(MsgType.CHAT_MSG))
                     {
                         this.addMsgOnScreen(msg);
                     }

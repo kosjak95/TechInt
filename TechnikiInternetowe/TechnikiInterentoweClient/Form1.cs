@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using TechnikiInterentoweCommon;
+using Message = TechnikiInterentoweCommon.Message;
 
 namespace TechnikiInterentoweClient
 {
@@ -62,7 +64,7 @@ namespace TechnikiInterentoweClient
             int i = 0;
             foreach (FileData file in filesListFromJson)
             {
-                file.FileId = (++i).ToString();
+                file.FileId = (++i);
                 bindingSource.Add(file);
             }
             dataGridView1.Refresh();
@@ -137,7 +139,7 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameWithoutFormat + "/" + client_name;
             string strResponse = rClient.makeRequest();
 
-            FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
+            CommonFileContent file_content = JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
 
             OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
@@ -170,7 +172,7 @@ namespace TechnikiInterentoweClient
 
                 rClient.endPoint = "http://localhost:8080/OpenFile/" + fileNameFromUser;
                 string strResponse = rClient.makeRequest();
-                FileContent file_content = JsonConvert.DeserializeObject<FileContent>(strResponse);
+                CommonFileContent file_content = JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
 
                 OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
 
@@ -305,20 +307,23 @@ namespace TechnikiInterentoweClient
                 Message message = clientSocket.msgsList[0];
                 switch (message.Key)
                 {
-                    case 1:
+                    case MsgType.SYSTEM_ACTION_MSG:
                         {
                             UpdateFilesList();
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
-                    case 2:
+                    case MsgType.AUTHORIZATION_MSG:
                         {
-                            Message msg = new Message() { Key = 2, Destination = null, Sender = client_name, Value = client_name };
+                            Message msg = new Message() { Key = MsgType.AUTHORIZATION_MSG,
+                                                          Destination = null,
+                                                          Sender = client_name,
+                                                          Value = client_name };
                             clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
-                    case 3:
+                    case MsgType.CHAT_MSG:
                         {
                             if (chatForm == null)
                             {
