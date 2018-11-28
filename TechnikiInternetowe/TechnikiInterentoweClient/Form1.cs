@@ -101,7 +101,6 @@ namespace TechnikiInterentoweClient
                 rClient.endPoint = "http://localhost:8080/Files/";
                 try
                 {
-                    isOnline = true;
                     string strResponse = rClient.makeRequest();
                     dataGridView1.Rows.Clear();
 
@@ -130,14 +129,22 @@ namespace TechnikiInterentoweClient
             TabPage tab = (TabPage)((Button)sender).Parent;
             string fileName = tab.Text;
             string content = ((TextBox)tab.Controls[0]).Text;
-            if (rClient == null)
+            if (isOnline)
             {
-                rClient = new RestClient();
+                if (rClient == null)
+                {
+                    rClient = new RestClient();
+                }
+
+                rClient.endPoint = "http://localhost:8080/UpdateContent/";
+                bool Response = rClient.makePostRequest(new { file_name = fileName, file_data = content });
             }
-
-            rClient.endPoint = "http://localhost:8080/UpdateContent/";
-            bool Response = rClient.makePostRequest(new { file_name = fileName, file_data = content });
-
+            else
+            {
+                FullFileData fileData = filesListFromJson.Find(item => item.Name.Equals(fileName));
+                fileData.FileContent = content;
+                fileData.Version++;
+            }
             TabControl tc = (TabControl)tab.Parent;
             tc.TabPages.Remove(tab);
         }
@@ -207,17 +214,12 @@ namespace TechnikiInterentoweClient
                 return JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
             }
             CommonFileContent fileFromDevice = new CommonFileContent();
-            foreach (FullFileData fileContent in filesListFromJson)
-            {
-                if(fileContent.Name.Equals(userAndFileNames.FileName))
-                {
-                    fileFromDevice.EditorName = fileContent.EditorName;
-                    fileFromDevice.FileContent1 = fileContent.FileContent;
-                    fileFromDevice.FileId = fileContent.FileId;
-                    fileFromDevice.IsEdited = fileContent.IsEdited;
-                    fileFromDevice.Name = fileContent.Name;
-                }
-            }
+            FullFileData fileContent = filesListFromJson.Find(item => item.Name.Equals(userAndFileNames.FileName));
+            fileFromDevice.EditorName = fileContent.EditorName;
+            fileFromDevice.FileContent1 = fileContent.FileContent;
+            fileFromDevice.FileId = fileContent.FileId;
+            fileFromDevice.IsEdited = fileContent.IsEdited;
+            fileFromDevice.Name = fileContent.Name;
             return fileFromDevice;
         }
 
