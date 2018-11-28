@@ -34,6 +34,9 @@ namespace TechnikiInterentoweClient
                 case Keys.Escape:
                     this.Dispose();
                     break;
+                case Keys.Enter:
+                    this.DialogResult = DialogResult.OK;
+                    break;
             }
         }
     }

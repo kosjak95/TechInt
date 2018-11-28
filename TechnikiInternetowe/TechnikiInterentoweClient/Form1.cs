@@ -144,6 +144,8 @@ namespace TechnikiInterentoweClient
                 FullFileData fileData = filesListFromJson.Find(item => item.Name.Equals(fileName));
                 fileData.FileContent = content;
                 fileData.Version++;
+                fileData.EditorName = "";
+                fileData.IsEdited = false;
             }
             TabControl tc = (TabControl)tab.Parent;
             tc.TabPages.Remove(tab);
@@ -239,25 +241,46 @@ namespace TechnikiInterentoweClient
                 return;
             }
 
-            if (rClient == null)
+            if (isOnline)
             {
-                rClient = new RestClient();
-            }
+                if (rClient == null)
+                {
+                    rClient = new RestClient();
+                }
 
-            rClient.endPoint = "http://localhost:8080/TryCreate/";
-            if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
-            {
-                CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
-                                                                                      { FileName = fileNameFromUser,
-                                                                                        UserName = client_name });
-                OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
+                rClient.endPoint = "http://localhost:8080/TryCreate/";
+                if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
+                {
+                    CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
+                    {
+                        FileName = fileNameFromUser,
+                        UserName = client_name
+                    });
+                    OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
 
-                UpdateFilesList();
+                    UpdateFilesList();
+                }
+                return;
             }
             else
             {
-                MessageBox.Show("Sorry You can't create this file");
+                FullFileData fileData = filesListFromJson.Find(item => item.Name.Equals(fileNameFromUser));
+                if(fileData == null)
+                {
+                    fileData = new FullFileData();
+                    fileData.EditorName = client_name;
+                    fileData.FileContent = "";
+                    fileData.FileId = -1;
+                    fileData.IsEdited = false;
+                    fileData.Name = fileNameFromUser;
+                    fileData.Version = 0;
+                    filesListFromJson.Add(fileData);
+                    OpenNewTabPage(fileNameFromUser, fileData.FileContent, fileData.IsEdited);
+                    UpdateFilesList();
+                    return;
+                }
             }
+            MessageBox.Show("Sorry You can't create this file");
         }
 
         private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
