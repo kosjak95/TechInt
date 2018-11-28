@@ -1,12 +1,12 @@
 export interface File {
-  name: string;
-  FileId: number;
-  version: string;
+  FileContent: string;
   lastUpdateTs: string;
+  version: string;
+  FileId: number;
   isEdited: boolean;
+  name: string;
   editorName: string;
 }
-
 
 export interface FileContent {
   Name: string;

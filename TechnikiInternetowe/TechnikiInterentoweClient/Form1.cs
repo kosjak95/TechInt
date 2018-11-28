@@ -11,15 +11,17 @@ namespace TechnikiInterentoweClient
 {
     public partial class Form1 : Form
     {
-        private List<FileData> filesListFromJson;
+        private List<FullFileData> filesListFromJson;
         private RestClient rClient;
         private ClientWebSocket clientSocket = null;
         private string client_name;
         ChatForm chatForm = null;
-        Boolean isOnline;
+        bool isOnline;
 
         public Form1()
         {
+            filesListFromJson = null;
+            isOnline = true;
             ClientName clientName = new ClientName();
             DialogResult result = clientName.ShowDialog(this);
             if (result == DialogResult.OK)
@@ -75,7 +77,7 @@ namespace TechnikiInterentoweClient
                                                          System.IO.Directory.GetCurrentDirectory())) + @"\App_Data\files.txt"))
                 {
                     string json = r.ReadToEnd();
-                    filesListFromJson = JsonConvert.DeserializeObject<List<FileData>>(json);
+                    filesListFromJson = JsonConvert.DeserializeObject<List<FullFileData>>(json);
                 }
             }catch(Exception e)
             {
@@ -90,27 +92,31 @@ namespace TechnikiInterentoweClient
         /// <param name="strResponse"></param>
         private async void UpdateFilesList()
         {
-            if (rClient == null)
+            if (isOnline)
             {
-                rClient = new RestClient();
-            }
-            rClient.endPoint = "http://localhost:8080/Files/";
-            try
-            {
-                isOnline = true;
-                string strResponse = rClient.makeRequest();
-                dataGridView1.Rows.Clear();
+                if (rClient == null)
+                {
+                    rClient = new RestClient();
+                }
+                rClient.endPoint = "http://localhost:8080/Files/";
+                try
+                {
+                    isOnline = true;
+                    string strResponse = rClient.makeRequest();
+                    dataGridView1.Rows.Clear();
 
-                filesListFromJson = new JavaScriptSerializer().Deserialize<List<FileData>>(strResponse);
-            }catch(Exception e)
-            {
-                isOnline = false;
-                loadFilesFromDevice();
-            }
+                    filesListFromJson = new JavaScriptSerializer().Deserialize<List<FullFileData>>(strResponse);
 
-            SaveJsonWithFilesOnDevice();
+                    SaveJsonWithFilesOnDevice();
+                }
+                catch (Exception e)
+                {
+                    isOnline = false;
+                    loadFilesFromDevice();
+                }
+            }
             int i = 0;
-            foreach (FileData file in filesListFromJson)
+            foreach (FullFileData file in filesListFromJson)
             {
                 file.FileId = (++i);
                 bindingSource.Add(file);
@@ -179,12 +185,14 @@ namespace TechnikiInterentoweClient
         /// <param name="selectedRow"></param
         private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
-            CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(fileNameWithoutFormat + "/" + client_name);
+            CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
+                                                                                  { FileName = fileNameWithoutFormat ,
+                                                                                    UserName = client_name });
             OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
         #endregion
 
-        private CommonFileContent SendReqToOpenFileAndReturnContentOfIt(string endOfPath)
+        private CommonFileContent SendReqToOpenFileAndReturnContentOfIt(UserAndFileNamesPair userAndFileNames)
         {
             if (isOnline)
             {
@@ -193,13 +201,24 @@ namespace TechnikiInterentoweClient
                     rClient = new RestClient();
                 }
 
-                rClient.endPoint = "http://localhost:8080/OpenFile/" + endOfPath;
+                rClient.endPoint = "http://localhost:8080/OpenFile/" + userAndFileNames.FileName + "/" + userAndFileNames.UserName;
                 string strResponse = rClient.makeRequest();
 
                 return JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
             }
-            //TODO: per offline
-            return new CommonFileContent();
+            CommonFileContent fileFromDevice = new CommonFileContent();
+            foreach (FullFileData fileContent in filesListFromJson)
+            {
+                if(fileContent.Name.Equals(userAndFileNames.FileName))
+                {
+                    fileFromDevice.EditorName = fileContent.EditorName;
+                    fileFromDevice.FileContent1 = fileContent.FileContent;
+                    fileFromDevice.FileId = fileContent.FileId;
+                    fileFromDevice.IsEdited = fileContent.IsEdited;
+                    fileFromDevice.Name = fileContent.Name;
+                }
+            }
+            return fileFromDevice;
         }
 
         private void createAndOpenNewFile()
@@ -226,7 +245,9 @@ namespace TechnikiInterentoweClient
             rClient.endPoint = "http://localhost:8080/TryCreate/";
             if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
             {
-                CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(fileNameFromUser + "/" + client_name);
+                CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
+                                                                                      { FileName = fileNameFromUser,
+                                                                                        UserName = client_name });
                 OpenNewTabPage(fileNameFromUser, file_content.FileContent1, file_content.IsEdited);
 
                 UpdateFilesList();

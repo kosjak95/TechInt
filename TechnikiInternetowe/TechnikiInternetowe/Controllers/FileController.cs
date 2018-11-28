@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Data.Entity;
 using TechnikiInternetowe.WebSockets;
 using TechnikiInterentoweCommon;
+using System.Collections.Generic;
 
 namespace TechnikiInternetowe.Controllers
 {
@@ -26,7 +27,16 @@ namespace TechnikiInternetowe.Controllers
             DB_TechIntEntities db = new DB_TechIntEntities();
             var dane = db.Files.Select(s => new { s.FileId, s.LastUpdateTs, s.Name, s.Version, s.IsEdited, s.EditorName });
 
-            return new JavaScriptSerializer().Serialize(dane);
+            List<FileData> baseData = new JavaScriptSerializer().Deserialize<List<FileData>>(
+                                          new JavaScriptSerializer().Serialize(dane));
+            List<FullFileData> fullFileDatas = new List<FullFileData>();
+            foreach(FileData fileData in baseData)
+            {
+                FullFileData tmp = new FullFileData();
+                tmp.setAll(fileData, OnlyGetFileContent(AppDomain.CurrentDomain.BaseDirectory, fileData.Name));
+                fullFileDatas.Add(tmp);
+            }
+            return new JavaScriptSerializer().Serialize(fullFileDatas);
         }
 
         /// <summary>
@@ -49,10 +59,10 @@ namespace TechnikiInternetowe.Controllers
                     content = sr.ReadToEnd();
                 }
                 file_content = new DBEntity.FileContent() { FileId = file.FileId,
-                                                   Name = file.Name,
-                                                   IsEdited = file.IsEdited,
-                                                   FileContent1 = content,
-                                                   EditorName = editorName };
+                                                            Name = file.Name,
+                                                            IsEdited = file.IsEdited,
+                                                            FileContent1 = content,
+                                                            EditorName = editorName };
 
                 if (file.IsEdited == false)
                 {
@@ -70,6 +80,29 @@ namespace TechnikiInternetowe.Controllers
             }
 
             return JsonConvert.SerializeObject(file_content);
+        }
+
+        /// <summary>
+        /// Function only return file content, no locking, no other data
+        /// </summary>
+        /// <param name="project_path"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        internal static string OnlyGetFileContent(string project_path, string fileName)
+        {
+            DB_TechIntEntities db = new DB_TechIntEntities();
+            try
+            {
+                Files file = db.Files.Where(w => w.Name == fileName).First();
+                using (StreamReader sr = new StreamReader(project_path + @file.FileSrc + file.Name + ".txt"))
+                {
+                    return sr.ReadToEnd();
+                }
+            } catch (Exception e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+                return null;
+            }
         }
 
         private static void sendUpdateFileListToAll()

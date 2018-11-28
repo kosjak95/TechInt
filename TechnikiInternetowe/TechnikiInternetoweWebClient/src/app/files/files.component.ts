@@ -35,10 +35,11 @@ export class FilesComponent implements OnInit {
     this.files = [];
     this.filesService.getFiles()
       .subscribe(
-        (res: File[]) => {
+      (res: File[]) => {
+        console.log(res);
           this.filesData = res;
           this.filesData.forEach(x => {
-            x.LastUpdateTs = formatDate(x.LastUpdateTs.substring(6, 19), 'dd-MM-yyyy hh:mm:ss a', 'en-US');
+            x.LastUpdateTs = formatDate(x.LastUpdateTs.substring(0, 19), 'dd-MM-yyyy hh:mm:ss a', 'en-US');
           })
           this.dataSource = this.filesData;
         },

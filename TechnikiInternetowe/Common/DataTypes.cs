@@ -21,6 +21,28 @@ namespace TechnikiInterentoweCommon
         public int Version { get; set; }
     }
 
+    public class FullFileData : FileData
+    {
+        public string FileContent { get; set; }
+
+        public void setAll(FileData p_base, string p_content)
+        {
+            FileId = p_base.FileId;
+            IsEdited = p_base.IsEdited;
+            Name = p_base.Name;
+            EditorName = p_base.EditorName;
+            LastUpdateTs = p_base.LastUpdateTs;
+            Version = p_base.Version;
+            FileContent = p_content;
+        }
+    }
+
+    public class UserAndFileNamesPair
+    {
+        public string UserName { get; set; }
+        public string FileName { get; set; }
+    }
+
     public class Message
     {
         public MsgType Key;
