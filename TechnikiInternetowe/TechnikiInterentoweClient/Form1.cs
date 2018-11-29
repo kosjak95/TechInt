@@ -105,15 +105,10 @@ namespace TechnikiInterentoweClient
         private async void UpdateFilesList()
         {
             if (isOnline)
-            {
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
-                rClient.endPoint = "http://localhost:8080/Files/";
+            { 
                 try
                 {
-                    string strResponse = rClient.makeRequest();
+                    string strResponse = MakePutRequest("Files/");
                     dataGridView1.Rows.Clear();
 
                     filesListFromJson = new JavaScriptSerializer().Deserialize<List<FullFileData>>(strResponse);
@@ -143,13 +138,7 @@ namespace TechnikiInterentoweClient
             string content = ((TextBox)tab.Controls[0]).Text;
             if (isOnline)
             {
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
-
-                rClient.endPoint = "http://localhost:8080/UpdateContent/";
-                bool Response = rClient.makePostRequest(new { file_name = fileName, file_data = content });
+                MakePostRequest("UpdateContent/", new { file_name = fileName, file_data = content });
             }
             else
             {
@@ -215,18 +204,32 @@ namespace TechnikiInterentoweClient
         }
         #endregion
 
+        private void ConfigureBeforeRequest(string routeAndArgs)
+        {
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
+            rClient.endPoint = "http://localhost:8080/" + routeAndArgs;
+        }
+
+        private string MakePutRequest(string routeAndArgs)
+        {
+            ConfigureBeforeRequest(routeAndArgs);
+            return rClient.makeRequest();
+        }
+
+        private bool MakePostRequest(string route, object inObject)
+        {
+            ConfigureBeforeRequest(route);
+            return rClient.makePostRequest(inObject);
+        }
+
         private CommonFileContent SendReqToOpenFileAndReturnContentOfIt(UserAndFileNamesPair userAndFileNames)
         {
             if (isOnline)
             {
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
-
-                rClient.endPoint = "http://localhost:8080/OpenFile/" + userAndFileNames.FileName + "/" + userAndFileNames.UserName;
-                string strResponse = rClient.makeRequest();
-
+                string strResponse = MakePutRequest("OpenFile/" + userAndFileNames.FileName + "/" + userAndFileNames.UserName);
                 return JsonConvert.DeserializeObject<CommonFileContent>(strResponse);
             }
             CommonFileContent fileFromDevice = new CommonFileContent();
@@ -257,13 +260,7 @@ namespace TechnikiInterentoweClient
 
             if (isOnline)
             {
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
-
-                rClient.endPoint = "http://localhost:8080/TryCreate/";
-                if (rClient.makePostRequest(new { file_name = fileNameFromUser }))
+                if (MakePostRequest("TryCreate/", new { file_name = fileNameFromUser }))
                 {
                     CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
                     {
@@ -301,11 +298,6 @@ namespace TechnikiInterentoweClient
         {
             if (e.TabPageIndex == 0)
             {
-                if (rClient == null)
-                {
-                    rClient = new RestClient();
-                }
-
                 dataGridView1.Rows.Clear();
                 dataGridView1.Refresh();
 
@@ -332,14 +324,8 @@ namespace TechnikiInterentoweClient
                 return;
             }
 
-            if (rClient == null)
-            {
-                rClient = new RestClient();
-            }
-            rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
-
             string fileName = page.SelectedTab.AccessibilityObject.Name;
-            rClient.makePostRequest(new { fileName });
+            MakePostRequest("ReleaseFileCludge/", new { fileName });
             page.SelectedTab.Dispose();
         }
 
@@ -471,12 +457,7 @@ namespace TechnikiInterentoweClient
 
         private bool checkServerConnection()
         {
-            if (rClient == null)
-            {
-                rClient = new RestClient();
-            }
-            rClient.endPoint = "http://localhost:8080/Files/";
-            string strResponse = rClient.makeRequest();
+            string strResponse = MakePutRequest("Files/");
             if (strResponse.Equals("Nie można połączyć się z serwerem zdalnym"))
                 return false;
 
