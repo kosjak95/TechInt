@@ -21,7 +21,7 @@ namespace TechnikiInterentoweClient
         public Form1()
         {
             filesListFromJson = null;
-            isOnline = true;
+            setConnectionStatus(true);
             ClientName clientName = new ClientName();
             DialogResult result = clientName.ShowDialog(this);
             if (result == DialogResult.OK)
@@ -46,6 +46,17 @@ namespace TechnikiInterentoweClient
             dataGridView1.DataSource = bindingSource;
 
             UpdateFilesList();
+        }
+
+        void setConnectionStatus(bool status)
+        {
+            isOnline = status;
+            if (status)
+            {
+                this.Icon = Properties.Resources.onliceIcon;
+                return;
+            }
+            this.Icon = Properties.Resources.offlineIcon;
         }
 
         /// <summary>
@@ -79,7 +90,8 @@ namespace TechnikiInterentoweClient
                     string json = r.ReadToEnd();
                     filesListFromJson = JsonConvert.DeserializeObject<List<FullFileData>>(json);
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 MessageBox.Show("Your Internet connection lost. \n We are sorry, but it's first start-up" +
                     " of application on this computer. We cannot load data.");
@@ -110,7 +122,7 @@ namespace TechnikiInterentoweClient
                 }
                 catch (Exception e)
                 {
-                    isOnline = false;
+                    setConnectionStatus(false);
                     loadFilesFromDevice();
                 }
             }
@@ -195,8 +207,10 @@ namespace TechnikiInterentoweClient
         private void SendReqToServerWithOpen(string fileNameWithoutFormat)
         {
             CommonFileContent file_content = SendReqToOpenFileAndReturnContentOfIt(new UserAndFileNamesPair()
-                                                                                  { FileName = fileNameWithoutFormat ,
-                                                                                    UserName = client_name });
+            {
+                FileName = fileNameWithoutFormat,
+                UserName = client_name
+            });
             OpenNewTabPage(fileNameWithoutFormat, file_content.FileContent1, file_content.IsEdited);
         }
         #endregion
@@ -265,7 +279,7 @@ namespace TechnikiInterentoweClient
             else
             {
                 FullFileData fileData = filesListFromJson.Find(item => item.Name.Equals(fileNameFromUser));
-                if(fileData == null)
+                if (fileData == null)
                 {
                     fileData = new FullFileData();
                     fileData.EditorName = client_name;
@@ -409,10 +423,13 @@ namespace TechnikiInterentoweClient
                         }
                     case MsgType.AUTHORIZATION_MSG:
                         {
-                            Message msg = new Message() { Key = MsgType.AUTHORIZATION_MSG,
-                                                          Destination = null,
-                                                          Sender = client_name,
-                                                          Value = client_name };
+                            Message msg = new Message()
+                            {
+                                Key = MsgType.AUTHORIZATION_MSG,
+                                Destination = null,
+                                Sender = client_name,
+                                Value = client_name
+                            };
                             clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
                             clientSocket.msgsList.RemoveAt(0);
                             break;
@@ -442,7 +459,28 @@ namespace TechnikiInterentoweClient
                 }
 
             }
+
+            //reconect to server
+            bool connectStatus = checkServerConnection();
+            if(connectStatus != isOnline)
+            {
+                setConnectionStatus(connectStatus);
+                //TODO: sync with server
+            }
         }
 
+        private bool checkServerConnection()
+        {
+            if (rClient == null)
+            {
+                rClient = new RestClient();
+            }
+            rClient.endPoint = "http://localhost:8080/Files/";
+            string strResponse = rClient.makeRequest();
+            if (strResponse.Equals("Nie można połączyć się z serwerem zdalnym"))
+                return false;
+
+            return true;
+        }
     }
 }

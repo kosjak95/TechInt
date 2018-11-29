@@ -56,7 +56,6 @@ namespace TechnikiInterentoweClient
             }
             catch (Exception e)
             {
-
                 return e.Message;
             }
 
@@ -69,17 +68,23 @@ namespace TechnikiInterentoweClient
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = httpVerb.POST.ToString();
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            try
             {
-                string json = new JavaScriptSerializer().Serialize(toSerialize);
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    string json = new JavaScriptSerializer().Serialize(toSerialize);
 
-                streamWriter.Write(json);
-            }
+                    streamWriter.Write(json);
+                }
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    return Convert.ToBoolean(streamReader.ReadToEnd());
+                }
+            }catch(Exception e)
             {
-                return Convert.ToBoolean(streamReader.ReadToEnd());
+                return false;
             }
         }
     }
