@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 
 namespace TechnikiInterentoweClient
 {
-    public enum httpVerb
+    public enum HttpVerb
     {
         GET,
         POST,
@@ -19,21 +19,21 @@ namespace TechnikiInterentoweClient
 
     class RestClient
     {
-        public string endPoint { get; set; }
-        public httpVerb httpMethod { get; set; }
+        public string EndPoint { get; set; }
+        public HttpVerb HttpMethod { get; set; }
 
         public RestClient()
         {
-            endPoint = string.Empty;
-            httpMethod = httpVerb.GET;
+            EndPoint = string.Empty;
+            HttpMethod = HttpVerb.GET;
         }
 
-        public string makeRequest()
+        public string MakeRequest()
         {
             string strResponse = null;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endPoint);
-            request.Method = httpMethod.ToString();
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(EndPoint);
+            request.Method = HttpMethod.ToString();
 
             try
             {
@@ -62,11 +62,11 @@ namespace TechnikiInterentoweClient
             return strResponse;
         }
 
-        public bool makePostRequest(object toSerialize)
+        public bool MakePostRequest(object toSerialize)
         { 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(endPoint);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(EndPoint);
             httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = httpVerb.POST.ToString();
+            httpWebRequest.Method = HttpVerb.POST.ToString();
 
             try
             {
@@ -82,7 +82,7 @@ namespace TechnikiInterentoweClient
                 {
                     return Convert.ToBoolean(streamReader.ReadToEnd());
                 }
-            }catch(Exception e)
+            }catch (Exception)
             {
                 return false;
             }

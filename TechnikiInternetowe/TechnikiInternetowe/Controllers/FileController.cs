@@ -40,6 +40,47 @@ namespace TechnikiInternetowe.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="project_path"></param>
+        /// <param name="file_name"></param>
+        /// <returns></returns>
+        /// [HttpPost]
+        /// [Route("SynchronizeAfterConnectionEstablished")]
+        internal static bool SynchronizeAfterConnectionEstablished(string project_path, List<FullFileData> filesList)
+        {
+            DB_TechIntEntities db = new DB_TechIntEntities();
+            foreach (FullFileData fileData in filesList)
+            {
+                var queryFile = db.Files.Where(w => w.Name == fileData.Name);
+                Files dbFile = null;
+                if (queryFile.Any())
+                    dbFile = queryFile.First();
+
+                if (dbFile == null)
+                {
+                    if (PermissionOnCreateFile(project_path, fileData.Name))
+                    {
+                        UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
+                    }
+                    else
+                    {
+                        //todo: some response about failed sync
+                    }
+                }
+                else
+                {
+                    if(fileData.Version >  int.Parse(dbFile.Version) && !dbFile.IsEdited)
+                    {
+                        UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
+                    }
+                }
+            }
+            //todo: send update
+            return true;
+        }
+
+        /// <summary>
         /// Return contend of given by argument file
         /// </summary>
         /// <returns></returns>
@@ -71,7 +112,7 @@ namespace TechnikiInternetowe.Controllers
                     db.Entry(file).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                sendUpdateFileListToAll();
+                SendUpdateFileListToAll();
             }
             catch (Exception e)
             {
@@ -105,7 +146,7 @@ namespace TechnikiInternetowe.Controllers
             }
         }
 
-        private static void sendUpdateFileListToAll()
+        private static void SendUpdateFileListToAll()
         {
             ServerWebSocket serverSocket = ServerWebSocket.Instance;
             serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() {
@@ -125,8 +166,8 @@ namespace TechnikiInternetowe.Controllers
         //[Route("TryCreate")]
         public static bool PermissionOnCreateFile(string project_path, string file_name)
         {
-            if (isCreationOfFilePossible(file_name))
-                if (insertDataToDb(project_path, file_name))
+            if (IsCreationOfFilePossible(file_name))
+                if (InsertDataToDb(project_path, file_name))
                     return CreateFile(project_path, file_name);
 
             return false;
@@ -160,7 +201,7 @@ namespace TechnikiInternetowe.Controllers
             }
 
             UpdateDataAtDb(file);
-            sendUpdateFileListToAll();
+            SendUpdateFileListToAll();
 
             return true;
         }
@@ -183,7 +224,7 @@ namespace TechnikiInternetowe.Controllers
                 file.EditorName = "";
                 db.Entry(file).State = EntityState.Modified;
                 db.SaveChanges();
-                sendUpdateFileListToAll();
+                SendUpdateFileListToAll();
             }
             catch (Exception e)
             {
@@ -199,7 +240,7 @@ namespace TechnikiInternetowe.Controllers
         #region private methods
 
         //check if file with this name not exist in db
-        private static bool isCreationOfFilePossible(string file_name)
+        private static bool IsCreationOfFilePossible(string file_name)
         {
             DB_TechIntEntities db = new DB_TechIntEntities();
             Files file = null;
@@ -228,7 +269,7 @@ namespace TechnikiInternetowe.Controllers
             try
             {
                 System.IO.File.Create(path).Dispose();
-                sendUpdateFileListToAll();
+                SendUpdateFileListToAll();
             }
             catch (Exception e)
             {
@@ -239,20 +280,21 @@ namespace TechnikiInternetowe.Controllers
         }
 
         //try insert given file into db
-        private static bool insertDataToDb(string project_path, string file_name)
+        private static bool InsertDataToDb(string project_path, string file_name)
         {
             try
             {
                 DB_TechIntEntities db = new DB_TechIntEntities();
-                Files newFile = new Files();
-
-                newFile.Name = file_name;
-                newFile.CreatedTs = DateTime.Now;
-                newFile.LastUpdateTs = DateTime.Now;
-                newFile.FileSrc = @"App_Data\Files\";
-                newFile.Version = "0";
-                newFile.IsEdited = false;
-                newFile.EditorName = "";
+                Files newFile = new Files
+                {
+                    Name = file_name,
+                    CreatedTs = DateTime.Now,
+                    LastUpdateTs = DateTime.Now,
+                    FileSrc = @"App_Data\Files\",
+                    Version = "0",
+                    IsEdited = false,
+                    EditorName = ""
+                };
                 db.Files.Add(newFile);
                 db.SaveChanges();
             }
@@ -271,7 +313,7 @@ namespace TechnikiInternetowe.Controllers
             {
                 DB_TechIntEntities db = new DB_TechIntEntities();
                 file.LastUpdateTs = DateTime.Now;
-                file.Version = (Int32.Parse(file.Version) + 1).ToString();
+                file.Version = (int.Parse(file.Version) + 1).ToString();
                 file.IsEdited = false;
                 file.EditorName = "";
                 db.Entry(file).State = EntityState.Modified;

@@ -27,7 +27,7 @@ namespace TechnikiInterentoweClient
                 if (pages.Count > 1)
                 {
                     RestClient restClient = new RestClient();
-                    rClient.endPoint = "http://localhost:8080/ReleaseFileCludge/";
+                    rClient.EndPoint = "http://localhost:8080/ReleaseFileCludge/";
                     //if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
                     foreach (TabPage page in pages)
                     {
@@ -39,7 +39,7 @@ namespace TechnikiInterentoweClient
                             continue;
 
                         string fileName = page.AccessibilityObject.Name;
-                        rClient.makePostRequest(new { fileName });
+                        rClient.MakePostRequest(new { fileName });
 
                     }
                 } 
@@ -113,7 +113,7 @@ namespace TechnikiInterentoweClient
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Size = new System.Drawing.Size(1219, 477);
             this.dataGridView1.TabIndex = 7;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             // 
             // fileIdDataGridViewTextBoxColumn
             // 
@@ -185,9 +185,9 @@ namespace TechnikiInterentoweClient
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(1233, 510);
             this.tabs.TabIndex = 5;
-            this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabs_Selecting);
-            this.tabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseClick);
-            this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabs_MouseDoubleClick);
+            this.tabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tabs_Selecting);
+            this.tabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Tabs_MouseClick);
+            this.tabs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Tabs_MouseDoubleClick);
             // 
             // addTab
             // 

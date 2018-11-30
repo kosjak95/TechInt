@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TechnikiInterentoweCommon;
 using TechnikiInternetowe.Controllers;
 using TechnikiInternetowe.WebSockets;
 
@@ -9,18 +11,18 @@ namespace TechnikiInternetowe.Communication
 {
     public class ExternalAdapterController : Controller
     {
-        private static string project_path { get; set; }
-        private ServerWebSocket serverSocket { get; set; }
+        private static string Project_path { get; set; }
+        private ServerWebSocket ServerSocket { get; set; }
 
         public ExternalAdapterController()
         {
-            project_path = AppDomain.CurrentDomain.BaseDirectory;
-            serverSocket = ServerWebSocket.Instance;
+            Project_path = AppDomain.CurrentDomain.BaseDirectory;
+            ServerSocket = ServerWebSocket.Instance;
         }
 
         ~ExternalAdapterController()
         {
-            serverSocket.closeServer();
+            ServerSocket.closeServer();
         }
 
         [HttpGet]
@@ -34,14 +36,21 @@ namespace TechnikiInternetowe.Communication
         [Route("OpenFile/{fileName}/{editorName}")]
         public async Task<string> GetFileContent(string fileName, string editorName)
         {
-            return await Task.Run(() => FileController.GetFileContent(project_path, fileName, editorName));
+            return await Task.Run(() => FileController.GetFileContent(Project_path, fileName, editorName));
         }
 
         [HttpPost]
         [Route("TryCreate")]
         public async Task<bool> PermissionOnCreateFile(string file_name)
         {
-            return await Task.Run(() => FileController.PermissionOnCreateFile(project_path, file_name));
+            return await Task.Run(() => FileController.PermissionOnCreateFile(Project_path, file_name));
+        }
+
+        [HttpPost]
+        [Route("SynchronizeAfterConnectionEstablished")]
+        public async Task<bool> SynchronizeAfterConnectionEstablished(List<FullFileData> filesList)
+        {
+            return await Task.Run(() => FileController.SynchronizeAfterConnectionEstablished(Project_path, filesList));
         }
 
         [System.Web.Http.HttpOptions]
@@ -51,7 +60,7 @@ namespace TechnikiInternetowe.Communication
             if (file_name == null)
                 return JsonConvert.SerializeObject(false);
 
-            return await Task.Run(() => JsonConvert.SerializeObject(FileController.PermissionOnCreateFile(project_path, file_name)));
+            return await Task.Run(() => JsonConvert.SerializeObject(FileController.PermissionOnCreateFile(Project_path, file_name)));
         }
 
 
@@ -59,14 +68,14 @@ namespace TechnikiInternetowe.Communication
         [Route("UpdateContent")]
         public async Task<bool> UpdateFileContent(string file_name, string file_data)
         {
-            return await Task.Run(() => FileController.UpdateFileContent(project_path, file_name, file_data));
+            return await Task.Run(() => FileController.UpdateFileContent(Project_path, file_name, file_data));
         }
 
         [System.Web.Http.HttpOptions]
         [Route("UpdateContentCludge")]
         public async Task<string> UpdateFileContentReqStruct([System.Web.Http.FromBody] string fileName, string content)
         {
-            return await Task.Run(() => JsonConvert.SerializeObject(FileController.UpdateFileContent(project_path, fileName,content)));
+            return await Task.Run(() => JsonConvert.SerializeObject(FileController.UpdateFileContent(Project_path, fileName,content)));
         }
 
         [System.Web.Http.HttpOptions]

@@ -21,7 +21,7 @@ namespace TechnikiInterentoweClient
         public Form1()
         {
             filesListFromJson = null;
-            setConnectionStatus(true);
+            SetConnectionStatus(true);
             ClientName clientName = new ClientName();
             DialogResult result = clientName.ShowDialog(this);
             if (result == DialogResult.OK)
@@ -48,7 +48,7 @@ namespace TechnikiInterentoweClient
             UpdateFilesList();
         }
 
-        void setConnectionStatus(bool status)
+        void SetConnectionStatus(bool status)
         {
             isOnline = status;
             if (status)
@@ -79,7 +79,7 @@ namespace TechnikiInterentoweClient
         /// <summary>
         /// Load data from device to filesListFromJson, if Internet connection is disable
         /// </summary>
-        private void loadFilesFromDevice()
+        private void LoadFilesFromDevice()
         {
             try
             {
@@ -91,7 +91,7 @@ namespace TechnikiInterentoweClient
                     filesListFromJson = JsonConvert.DeserializeObject<List<FullFileData>>(json);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Your Internet connection lost. \n We are sorry, but it's first start-up" +
                     " of application on this computer. We cannot load data.");
@@ -115,10 +115,10 @@ namespace TechnikiInterentoweClient
 
                     SaveJsonWithFilesOnDevice();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    setConnectionStatus(false);
-                    loadFilesFromDevice();
+                    SetConnectionStatus(false);
+                    LoadFilesFromDevice();
                 }
             }
             int i = 0;
@@ -167,14 +167,16 @@ namespace TechnikiInterentoweClient
             tabs.SelectedTab = tp;
             tp.Dock = DockStyle.Fill;
 
-            TextBox fileContentTB = new TextBox();
-            fileContentTB.Dock = DockStyle.Fill;
-            fileContentTB.Location = new System.Drawing.Point(0, Convert.ToInt32(0.2 * Convert.ToInt32(tp.Size.Height.ToString())));
-            fileContentTB.Multiline = true;
-            fileContentTB.ScrollBars = ScrollBars.Vertical;
-            fileContentTB.AcceptsReturn = true;
-            fileContentTB.AcceptsTab = true;
-            fileContentTB.WordWrap = true;
+            TextBox fileContentTB = new TextBox
+            {
+                Dock = DockStyle.Fill,
+                Location = new System.Drawing.Point(0, Convert.ToInt32(0.2 * Convert.ToInt32(tp.Size.Height.ToString()))),
+                Multiline = true,
+                ScrollBars = ScrollBars.Vertical,
+                AcceptsReturn = true,
+                AcceptsTab = true,
+                WordWrap = true
+            };
             tp.Controls.Add(fileContentTB);
             fileContentTB.Text = fileContent;
 
@@ -210,19 +212,19 @@ namespace TechnikiInterentoweClient
             {
                 rClient = new RestClient();
             }
-            rClient.endPoint = "http://localhost:8080/" + routeAndArgs;
+            rClient.EndPoint = "http://localhost:8080/" + routeAndArgs;
         }
 
         private string MakePutRequest(string routeAndArgs)
         {
             ConfigureBeforeRequest(routeAndArgs);
-            return rClient.makeRequest();
+            return rClient.MakeRequest();
         }
 
         private bool MakePostRequest(string route, object inObject)
         {
             ConfigureBeforeRequest(route);
-            return rClient.makePostRequest(inObject);
+            return rClient.MakePostRequest(inObject);
         }
 
         private CommonFileContent SendReqToOpenFileAndReturnContentOfIt(UserAndFileNamesPair userAndFileNames)
@@ -242,7 +244,7 @@ namespace TechnikiInterentoweClient
             return fileFromDevice;
         }
 
-        private void createAndOpenNewFile()
+        private void CreateAndOpenNewFile()
         {
             CreateFileDialog createDialog = new CreateFileDialog();
 
@@ -278,13 +280,14 @@ namespace TechnikiInterentoweClient
                 FullFileData fileData = filesListFromJson.Find(item => item.Name.Equals(fileNameFromUser));
                 if (fileData == null)
                 {
-                    fileData = new FullFileData();
-                    fileData.EditorName = client_name;
-                    fileData.FileContent = "";
-                    fileData.FileId = -1;
-                    fileData.IsEdited = false;
-                    fileData.Name = fileNameFromUser;
-                    fileData.Version = 0;
+                    fileData = new FullFileData
+                    {
+                        EditorName = client_name,
+                        FileContent = "",
+                        IsEdited = false,
+                        Name = fileNameFromUser,
+                        Version = 0
+                    };
                     filesListFromJson.Add(fileData);
                     OpenNewTabPage(fileNameFromUser, fileData.FileContent, fileData.IsEdited);
                     UpdateFilesList();
@@ -294,7 +297,7 @@ namespace TechnikiInterentoweClient
             MessageBox.Show("Sorry You can't create this file");
         }
 
-        private void tabs_Selecting(object sender, TabControlCancelEventArgs e)
+        private void Tabs_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (e.TabPageIndex == 0)
             {
@@ -305,7 +308,7 @@ namespace TechnikiInterentoweClient
             }
         }
 
-        private void tabs_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void Tabs_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             TabControl page = (TabControl)sender;
             if (e.Button == MouseButtons.Left)
@@ -329,10 +332,9 @@ namespace TechnikiInterentoweClient
             page.SelectedTab.Dispose();
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            if (dgv == null)
+            if (!(sender is DataGridView dgv))
             {
                 return;
             }
@@ -359,14 +361,14 @@ namespace TechnikiInterentoweClient
             SendReqToServerWithOpen(file_name);
         }
 
-        private void tabs_MouseClick(object sender, MouseEventArgs e)
+        private void Tabs_MouseClick(object sender, MouseEventArgs e)
         {
             TabControl page = (TabControl)sender;
             if (e.Button == MouseButtons.Left)
             {
                 if (page.SelectedTab.AccessibilityObject.Name.Equals("    +"))
                 {
-                    createAndOpenNewFile();
+                    CreateAndOpenNewFile();
                 }
             }
         }
@@ -385,16 +387,17 @@ namespace TechnikiInterentoweClient
             this.chatForm = null;
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            Timer timer = new Timer();
-            timer.Interval = (500);
-            timer.Tick += new EventHandler(timer_Tick);
+            Timer timer = new Timer
+            {
+                Interval = 500
+            };
+            timer.Tick += new EventHandler(Timer_Tick);
             timer.Start();
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
             if (clientSocket.msgsList.Count > 0)
             {
@@ -447,15 +450,15 @@ namespace TechnikiInterentoweClient
             }
 
             //reconect to server
-            bool connectStatus = checkServerConnection();
+            bool connectStatus = CheckServerConnection();
             if(connectStatus != isOnline)
             {
-                setConnectionStatus(connectStatus);
-                //TODO: sync with server
+                SetConnectionStatus(connectStatus);
+                MakePostRequest("SynchronizeAfterConnectionEstablished/", filesListFromJson);
             }
         }
 
-        private bool checkServerConnection()
+        private bool CheckServerConnection()
         {
             string strResponse = MakePutRequest("Files/");
             if (strResponse.Equals("Nie można połączyć się z serwerem zdalnym"))
