@@ -412,14 +412,13 @@ namespace TechnikiInterentoweClient
                         }
                     case MsgType.AUTHORIZATION_MSG:
                         {
-                            Message msg = new Message()
+                            clientSocket.SendMsg(new Message()
                             {
                                 Key = MsgType.AUTHORIZATION_MSG,
-                                Destination = null,
+                                Value = client_name,
                                 Sender = client_name,
-                                Value = client_name
-                            };
-                            clientSocket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+                                Destination = "Server"
+                        });
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }

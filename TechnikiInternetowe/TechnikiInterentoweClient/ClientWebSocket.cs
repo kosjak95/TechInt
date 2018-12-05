@@ -24,9 +24,9 @@ namespace TechnikiInterentoweClient
 
             websocketClient = new WebSocket(this.url, this.protocol, this.version);
 
-            websocketClient.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocketClient_Error);
-            websocketClient.Opened += new EventHandler(websocketClient_Opened);
-            websocketClient.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocketClient_MessageReceived);
+            websocketClient.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(WebsocketClient_Error);
+            websocketClient.Opened += new EventHandler(WebsocketClient_Opened);
+            websocketClient.MessageReceived += new EventHandler<MessageReceivedEventArgs>(WebsocketClient_MessageReceived);
         }
 
         public void Start()
@@ -34,25 +34,26 @@ namespace TechnikiInterentoweClient
             websocketClient.Open();
         }
 
-        private void websocketClient_MessageReceived(object sender, MessageReceivedEventArgs e)
+        private void WebsocketClient_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
             Message message = new JavaScriptSerializer().Deserialize<Message>(e.Message);
             msgsList.Add(message);
         }
 
-        private void websocketClient_Opened(object sender, EventArgs e)
+        private void WebsocketClient_Opened(object sender, EventArgs e)
         {
             Console.Write("Succesfully connected");
         }
 
-        private void websocketClient_Error(object sender, ErrorEventArgs e)
+        private void WebsocketClient_Error(object sender, ErrorEventArgs e)
         {
             Console.WriteLine(e.Exception.Message);
         }
 
-        public void sendMsg(string msg)
+        public void SendMsg(Message msg)
         {
-            websocketClient.Send(msg);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            websocketClient.Send(serializer.Serialize(msg));
         }
 
         public void Stop()

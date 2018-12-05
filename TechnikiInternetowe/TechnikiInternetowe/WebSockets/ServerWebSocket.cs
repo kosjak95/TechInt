@@ -113,11 +113,14 @@ namespace TechnikiInternetowe.WebSockets
             webSocketServer.Stop();
         }
 
-        public void sendToAll(string msg)
+        public void sendToAll(Message msg)
         {
-            foreach(Client client in listOfClientsSessions)
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            foreach (Client client in listOfClientsSessions)
             {
-                client.socket.Send(msg);
+                msg.Destination = client.clientName;
+                msg.Sender = "Server";
+                client.socket.Send(serializer.Serialize(msg));
             }
         }
 

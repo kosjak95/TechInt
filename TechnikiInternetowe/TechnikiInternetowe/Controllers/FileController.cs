@@ -76,7 +76,7 @@ namespace TechnikiInternetowe.Controllers
                     }
                 }
             }
-            //todo: send update
+            SendUpdateFileListToAll();
             return true;
         }
 
@@ -149,11 +149,11 @@ namespace TechnikiInternetowe.Controllers
         private static void SendUpdateFileListToAll()
         {
             ServerWebSocket serverSocket = ServerWebSocket.Instance;
-            serverSocket.sendToAll(new JavaScriptSerializer().Serialize(new Message() {
-                                                              Key = MsgType.SYSTEM_ACTION_MSG,
-                                                              Destination = null,
-                                                              Sender = "server",
-                                                              Value = "Update" }));
+            serverSocket.sendToAll(new Message()
+            {
+                Key = MsgType.SYSTEM_ACTION_MSG,
+                Value = "Update"
+            });
         }
 
         /// <summary>

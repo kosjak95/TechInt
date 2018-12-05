@@ -24,11 +24,13 @@ namespace TechnikiInterentoweClient
         private void send_button_Click(object sender, EventArgs e)
         {
             this.tbChat.Text += "\n Ja: " + tbMsg.Text;
-            Message msg = new Message() { Key = TechnikiInterentoweCommon.MsgType.CHAT_MSG,
-                                          Destination = this.Text,
-                                          Sender = clientName,
-                                          Value = this.tbMsg.Text };
-            socket.sendMsg(new JavaScriptSerializer().Serialize(msg));
+            socket.SendMsg(new Message()
+            {
+                Key = TechnikiInterentoweCommon.MsgType.CHAT_MSG,
+                Destination = this.Text,
+                Sender = clientName,
+                Value = this.tbMsg.Text
+            });
             tbMsg.Text = "";
         }
 
