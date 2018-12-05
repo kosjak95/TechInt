@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using TechnikiInterentoweCommon;
@@ -20,8 +21,8 @@ namespace TechnikiInterentoweClient
 
         public Form1()
         {
-            filesListFromJson = null;
-            SetConnectionStatus(true);
+            filesListFromJson = new List<FullFileData>();
+            SetConnectionStatus(false);
             ClientName clientName = new ClientName();
             DialogResult result = clientName.ShowDialog(this);
             if (result == DialogResult.OK)
@@ -105,21 +106,18 @@ namespace TechnikiInterentoweClient
         private async void UpdateFilesList()
         {
             if (isOnline)
-            { 
-                try
-                {
-                    string strResponse = MakePutRequest("Files/");
-                    dataGridView1.Rows.Clear();
+            {
+                string strResponse = MakePutRequest("Files/");
+                dataGridView1.Rows.Clear();
 
-                    filesListFromJson = new JavaScriptSerializer().Deserialize<List<FullFileData>>(strResponse);
+                filesListFromJson = new JavaScriptSerializer().Deserialize<List<FullFileData>>(strResponse);
 
-                    SaveJsonWithFilesOnDevice();
-                }
-                catch (Exception)
-                {
-                    SetConnectionStatus(false);
-                    LoadFilesFromDevice();
-                }
+                SaveJsonWithFilesOnDevice();
+            }
+            else
+            {
+                SetConnectionStatus(false);
+                LoadFilesFromDevice();
             }
             int i = 0;
             foreach (FullFileData file in filesListFromJson)
@@ -404,9 +402,15 @@ namespace TechnikiInterentoweClient
                 Message message = clientSocket.msgsList[0];
                 switch (message.Key)
                 {
-                    case MsgType.SYSTEM_ACTION_MSG:
+                    case MsgType.REFRESH_FILES_LIST_MSG:
                         {
                             UpdateFilesList();
+                            clientSocket.msgsList.RemoveAt(0);
+                            break;
+                        }
+                    case MsgType.FAIL_SYNC_FILES_MSG:
+                        {
+                            InformUserAboutFailSyncFilesAfterReEstablishedConnection(message.Value);
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
@@ -418,7 +422,8 @@ namespace TechnikiInterentoweClient
                                 Value = client_name,
                                 Sender = client_name,
                                 Destination = "Server"
-                        });
+                            });
+                            SetConnectionStatus(true);
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
@@ -453,8 +458,27 @@ namespace TechnikiInterentoweClient
             if(connectStatus != isOnline)
             {
                 SetConnectionStatus(connectStatus);
-                MakePostRequest("SynchronizeAfterConnectionEstablished/", filesListFromJson);
+                string serializedObject = new JavaScriptSerializer().Serialize(new SynchronizeAfterConnectionEstablishedMsg()
+                {
+                    filesList = filesListFromJson,
+                    sender = client_name
+                });
+                MakePostRequest("SynchronizeAfterConnectionEstablished/", 
+                                new { synchMsg = serializedObject });
             }
+        }
+
+        private void InformUserAboutFailSyncFilesAfterReEstablishedConnection(string serializedListOfFailSyncFiles)
+        {
+            List<string> filesList = new JavaScriptSerializer().Deserialize<List<string>>(serializedListOfFailSyncFiles);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("Nie udało się zsynchronizować następujących plików:\n");
+            foreach(string fileName in filesList)
+            {
+                builder.Append(fileName).Append("\n");
+            }
+            builder.Append("Dane zostały utracone");
+            System.Web.UI.ScriptManager.RegisterClientScriptBlock(null, this.GetType(), "alertMessage", builder.ToString(), true);
         }
 
         private bool CheckServerConnection()

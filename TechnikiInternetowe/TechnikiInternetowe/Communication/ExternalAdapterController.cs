@@ -22,7 +22,7 @@ namespace TechnikiInternetowe.Communication
 
         ~ExternalAdapterController()
         {
-            ServerSocket.closeServer();
+            ServerSocket.CloseServer();
         }
 
         [HttpGet]
@@ -48,9 +48,9 @@ namespace TechnikiInternetowe.Communication
 
         [HttpPost]
         [Route("SynchronizeAfterConnectionEstablished")]
-        public async Task<bool> SynchronizeAfterConnectionEstablished(List<FullFileData> filesList)
+        public async Task<bool> SynchronizeAfterConnectionEstablished(string synchMsg)
         {
-            return await Task.Run(() => FileController.SynchronizeAfterConnectionEstablished(Project_path, filesList));
+            return await Task.Run(() => FileController.SynchronizeAfterConnectionEstablished(Project_path, synchMsg));
         }
 
         [System.Web.Http.HttpOptions]

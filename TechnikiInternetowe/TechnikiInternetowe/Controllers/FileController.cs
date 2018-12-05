@@ -47,10 +47,14 @@ namespace TechnikiInternetowe.Controllers
         /// <returns></returns>
         /// [HttpPost]
         /// [Route("SynchronizeAfterConnectionEstablished")]
-        internal static bool SynchronizeAfterConnectionEstablished(string project_path, List<FullFileData> filesList)
+        internal static bool SynchronizeAfterConnectionEstablished(string project_path, 
+                                                                   string synchCodedMsg)
         {
+            SynchronizeAfterConnectionEstablishedMsg synchMsg = 
+                new JavaScriptSerializer().Deserialize<SynchronizeAfterConnectionEstablishedMsg>(synchCodedMsg);
             DB_TechIntEntities db = new DB_TechIntEntities();
-            foreach (FullFileData fileData in filesList)
+            List<string> failedSyncFileNames = new List<string>();
+            foreach (FullFileData fileData in synchMsg.filesList)
             {
                 var queryFile = db.Files.Where(w => w.Name == fileData.Name);
                 Files dbFile = null;
@@ -65,7 +69,7 @@ namespace TechnikiInternetowe.Controllers
                     }
                     else
                     {
-                        //todo: some response about failed sync
+                        failedSyncFileNames.Add(fileData.Name);
                     }
                 }
                 else
@@ -76,6 +80,7 @@ namespace TechnikiInternetowe.Controllers
                     }
                 }
             }
+            SendFailedSyncFilesMsg(synchMsg.sender, failedSyncFileNames);
             SendUpdateFileListToAll();
             return true;
         }
@@ -149,11 +154,21 @@ namespace TechnikiInternetowe.Controllers
         private static void SendUpdateFileListToAll()
         {
             ServerWebSocket serverSocket = ServerWebSocket.Instance;
-            serverSocket.sendToAll(new Message()
+            serverSocket.SendToAll(new Message()
             {
-                Key = MsgType.SYSTEM_ACTION_MSG,
+                Key = MsgType.REFRESH_FILES_LIST_MSG,
                 Value = "Update"
             });
+        }
+
+        private static void SendFailedSyncFilesMsg(string receiver, List<string> filesNameslist)
+        {
+            if(filesNameslist.Count.Equals(0))
+            {
+                return;
+            }
+            ServerWebSocket serverSocket = ServerWebSocket.Instance;
+            serverSocket.SendToOne(receiver, filesNameslist);
         }
 
         /// <summary>

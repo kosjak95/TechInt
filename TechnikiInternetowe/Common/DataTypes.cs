@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TechnikiInterentoweCommon
 {
@@ -37,6 +38,12 @@ namespace TechnikiInterentoweCommon
         }
     }
 
+    public class SynchronizeAfterConnectionEstablishedMsg
+    {
+        public List<FullFileData> filesList;
+        public string sender;
+    }
+
     public class UserAndFileNamesPair
     {
         public string UserName { get; set; }
@@ -56,9 +63,10 @@ namespace TechnikiInterentoweCommon
     //3. chat
     public enum MsgType
     {
-        SYSTEM_ACTION_MSG = 1,
-        AUTHORIZATION_MSG = 2,
-        CHAT_MSG = 3
+        REFRESH_FILES_LIST_MSG = 1,
+        FAIL_SYNC_FILES_MSG = 2,
+        AUTHORIZATION_MSG = 3,
+        CHAT_MSG = 4
     }
 
     public class NoUserNameException : Exception{}

@@ -36,32 +36,32 @@ namespace TechnikiInternetowe.WebSockets
             listOfClientsSessions = new List<Client>();
             webSocketServer = new WebSocketServer();
             webSocketServer.Setup(Port);
-            webSocketServer.NewSessionConnected += webSocketServer_NewSessionConnected;
-            webSocketServer.NewMessageReceived += webSocketServer_NewMessageReceived;
-            webSocketServer.NewDataReceived += webSocketServer_NewDataReceived;
-            webSocketServer.SessionClosed += webSocketServer_SessionClosed;
+            webSocketServer.NewSessionConnected += WebSocketServer_NewSessionConnected;
+            webSocketServer.NewMessageReceived += WebSocketServer_NewMessageReceived;
+            webSocketServer.NewDataReceived += WebSocketServer_NewDataReceived;
+            webSocketServer.SessionClosed += WebSocketServer_SessionClosed;
 
             ThreadPool.QueueUserWorkItem(new WaitCallback((x) => this.runServer()));
         }
 
-        private void webSocketServer_SessionClosed(WebSocketSession session, CloseReason value)
+        private void WebSocketServer_SessionClosed(WebSocketSession session, CloseReason value)
         {
             Console.Write("SessionClosed");
         }
 
-        private void webSocketServer_NewDataReceived(WebSocketSession session, byte[] value)
+        private void WebSocketServer_NewDataReceived(WebSocketSession session, byte[] value)
         {
             Console.Write("NewDataReceive");
         }
 
-        private void webSocketServer_NewMessageReceived(WebSocketSession session, string value)
+        private void WebSocketServer_NewMessageReceived(WebSocketSession session, string value)
         {
             Console.Write(value);
 
             Message message = new JavaScriptSerializer().Deserialize<Message>(value);
             switch(message.Key)
             {
-                case MsgType.SYSTEM_ACTION_MSG:
+                case MsgType.REFRESH_FILES_LIST_MSG:
                     {
                         throw new NotImplementedException();
                         break;
@@ -99,7 +99,7 @@ namespace TechnikiInternetowe.WebSockets
             }
         }
 
-        private void webSocketServer_NewSessionConnected(WebSocketSession session)
+        private void WebSocketServer_NewSessionConnected(WebSocketSession session)
         {
             listOfClientsSessions.Add(new Client() { clientName = "", socket = session });
             Message initMsgToClient = new Message() { Key = MsgType.AUTHORIZATION_MSG, Destination = null, Value = "name" };
@@ -108,12 +108,12 @@ namespace TechnikiInternetowe.WebSockets
             Console.Write("SessionConnected");
         }
 
-        public void closeServer()
+        public void CloseServer()
         {
             webSocketServer.Stop();
         }
 
-        public void sendToAll(Message msg)
+        public void SendToAll(Message msg)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             foreach (Client client in listOfClientsSessions)
@@ -121,6 +121,25 @@ namespace TechnikiInternetowe.WebSockets
                 msg.Destination = client.clientName;
                 msg.Sender = "Server";
                 client.socket.Send(serializer.Serialize(msg));
+            }
+        }
+
+        public void SendToOne(string receiver, List<string> filesNameslist)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            foreach (Client client in listOfClientsSessions)
+            {
+                if(!client.clientName.Equals(receiver))
+                {
+                    continue;
+                }
+                client.socket.Send(serializer.Serialize(new Message()
+                {
+                    Destination = client.clientName,
+                    Sender = "Server",
+                    Key = MsgType.FAIL_SYNC_FILES_MSG,
+                    Value = serializer.Serialize(filesNameslist)
+                }));
             }
         }
 
