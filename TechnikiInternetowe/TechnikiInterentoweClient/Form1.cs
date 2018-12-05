@@ -18,10 +18,23 @@ namespace TechnikiInterentoweClient
         private string client_name;
         ChatForm chatForm = null;
         bool isOnline;
+        Timer oflineTimer, onlineTimer;
 
         public Form1()
         {
+            oflineTimer = new Timer
+            {
+                Interval = 500
+            };
+            oflineTimer.Tick += new EventHandler(Timer_TickOfline);
+            oflineTimer.Start();
+            onlineTimer = new Timer
+            {
+                Interval = 500
+            };
+            onlineTimer.Tick += new EventHandler(Timer_Tick);
             filesListFromJson = new List<FullFileData>();
+            LoadFilesFromDevice();
             SetConnectionStatus(false);
             ClientName clientName = new ClientName();
             DialogResult result = clientName.ShowDialog(this);
@@ -117,7 +130,7 @@ namespace TechnikiInterentoweClient
             else
             {
                 SetConnectionStatus(false);
-                LoadFilesFromDevice();
+                //LoadFilesFromDevice();
             }
             int i = 0;
             foreach (FullFileData file in filesListFromJson)
@@ -379,7 +392,6 @@ namespace TechnikiInterentoweClient
             }
         }
 
-
         public void MakeChatNull()
         {
             this.chatForm = null;
@@ -394,7 +406,19 @@ namespace TechnikiInterentoweClient
             timer.Tick += new EventHandler(Timer_Tick);
             timer.Start();
         }
-
+        
+        private void Timer_TickOfline(object sender, EventArgs e)
+        {
+            bool connectStatus = CheckServerConnection();
+            if(connectStatus)
+            {
+                clientSocket = new ClientWebSocket();
+                clientSocket.Setup();
+                clientSocket.Start();
+                oflineTimer.Stop();
+                onlineTimer.Start();
+            }
+        }
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (clientSocket.msgsList.Count > 0)
@@ -424,6 +448,13 @@ namespace TechnikiInterentoweClient
                                 Destination = "Server"
                             });
                             SetConnectionStatus(true);
+                            string serializedObject = new JavaScriptSerializer().Serialize(new SynchronizeAfterConnectionEstablishedMsg()
+                            {
+                                filesList = filesListFromJson,
+                                sender = client_name
+                            });
+                            MakePostRequest("SynchronizeAfterConnectionEstablished/",
+                                            new { synchMsg = serializedObject });
                             clientSocket.msgsList.RemoveAt(0);
                             break;
                         }
@@ -452,20 +483,6 @@ namespace TechnikiInterentoweClient
                 }
 
             }
-
-            //reconect to server
-            bool connectStatus = CheckServerConnection();
-            if(connectStatus != isOnline)
-            {
-                SetConnectionStatus(connectStatus);
-                string serializedObject = new JavaScriptSerializer().Serialize(new SynchronizeAfterConnectionEstablishedMsg()
-                {
-                    filesList = filesListFromJson,
-                    sender = client_name
-                });
-                MakePostRequest("SynchronizeAfterConnectionEstablished/", 
-                                new { synchMsg = serializedObject });
-            }
         }
 
         private void InformUserAboutFailSyncFilesAfterReEstablishedConnection(string serializedListOfFailSyncFiles)
@@ -478,7 +495,10 @@ namespace TechnikiInterentoweClient
                 builder.Append(fileName).Append("\n");
             }
             builder.Append("Dane zostały utracone");
-            System.Web.UI.ScriptManager.RegisterClientScriptBlock(null, this.GetType(), "alertMessage", builder.ToString(), true);
+
+            var result = MessageBox.Show(builder.ToString(), "Fail synchronize files",
+                                         MessageBoxButtons.OK,
+                                         MessageBoxIcon.Error);
         }
 
         private bool CheckServerConnection()
