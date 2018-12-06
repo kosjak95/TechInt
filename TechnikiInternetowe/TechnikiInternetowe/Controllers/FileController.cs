@@ -72,16 +72,19 @@ namespace TechnikiInternetowe.Controllers
                         failedSyncFileNames.Add(fileData.Name);
                     }
                 }
-                else
+                else if(fileData.Version != int.Parse(dbFile.Version))
                 {
                     if(fileData.Version >  int.Parse(dbFile.Version) && !dbFile.IsEdited)
                     {
                         UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
                     }
+                    else
+                    {
+                        failedSyncFileNames.Add(fileData.Name);
+                    }
                 }
             }
             SendFailedSyncFilesMsg(synchMsg.sender, failedSyncFileNames);
-            SendUpdateFileListToAll();
             return true;
         }
 

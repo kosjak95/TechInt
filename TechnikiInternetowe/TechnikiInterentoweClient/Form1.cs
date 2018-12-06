@@ -22,17 +22,6 @@ namespace TechnikiInterentoweClient
 
         public Form1()
         {
-            oflineTimer = new Timer
-            {
-                Interval = 500
-            };
-            oflineTimer.Tick += new EventHandler(Timer_TickOfline);
-            oflineTimer.Start();
-            onlineTimer = new Timer
-            {
-                Interval = 500
-            };
-            onlineTimer.Tick += new EventHandler(Timer_Tick);
             filesListFromJson = new List<FullFileData>();
             LoadFilesFromDevice();
             SetConnectionStatus(false);
@@ -48,6 +37,17 @@ namespace TechnikiInterentoweClient
                 clientName.Dispose();
                 throw new NoUserNameException();
             }
+            oflineTimer = new Timer
+            {
+                Interval = 500
+            };
+            oflineTimer.Tick += new EventHandler(Timer_TickOfline);
+            oflineTimer.Start();
+            onlineTimer = new Timer
+            {
+                Interval = 500
+            };
+            onlineTimer.Tick += new EventHandler(Timer_Tick);
 
             clientSocket = new ClientWebSocket();
             clientSocket.Setup();
@@ -496,9 +496,12 @@ namespace TechnikiInterentoweClient
             }
             builder.Append("Dane zostały utracone");
 
-            var result = MessageBox.Show(builder.ToString(), "Fail synchronize files",
-                                         MessageBoxButtons.OK,
-                                         MessageBoxIcon.Error);
+            new System.Threading.Thread(() =>
+            {
+                MessageBox.Show(builder.ToString(), "Fail synchronize files",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }).Start();
         }
 
         private bool CheckServerConnection()
