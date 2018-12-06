@@ -24,7 +24,7 @@ namespace TechnikiInterentoweClient
 
             websocketClient = new WebSocket(this.url, this.protocol, this.version);
 
-            websocketClient.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(WebsocketClient_Error);
+            websocketClient.Error += new EventHandler<ErrorEventArgs>(WebsocketClient_Error);
             websocketClient.Opened += new EventHandler(WebsocketClient_Opened);
             websocketClient.MessageReceived += new EventHandler<MessageReceivedEventArgs>(WebsocketClient_MessageReceived);
         }

@@ -18,7 +18,7 @@ namespace TechnikiInterentoweClient
         private string client_name;
         ChatForm chatForm = null;
         bool isOnline;
-        Timer oflineTimer, onlineTimer;
+        Timer offlineTimer, onlineTimer;
 
         public Form1()
         {
@@ -37,12 +37,12 @@ namespace TechnikiInterentoweClient
                 clientName.Dispose();
                 throw new NoUserNameException();
             }
-            oflineTimer = new Timer
+            offlineTimer = new Timer
             {
-                Interval = 500
+                Interval = 1000
             };
-            oflineTimer.Tick += new EventHandler(Timer_TickOfline);
-            oflineTimer.Start();
+            offlineTimer.Tick += new EventHandler(Timer_TickOfline);
+            offlineTimer.Start();
             onlineTimer = new Timer
             {
                 Interval = 500
@@ -51,7 +51,6 @@ namespace TechnikiInterentoweClient
 
             clientSocket = new ClientWebSocket();
             clientSocket.Setup();
-            clientSocket.Start();
 
             InitializeComponent();
             bindingSource = new BindingSource();
@@ -130,7 +129,6 @@ namespace TechnikiInterentoweClient
             else
             {
                 SetConnectionStatus(false);
-                //LoadFilesFromDevice();
             }
             int i = 0;
             foreach (FullFileData file in filesListFromJson)
@@ -410,12 +408,10 @@ namespace TechnikiInterentoweClient
         private void Timer_TickOfline(object sender, EventArgs e)
         {
             bool connectStatus = CheckServerConnection();
-            if(connectStatus)
+            if (connectStatus)
             {
-                clientSocket = new ClientWebSocket();
-                clientSocket.Setup();
                 clientSocket.Start();
-                oflineTimer.Stop();
+                offlineTimer.Stop(); 
                 onlineTimer.Start();
             }
         }
