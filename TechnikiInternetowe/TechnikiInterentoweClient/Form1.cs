@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.WebSockets;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
@@ -407,13 +408,22 @@ namespace TechnikiInterentoweClient
         
         private void Timer_TickOfline(object sender, EventArgs e)
         {
-            bool connectStatus = CheckServerConnection();
-            if (connectStatus)
+            switch(clientSocket.isConnected())
             {
-                clientSocket.Start();
-                offlineTimer.Stop(); 
-                onlineTimer.Start();
+                case WebSocket4Net.WebSocketState.Open:
+                    {
+                        offlineTimer.Stop();
+                        onlineTimer.Start();
+                        break;
+                    }
+                case WebSocket4Net.WebSocketState.Closed:
+                case WebSocket4Net.WebSocketState.None:
+                    {
+                        clientSocket.Start();
+                        break;
+                    }
             }
+          
         }
         private void Timer_Tick(object sender, EventArgs e)
         {

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SuperSocket.ClientEngine;
+using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
-using SuperSocket.ClientEngine;
 using TechnikiInterentoweCommon;
 using WebSocket4Net;
 
@@ -27,6 +27,11 @@ namespace TechnikiInterentoweClient
             websocketClient.Error += new EventHandler<ErrorEventArgs>(WebsocketClient_Error);
             websocketClient.Opened += new EventHandler(WebsocketClient_Opened);
             websocketClient.MessageReceived += new EventHandler<MessageReceivedEventArgs>(WebsocketClient_MessageReceived);
+        }
+
+        public WebSocketState isConnected()
+        {
+            return websocketClient.State;
         }
 
         public void Start()
