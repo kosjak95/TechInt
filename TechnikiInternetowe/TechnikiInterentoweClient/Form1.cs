@@ -78,9 +78,6 @@ namespace TechnikiInterentoweClient
         /// </summary>
         private void SaveJsonWithFilesOnDevice()
         {
-            if (!isOnline)
-                return;
-
             using (StreamWriter file = File.CreateText(Path.GetDirectoryName(
                                                        Path.GetDirectoryName(
                                                        System.IO.Directory.GetCurrentDirectory())) + @"\App_Data\files.txt"))
@@ -414,6 +411,8 @@ namespace TechnikiInterentoweClient
                     {
                         offlineTimer.Stop();
                         onlineTimer.Start();
+                        UpdateFilesList();
+                        SaveJsonWithFilesOnDevice();
                         break;
                     }
                 case WebSocket4Net.WebSocketState.Closed:
@@ -489,6 +488,12 @@ namespace TechnikiInterentoweClient
                 }
 
             }
+            if (clientSocket.isConnected() != WebSocket4Net.WebSocketState.Open)
+            {
+                onlineTimer.Stop();
+                offlineTimer.Start();
+                SetConnectionStatus(false);
+            }
         }
 
         private void InformUserAboutFailSyncFilesAfterReEstablishedConnection(string serializedListOfFailSyncFiles)
@@ -508,15 +513,6 @@ namespace TechnikiInterentoweClient
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
             }).Start();
-        }
-
-        private bool CheckServerConnection()
-        {
-            string strResponse = MakePutRequest("Files/");
-            if (strResponse.Equals("Nie można połączyć się z serwerem zdalnym"))
-                return false;
-
-            return true;
         }
     }
 }

@@ -20,18 +20,16 @@ namespace TechnikiInterentoweClient
                 components.Dispose();
             }
 
-
             if (tabs != null)
             {
                 TabControl.TabPageCollection pages = tabs.TabPages;
                 if (pages.Count > 1)
                 {
                     RestClient restClient = new RestClient();
-                    rClient.EndPoint = "http://localhost:8080/ReleaseFileCludge/";
+                    restClient.EndPoint = "http://localhost:8080/ReleaseFileCludge/";
                     //if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
                     foreach (TabPage page in pages)
                     {
-
                         if (page.AccessibilityObject.Name.Equals("KK Reader") || page.AccessibilityObject.Name.Equals("    +"))
                             continue;
 
@@ -39,11 +37,11 @@ namespace TechnikiInterentoweClient
                             continue;
 
                         string fileName = page.AccessibilityObject.Name;
-                        rClient.MakePostRequest(new { fileName });
-
+                        restClient.MakePostRequest(new { fileName });
                     }
                 } 
             }
+            SaveJsonWithFilesOnDevice();
             base.Dispose(disposing);
         }
 
