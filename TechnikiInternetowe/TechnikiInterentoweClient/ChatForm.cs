@@ -23,7 +23,7 @@ namespace TechnikiInterentoweClient
 
         private void send_button_Click(object sender, EventArgs e)
         {
-            this.tbChat.Text += "\n Ja: " + tbMsg.Text;
+            this.tbChat.Text += "Ja: " + tbMsg.Text + "\r\n";
             socket.SendMsg(new Message()
             {
                 Key = TechnikiInterentoweCommon.MsgType.CHAT_MSG,
@@ -36,8 +36,8 @@ namespace TechnikiInterentoweClient
 
         public void addMsgOnScreen(Message msg)
         {
-            tbChat.Text += "\n" + msg.Sender + ": ";
-            tbChat.Text += msg.Value + "\n";
+            tbChat.Text += msg.Sender + ": ";
+            tbChat.Text += msg.Value + "\r\n";
         }
 
         private void Form1_Load(object sender, EventArgs e)
