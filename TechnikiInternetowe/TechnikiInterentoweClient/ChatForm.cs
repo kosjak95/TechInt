@@ -11,6 +11,7 @@ namespace TechnikiInterentoweClient
         private string clientName;
         private ClientWebSocket socket;
         private Form1 parent;
+        private Timer timer;
 
         public ChatForm(string clientName, string destinationName, ClientWebSocket socket, Form1 parent)
         {
@@ -42,11 +43,10 @@ namespace TechnikiInterentoweClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Timer timer = new Timer();
+            timer = new Timer();
             timer.Interval = (500);
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
-
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -65,9 +65,9 @@ namespace TechnikiInterentoweClient
             }
         }
 
-
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timer.Stop();
             this.parent.MakeChatNull();
         }
     }
