@@ -26,7 +26,7 @@ namespace TechnikiInterentoweClient
                 if (pages.Count > 1)
                 {
                     RestClient restClient = new RestClient();
-                    restClient.EndPoint = "http://localhost:8080/ReleaseFileCludge/";
+                    restClient.EndPoint = "http://" + Properties.Settings.Default.Host.ToString() + ":8080/ReleaseFileCludge/";
                     //if (rClient.makePostRequest(new { file_name = newFileNameTextBox.Text }))
                     foreach (TabPage page in pages)
                     {

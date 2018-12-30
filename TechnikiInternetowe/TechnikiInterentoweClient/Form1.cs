@@ -219,7 +219,7 @@ namespace TechnikiInterentoweClient
             {
                 rClient = new RestClient();
             }
-            rClient.EndPoint = "http://localhost:8080/" + routeAndArgs;
+            rClient.EndPoint = "http://"+ Properties.Settings.Default.Host.ToString() + ":8080/" + routeAndArgs;
         }
 
         private string MakePutRequest(string routeAndArgs)

@@ -18,7 +18,7 @@ namespace TechnikiInterentoweClient
         public void Setup()
         {
             msgsList = new List<Message>();
-            this.url = "ws://localhost:8081";
+            this.url = "ws://" + Properties.Settings.Default.Host.ToString() + ":8081";
             this.protocol = "basic";
             this.version = WebSocketVersion.Rfc6455;
 

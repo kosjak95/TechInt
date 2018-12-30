@@ -64,7 +64,6 @@ namespace TechnikiInternetowe.WebSockets
                 case MsgType.REFRESH_FILES_LIST_MSG:
                     {
                         throw new NotImplementedException();
-                        break;
                     }
                 case MsgType.AUTHORIZATION_MSG:
                     {
