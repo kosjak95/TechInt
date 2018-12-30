@@ -14,6 +14,8 @@ namespace TechnikiInternetowe.Controllers
 {
     public class FileController : Controller
     {
+        private static object LockSynch = new object();
+
         #region public methods
 
         /// <summary>
@@ -54,37 +56,40 @@ namespace TechnikiInternetowe.Controllers
                 new JavaScriptSerializer().Deserialize<SynchronizeAfterConnectionEstablishedMsg>(synchCodedMsg);
             DB_TechIntEntities db = new DB_TechIntEntities();
             List<string> failedSyncFileNames = new List<string>();
-            foreach (FullFileData fileData in synchMsg.filesList)
+            lock (LockSynch)
             {
-                var queryFile = db.Files.Where(w => w.Name == fileData.Name);
-                Files dbFile = null;
-                if (queryFile.Any())
-                    dbFile = queryFile.First();
+                foreach (FullFileData fileData in synchMsg.filesList)
+                {
+                    var queryFile = db.Files.Where(w => w.Name == fileData.Name);
+                    Files dbFile = null;
+                    if (queryFile.Any())
+                        dbFile = queryFile.First();
 
-                if (dbFile == null)
-                {
-                    if (PermissionOnCreateFile(project_path, fileData.Name))
+                    if (dbFile == null)
                     {
-                        UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
+                        if (PermissionOnCreateFile(project_path, fileData.Name))
+                        {
+                            UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
+                        }
+                        else
+                        {
+                            failedSyncFileNames.Add(fileData.Name);
+                        }
                     }
-                    else
+                    else if (fileData.WasChanged)
                     {
-                        failedSyncFileNames.Add(fileData.Name);
+                        if (fileData.Version > int.Parse(dbFile.Version) && !dbFile.IsEdited)
+                        {
+                            UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
+                        }
+                        else
+                        {
+                            failedSyncFileNames.Add(fileData.Name);
+                        }
                     }
                 }
-                else if(fileData.Version != int.Parse(dbFile.Version))
-                {
-                    if(fileData.Version >  int.Parse(dbFile.Version) && !dbFile.IsEdited)
-                    {
-                        UpdateFileContent(project_path, fileData.Name, fileData.FileContent);
-                    }
-                    else
-                    {
-                        failedSyncFileNames.Add(fileData.Name);
-                    }
-                }
+                SendFailedSyncFilesMsg(synchMsg.sender, failedSyncFileNames);
             }
-            SendFailedSyncFilesMsg(synchMsg.sender, failedSyncFileNames);
             return true;
         }
 

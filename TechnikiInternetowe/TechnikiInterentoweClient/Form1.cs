@@ -154,6 +154,7 @@ namespace TechnikiInterentoweClient
                 fileData.Version++;
                 fileData.EditorName = "";
                 fileData.IsEdited = false;
+                fileData.WasChanged = true;
             }
             TabControl tc = (TabControl)tab.Parent;
             tc.TabPages.Remove(tab);

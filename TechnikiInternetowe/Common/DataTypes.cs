@@ -25,6 +25,7 @@ namespace TechnikiInterentoweCommon
     public class FullFileData : FileData
     {
         public string FileContent { get; set; }
+        public bool WasChanged { get; set; }
 
         public void setAll(FileData p_base, string p_content)
         {
@@ -35,6 +36,7 @@ namespace TechnikiInterentoweCommon
             LastUpdateTs = p_base.LastUpdateTs;
             Version = p_base.Version;
             FileContent = p_content;
+            WasChanged = false;
         }
     }
 
