@@ -46,6 +46,14 @@ namespace TechnikiInternetowe.WebSockets
 
         private void WebSocketServer_SessionClosed(WebSocketSession session, CloseReason value)
         {
+            foreach(Client client in listOfClientsSessions)
+            {
+                if(client.socket.Equals(session))
+                {
+                    listOfClientsSessions.Remove(client);
+                    break;
+                }
+            }
             Console.Write("SessionClosed");
         }
 
