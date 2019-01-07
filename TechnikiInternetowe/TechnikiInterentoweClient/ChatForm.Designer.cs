@@ -35,10 +35,10 @@
             // 
             // send_button
             // 
-            this.send_button.Location = new System.Drawing.Point(140, 245);
-            this.send_button.Margin = new System.Windows.Forms.Padding(2);
+            this.send_button.Location = new System.Drawing.Point(187, 302);
+            this.send_button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.send_button.Name = "send_button";
-            this.send_button.Size = new System.Drawing.Size(56, 19);
+            this.send_button.Size = new System.Drawing.Size(75, 23);
             this.send_button.TabIndex = 0;
             this.send_button.Text = "Wyślij";
             this.send_button.UseVisualStyleBackColor = true;
@@ -46,32 +46,33 @@
             // 
             // tbMsg
             // 
-            this.tbMsg.Location = new System.Drawing.Point(9, 203);
-            this.tbMsg.Margin = new System.Windows.Forms.Padding(2);
+            this.tbMsg.Location = new System.Drawing.Point(12, 250);
+            this.tbMsg.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbMsg.Multiline = true;
             this.tbMsg.Name = "tbMsg";
-            this.tbMsg.Size = new System.Drawing.Size(127, 61);
+            this.tbMsg.Size = new System.Drawing.Size(168, 74);
             this.tbMsg.TabIndex = 1;
             // 
             // tbChat
             // 
             this.tbChat.Enabled = false;
-            this.tbChat.Location = new System.Drawing.Point(9, 10);
-            this.tbChat.Margin = new System.Windows.Forms.Padding(2);
+            this.tbChat.Location = new System.Drawing.Point(12, 12);
+            this.tbChat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbChat.Multiline = true;
             this.tbChat.Name = "tbChat";
-            this.tbChat.Size = new System.Drawing.Size(188, 189);
+            this.tbChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbChat.Size = new System.Drawing.Size(249, 232);
             this.tbChat.TabIndex = 2;
             // 
             // ChatForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(205, 273);
+            this.ClientSize = new System.Drawing.Size(273, 336);
             this.Controls.Add(this.tbChat);
             this.Controls.Add(this.tbMsg);
             this.Controls.Add(this.send_button);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ChatForm";
             this.Text = "ChatForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
